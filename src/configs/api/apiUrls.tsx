@@ -40,7 +40,7 @@ export const ApiUrl = {
   ADD_UNIVERSITY_URL: "university/add",
   EDIT_UNIVERSITY_URL: "university/edit/",
   ADD_STAFF_MEMBER_URL: "admin/staff/add",
-  EDIT_STAFF_MEMBER_URL: "staff-members/edit-staff-member/",
+  EDIT_STAFF_MEMBER_URL: "admin/staff/edit/",
   GET_STAFF_MEMBER_URL: "admin/staff/get",
 };
 export const graphqlQuerys = {
