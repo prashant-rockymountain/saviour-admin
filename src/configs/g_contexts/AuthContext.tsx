@@ -86,7 +86,7 @@ const AuthProvider = ({ children }: Props) => {
       setBtnLoading(false);
 
       errorToast({ title: response.data?.message });
-    }
+    }     
   };
 
   const handleLogout = () => {

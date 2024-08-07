@@ -1,5 +1,5 @@
 const baseurl =
-  process.env.NODE_ENV !== "development"
+  process.env.NODE_ENV == "development"
     ? "http://localhost:13006/api/"
     : "https://saviour-backend.loopretail.tngwebsolutions.com/api/";
 
@@ -8,7 +8,7 @@ export const ApiUrl = {
   IMAGE_BASE_URL: "https://storage.googleapis.com/saviour-visa/",
   DELETE_GOOGLE_IMAGE_URL:"/upload/delete?url=",
   UPLOAD_IMAGE_URL:"upload/files",
-  LOGIN_URL: "super-admin/login",
+  LOGIN_URL: "admin/login",
   ADD_COUNTRY_URL: "country/add",
   GET_COUNTRY_LIST_URL: "country/get-all",
   ADD_ROLE_OPTION_URL: "role-options/add",
