@@ -50,6 +50,13 @@ const navigation = (): VerticalNavItemsType => {
       path: '/all-application',
       icon: 'tabler:certificate',
     },
+    {
+      path: "/staff-member",
+      action: "read",
+      subject: 'staff member',
+      title: "Staff Member",
+      icon: "tabler:checkup-list",
+    },
     // {
     //   action: "read",
     //   subject: AbilityNames.ROLE_PAGE,
