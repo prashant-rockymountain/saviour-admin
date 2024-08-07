@@ -7,7 +7,7 @@ const navigation = (): VerticalNavItemsType => {
   const shortcontent = [
     {
       title: 'Dashboard',
-      path: '/dashboard',
+      path: '/home',
       icon: 'tabler:smart-home',
     },
     {

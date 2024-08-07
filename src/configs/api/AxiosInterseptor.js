@@ -47,7 +47,7 @@ axi.interceptors.response.use(
       errorToast({ title: response.data?.message });
       return Promise.reject(error);
     } else {
-      errorToast({ title: error?.response.data?.message });
+      errorToast({ title: error?.response?.data?.message });
       return Promise.reject(error);
     }
   }
