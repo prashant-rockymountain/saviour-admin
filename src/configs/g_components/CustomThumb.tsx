@@ -16,7 +16,7 @@ interface props {
   src: string;
 }
 const CustomThumb: FC<props> = ({ alt, src }) => {
-  return src.length > 0 ? (
+  return src?.length > 0 ? (
     <ThumbImgStyle alt={alt} src={`${ApiUrl.IMAGE_BASE_URL}${src}`} />
   ) : (
     <Avatar
