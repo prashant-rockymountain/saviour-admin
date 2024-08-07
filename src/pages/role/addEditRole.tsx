@@ -2,6 +2,7 @@ import { Box, Grid } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import Crumbs from "src/configs/g_components/Crumbs";
+import RoleForm from "src/configs/g_components/g_forms/roleForm";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 
 const AddRole = () => {
@@ -20,7 +21,7 @@ const AddRole = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          {/* <RoleForm /> */}
+          <RoleForm />
         </Grid>
       </Grid>
     </>

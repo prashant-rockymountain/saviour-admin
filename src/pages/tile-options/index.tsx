@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import RoleoptionController from "./controller";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
+import RoleOptionsForm from "src/configs/g_components/g_forms/roleOptionsForm";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },
@@ -46,7 +47,7 @@ const RoleOptionsTable = () => {
           <GModal
             open={open}
             onclose={onclose}
-            component={<></>}
+            component={<RoleOptionsForm open={setOpen} />}
           />
           <Card>
             <CardContent>
