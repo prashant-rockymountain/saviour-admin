@@ -50,26 +50,26 @@ const navigation = (): VerticalNavItemsType => {
       path: '/all_application',
       icon: 'tabler:certificate',
     },
-    {
-      action: "read",
-      subject: AbilityNames.ROLE_PAGE,
-      title: "Role",
-      icon: "tabler:users-plus",
-      children: [
-        {
-          path: "/role",
-          action: "read",
-          subject: AbilityNames.ROLE_PAGE,
-          title: "Role",
-        },
-        {
-          path: "/tile-options",
-          action: "read",
-          subject: AbilityNames.ROLEOPTION_PAGE,
-          title: "Role Options",
-        },
-      ],
-    },
+    // {
+    //   action: "read",
+    //   subject: AbilityNames.ROLE_PAGE,
+    //   title: "Role",
+    //   icon: "tabler:users-plus",
+    //   children: [
+    //     {
+    //       path: "/role",
+    //       action: "read",
+    //       subject: AbilityNames.ROLE_PAGE,
+    //       title: "Role",
+    //     },
+    //     {
+    //       path: "/tile-options",
+    //       action: "read",
+    //       subject: AbilityNames.ROLEOPTION_PAGE,
+    //       title: "Role Options",
+    //     },
+    //   ],
+    // },
   ]
  
 
