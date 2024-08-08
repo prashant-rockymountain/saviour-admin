@@ -1,4 +1,9 @@
-import { FormLabel, InputBaseComponentProps, Skeleton, TextField } from "@mui/material";
+import {
+  FormLabel,
+  InputBaseComponentProps,
+  Skeleton,
+  TextField,
+} from "@mui/material";
 import React, { FC, ReactNode } from "react";
 interface customfield {
   initialize: boolean;
@@ -9,8 +14,11 @@ interface customfield {
   error?: boolean;
   labelName: string;
   register?: Record<string, any>;
-  disabled?: boolean,
+  disabled?: boolean;
   type?: React.HTMLInputTypeAttribute;
+  multiline?: any;
+  rows?: number;
+  maxRows?: number;
   variant?: "outlined" | "filled" | "standard";
 }
 const Customfield: FC<customfield> = ({
@@ -36,7 +44,6 @@ const Customfield: FC<customfield> = ({
         <Skeleton variant="text" width={"100%"} height={45} />
       ) : (
         <TextField
-
           type={type || "text"}
           sx={{ mt: 2 }}
           placeholder={placeholder}

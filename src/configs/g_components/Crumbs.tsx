@@ -7,7 +7,7 @@ import { textcolor } from "src/configs/theme/palette";
 
 const Crumbs = ({ links }: { links: Array<Links> }) => {
   return (
-    <Breadcrumbs>
+    <Breadcrumbs sx={{ mb: 6 }}>
       {links.map((item, i) =>
         item.path ? (
           <Link key={i} href={item.path}>
