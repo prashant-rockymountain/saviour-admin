@@ -2,6 +2,7 @@ export enum AbilityNames {
   ACL_PAGE = "acl-page",
   ROLE_PAGE = "role-page",
   ROLEOPTION_PAGE = "roleoption-page",
+  PROFILEASSESSEMENT_PAGE = "profileassessment-page",
 
 }
 

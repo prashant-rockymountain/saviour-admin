@@ -225,9 +225,10 @@ const EducationInfo = ({
                         labelName="Institute"
                         size={"small"}
                         fullWidth={true}
-                        register={register("name")}
+                        register={register(`education_info.${index}.institute`)}
                       />
                     </Grid>
+                    {/* @ts-ignore */}
                     {values.education_info.length !== 1 && !item._id && (
                       <Grid item xs={3} sm={1.5} lg={0.75} mt={6}>
                         <Fab
@@ -239,6 +240,7 @@ const EducationInfo = ({
                         </Fab>
                       </Grid>
                     )}
+                    {/* @ts-ignore */}
                     {index == values.education_info.length - 1 && (
                       <Grid item xs={3} sm={1.5} lg={0.75} mt={6}>
                         <Fab

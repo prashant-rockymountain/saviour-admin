@@ -33,7 +33,7 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Profile Assesment',
       action: 'read',
       subject: 'profile assesment',
-      path: '/profile-assesment',
+      path: '/profile-assessment',
       icon: 'tabler:user-circle',
     },
     {
