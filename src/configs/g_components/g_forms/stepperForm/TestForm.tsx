@@ -24,21 +24,21 @@ import { useForm } from "react-hook-form";
 import Customfield from "src/configs/g_components/Customfield";
 import * as yup from "yup";
 interface TestFormTypes {
-  ielts: string;
-  pte: string;
-  toefl: string;
-  duolingo: string;
+  ielts: boolean;
+  pte: boolean;
+  toefl: boolean;
+  duolingo: boolean;
 }
 const TestForm = ({
   setActiveStep,
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const [courseData, setcourseData] = useState<TestFormTypes>({
-    ielts: "",
-    pte: "",
-    toefl: "",
-    duolingo: "",
+  const [testFormData, setTestFormData] = useState<TestFormTypes>({
+    ielts: false,
+    pte: false,
+    toefl: false,
+    duolingo: false,
   });
   const isLoading = false;
   const schema = yup.object().shape({
@@ -57,46 +57,69 @@ const TestForm = ({
     clearErrors,
     formState: { errors },
   } = useForm({
-    defaultValues: { ...courseData },
+    defaultValues: { ...testFormData },
     resolver: yupResolver(schema),
   });
   const values = watch();
   console.log(values, "register");
-
+  const onSumit = () => {};
   return (
     <>
-      <Card>
-        <CardHeader title="English Proficiency Info" variant={"body1"} />
-        <CardContent>
-          <Grid container spacing={6}>
-            <Grid item sm={4} md={2} mt={7}>
-              <FormControlLabel
-                control={<Checkbox defaultChecked={values.ielts} />}
-                label="IELTS"
-                {...register("ielts")}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Button
-                variant="contained"
-                onClick={() => setActiveStep((prev) => prev - 1)}
+      <form onSubmit={handleSubmit(onSumit)}>
+        <Card>
+          <CardHeader title="English Proficiency Info" variant={"body1"} />
+          <CardContent>
+            <Grid container spacing={6}>
+              <Grid item xs={4} sm={2.5} md={2} lg={1}>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked={values.ielts} />}
+                  label="IELTS"
+                  {...register("ielts")}
+                />
+              </Grid>
+              <Grid item xs={4} sm={2.5} md={2} lg={1}>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked={values.pte} />}
+                  label="PTE"
+                  {...register("pte")}
+                />
+              </Grid>
+              <Grid item xs={4} sm={2.5} md={2} lg={1}>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked={values.toefl} />}
+                  label="TOEFL"
+                  {...register("toefl")}
+                />
+              </Grid>
+              <Grid item xs={4} sm={2.5} md={2} lg={1}>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked={values.duolingo} />}
+                  label="DUOLINGO"
+                  {...register("duolingo")}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Back
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => setActiveStep((prev) => prev + 1)}
-              >
-                Next
-              </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setActiveStep((prev) => prev - 1)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setActiveStep((prev) => prev + 1)}
+                >
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </form>
     </>
   );
 };

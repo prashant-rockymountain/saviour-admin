@@ -25,6 +25,9 @@ import Customfield from "src/configs/g_components/Customfield";
 import CourseDetails from "src/configs/g_components/g_forms/stepperForm/courseDetails";
 import StudentInfo from "src/configs/g_components/g_forms/stepperForm/studentInfo";
 import TestForm from "src/configs/g_components/g_forms/stepperForm/TestForm";
+import EducationInfo from "src/configs/g_components/g_forms/stepperForm/educationInfo";
+import EmploymentInfo from "src/configs/g_components/g_forms/stepperForm/employmentInfo";
+import DocumentsForm from "src/configs/g_components/g_forms/stepperForm/documentsForm";
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
@@ -103,7 +106,7 @@ const steps = [
   "Documents",
 ];
 const StepperForm = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(4);
   const isLoading = false;
   const getStepContent = (step: number) => {
     switch (step) {
@@ -125,6 +128,24 @@ const StepperForm = () => {
             <TestForm setActiveStep={setActiveStep} />
           </>
         );
+      case 3:
+        return (
+          <>
+            <EducationInfo setActiveStep={setActiveStep} />
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <EmploymentInfo setActiveStep={setActiveStep} />
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <DocumentsForm setActiveStep={setActiveStep} />
+          </>
+        );
     }
   };
   return (
@@ -144,7 +165,7 @@ const StepperForm = () => {
             activeStep={activeStep}
             connector={<ColorlibConnector />}
           >
-            {steps.map((label) => (
+            {steps?.map((label) => (
               <Step key={label}>
                 <StepLabel StepIconComponent={ColorlibStepIcon}>
                   {label}
