@@ -11,11 +11,6 @@ import {
   MenuItem,
   Select,
   Skeleton,
-  Step,
-  StepIconProps,
-  StepLabel,
-  Stepper,
-  styled,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,11 +23,13 @@ interface courseDetailsTypes {
   credentials: string;
   program: string;
 }
+
 const CourseDetails = ({
   setActiveStep,
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
+
   const [courseData, setcourseData] = useState<courseDetailsTypes>({
     name: "",
     country: "",
@@ -40,7 +37,10 @@ const CourseDetails = ({
     credentials: "",
     program: "",
   });
+
+
   const isLoading = false;
+
   const schema = yup.object().shape({
     name: yup.string(),
     country: yup.string(),
@@ -52,11 +52,8 @@ const CourseDetails = ({
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
-    getValues,
-    clearErrors,
     formState: { errors },
+    watch
   } = useForm({
     defaultValues: { ...courseData },
     resolver: yupResolver(schema),

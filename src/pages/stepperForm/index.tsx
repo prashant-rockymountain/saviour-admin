@@ -97,6 +97,7 @@ function ColorlibStepIcon(props: StepIconProps) {
     </ColorlibStepIconRoot>
   );
 }
+
 const steps = [
   "Course Details",
   "Student Info",
@@ -105,9 +106,12 @@ const steps = [
   "Employment Info",
   "Documents",
 ];
+
 const StepperForm = () => {
   const [activeStep, setActiveStep] = useState(4);
   const isLoading = false;
+
+
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
@@ -148,6 +152,7 @@ const StepperForm = () => {
         );
     }
   };
+
   return (
     <>
       <Grid container spacing={6}>
@@ -155,7 +160,7 @@ const StepperForm = () => {
           <Crumbs
             links={[
               { title: "Dashboard", path: "/" },
-              { title: " Add Profile" },
+              { title: "Add Profile" },
             ]}
           />
         </Grid>
@@ -174,9 +179,11 @@ const StepperForm = () => {
             ))}
           </Stepper>
         </Grid>
+
         <Grid item xs={12}>
           {getStepContent(activeStep)}
         </Grid>
+
       </Grid>
     </>
   );
