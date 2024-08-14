@@ -10,11 +10,7 @@ const navigation = (): VerticalNavItemsType => {
       path: '/home',
       icon: 'tabler:smart-home',
     },
-    {
-      title: 'Partnered Institute',
-      path: '/partnered-institute',
-      icon: 'tabler:mail',
-    },
+
     {
       title: 'Course Finder',
       path: '/course-finder',
@@ -29,20 +25,8 @@ const navigation = (): VerticalNavItemsType => {
       path: '/all-institutes',                      
       icon: 'tabler:share',
     },
-    {
-      title: 'Profile Assesment',
-      action: 'read',
-      subject: 'profile assesment',
-      path: '/profile-assesment',
-      icon: 'tabler:user-circle',
-    },
-    {
-      title: 'All Inquiries',
-      action: 'read',
-      subject: 'all inquiries',
-      path: '/all-inquiries',
-      icon: 'tabler:mood-look-up',
-    },
+
+
     {
       title: 'All Application',
       action: 'read',

@@ -7,6 +7,8 @@ export const textcolor = {
   secondary_text: "#33303cde",
   rgba_light: "51, 48, 60",
   rgba_dark: "228, 230, 244",
+  info:"#5a8dee",
+  success:"#28C76F"
 };
 
 const DefaultPalette = (mode: PaletteMode, skin: Skin) => {
@@ -97,9 +99,9 @@ const DefaultPalette = (mode: PaletteMode, skin: Skin) => {
       contrastText: whiteColor,
     },
     info: {
-      light: "#1FD5EB",
-      main: "#00CFE8",
-      dark: "#00B6CC",
+      light: "#5a99ee",
+      main: "#5a8dee",
+      dark: "#5a80ee",
       contrastText: whiteColor,
     },
     success: {
