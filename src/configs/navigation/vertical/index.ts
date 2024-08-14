@@ -25,8 +25,20 @@ const navigation = (): VerticalNavItemsType => {
       path: '/all-institutes',                      
       icon: 'tabler:share',
     },
-
-
+    {
+      title: 'Profile Assesment',
+      action: 'read',
+      subject: 'profile assesment',
+      path: '/profile-assessment',
+      icon: 'tabler:user-circle',
+    },
+    {
+      title: 'All Inquiries',
+      action: 'read',
+      subject: 'all inquiries',
+      path: '/all-inquiries',
+      icon: 'tabler:mood-look-up',
+    },
     {
       title: 'All Application',
       action: 'read',
