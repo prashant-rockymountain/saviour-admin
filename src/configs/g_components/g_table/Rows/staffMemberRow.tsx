@@ -27,11 +27,7 @@ const StaffMemberRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-  const hanclick = (data: string) => {
-    if (clickbutton) {
-      clickbutton(data);
-    }
-  };
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -62,13 +58,10 @@ const StaffMemberRow: FC<rowType> = ({
               <Fab
                 size="small"
                 color="secondary"
-                onClick={
-                  clickbutton != undefined
-                    ? () => hanclick
-                    : () => {
-                        dispatch(addeditdata(row));
-                        router.push("/staff-member/addEditStaffMember");
-                      }
+                onClick={() => {
+                  dispatch(addeditdata(row));
+                  router.push("/staff-member/addEditStaffMember");
+                }
                 }
               >
                 <EditIcon />

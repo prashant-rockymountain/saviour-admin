@@ -24,11 +24,7 @@ const RoleRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-  const hanclick = (data: string) => {
-    if (clickbutton) {
-      clickbutton(data);
-    }
-  };
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -53,10 +49,7 @@ const RoleRow: FC<rowType> = ({
               <Fab
                 size="small"
                 color="secondary"
-                onClick={
-                  clickbutton != undefined
-                    ? () => hanclick
-                    : () => {
+                onClick={() => {
                         dispatch(addeditdata(row));
                         router.push("/role/addEditRole");
                       }

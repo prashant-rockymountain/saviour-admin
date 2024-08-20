@@ -24,11 +24,7 @@ const InquiriesRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-  const hanclick = (data: string) => {
-    if (clickbutton) {
-      clickbutton(data);
-    }
-  };
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -53,13 +49,10 @@ const InquiriesRow: FC<rowType> = ({
               <Fab
                 size="small"
                 color="secondary"
-                onClick={
-                  clickbutton != undefined
-                    ? () => hanclick
-                    : () => {
-                        dispatch(addeditdata(row));
-                        router.push("/role/addEditRole");
-                      }
+                onClick={() => {
+                  dispatch(addeditdata(row));
+                  router.push("/role/addEditRole");
+                }
                 }
               >
                 <EditIcon />

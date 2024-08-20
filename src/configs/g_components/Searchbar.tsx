@@ -21,7 +21,7 @@ const Searchbar = ({
   
     setFilteredData([
       ...data?.filter((item: Record<string, any>) =>
-        (item.name || item.program_type)
+        (item.name || item.program_type || item?.university?.name?.name)
           .toLowerCase()
           .replace(/\s+/g, "")
           .includes(value.replace(/\s+/g, "").toLowerCase())

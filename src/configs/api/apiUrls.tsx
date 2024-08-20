@@ -35,7 +35,7 @@ export const ApiUrl = {
   GET_CAMPUS_LIST_URL: "campus/get",
   EDIT_CAMPUS_URL: "campus/edit/",
   ADD_CAMPUS_URL: "campus/add",
-  GET_UNIVERSITY_LIST_URL: "university/get-all-university",
+  GET_UNIVERSITY_LIST_URL: "admin/university/all",
   GET_UNIVERSITY_URL: "university/get-university/:",
   ADD_UNIVERSITY_URL: "university/add",
   EDIT_UNIVERSITY_URL: "university/edit/",

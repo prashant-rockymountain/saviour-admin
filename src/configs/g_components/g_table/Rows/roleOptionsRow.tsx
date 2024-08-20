@@ -24,16 +24,11 @@ const RoleOptionsRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-  const hanclick = (data: string) => {
-    
-    if (clickbutton) {
-      clickbutton(data);
-    }
-  };
+
   const dispatch = useDispatch();
   const router = useRouter();
- 
-  
+
+
 
   return (
     <TableRow hover key={Math.random()}>
@@ -51,9 +46,7 @@ const RoleOptionsRow: FC<rowType> = ({
               <Fab
                 size="small"
                 color="secondary"
-                onClick={clickbutton != undefined ? () => hanclick : () => {
-                  
-                  
+                onClick={() => {
                   dispatch(addeditdata(row));
                   open(true)
                   // router.push("/country/addEditCountry");
