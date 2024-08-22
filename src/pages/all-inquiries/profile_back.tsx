@@ -62,7 +62,7 @@ const ProfileBack = () => {
                                 </Grid>
                                 <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: "15px" }}>
                                     <Button variant="contained" startIcon={<KeyboardBackspaceIcon />} onClick={() => { router.push("/all-inquiries/profile_view_comment") }}>
-                                        Profile Back
+                                      Back
                                     </Button>
                                 </Grid>
 
@@ -111,7 +111,7 @@ const ProfileBack = () => {
                                     </Card>
                                 </Grid></TabPanel>
                             <TabPanel value="4">
-                                <Grid item xs={12} sx={{ p: "24px 0px" }}>
+                                <Grid item xs={12} >
                                     <Card>
                                         <CardContent>
                                             <Application />
