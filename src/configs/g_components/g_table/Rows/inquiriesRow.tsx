@@ -27,6 +27,11 @@ const InquiriesRow: FC<rowType> = ({
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const hanclick = (data: string) => {
+    if (clickbutton) {
+      clickbutton(data);
+    }
+  };
 
   return (
     <TableRow hover key={Math.random()}>
@@ -42,17 +47,20 @@ const InquiriesRow: FC<rowType> = ({
           </TableCell>
           <TableCell align="center">
             {" "}
-            <CustomChip status={row?.is_active} />
+            <CustomChip label="dsd" status={row?.is_active} />
           </TableCell>
           <TableCell align="center">
-            {
+          {
               <Fab
                 size="small"
                 color="secondary"
-                onClick={() => {
-                  dispatch(addeditdata(row));
-                  router.push("/role/addEditRole");
-                }
+                onClick={
+                  clickbutton != undefined
+                    ? () => hanclick
+                    : () => {
+                        // dispatch(addeditdata(row));
+                        router.push("/all-inquiries/profile_view_comment");
+                      }
                 }
               >
                 <VisibilityIcon />
