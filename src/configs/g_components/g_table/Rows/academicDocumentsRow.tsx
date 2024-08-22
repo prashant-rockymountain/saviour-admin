@@ -16,7 +16,7 @@ import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
 import CustomChip from "../../CustomChip";
 
-const InquiriesRow: FC<rowType> = ({
+const AcademicDocumentsRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
@@ -24,7 +24,11 @@ const InquiriesRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-
+  const hanclick = (data: string) => {
+    if (clickbutton) {
+      clickbutton(data);
+    }
+  };
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -49,10 +53,13 @@ const InquiriesRow: FC<rowType> = ({
               <Fab
                 size="small"
                 color="secondary"
-                onClick={() => {
-                  dispatch(addeditdata(row));
-                  router.push("/role/addEditRole");
-                }
+                onClick={
+                  clickbutton != undefined
+                    ? () => hanclick
+                    : () => {
+                        // dispatch(addeditdata(row));
+                        router.push("/all-inquiries/profile_view_comment");
+                      }
                 }
               >
                 <VisibilityIcon />
@@ -65,4 +72,4 @@ const InquiriesRow: FC<rowType> = ({
   );
 };
 
-export default InquiriesRow;
+export default AcademicDocumentsRow;

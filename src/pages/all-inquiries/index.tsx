@@ -20,6 +20,8 @@ const TABLE_HEAD = [
   { label: "University", align: "center" },
   { label: "Program", align: "center" },
   { label: "In Take", align: "center" },
+  { label: "Action", align: "center" },
+  
 ];
 
 const AllInquiries = () => {
@@ -50,7 +52,7 @@ const AllInquiries = () => {
                       height={20}
                     ></Skeleton>
                   ) : (
-                    <Searchbar data={rows} setFilteredData={setFilteredData} />
+                    <Searchbar  data={rows} setFilteredData={setFilteredData} />
                   )}
                 </Grid>
                 {/* <Grid item sm={8} sx={{ textAlign: "right" }}>
