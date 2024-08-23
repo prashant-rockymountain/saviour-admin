@@ -9,6 +9,7 @@ import { rowType } from "src/configs/g_types/types";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { Edit, Visibility } from "@mui/icons-material";
+import { addeditdata } from "src/reduxStore/editDataSlice";
 
 const InstitudeRow: FC<rowType> = ({
     isLoading,
@@ -21,6 +22,11 @@ const InstitudeRow: FC<rowType> = ({
 
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const showInstitude = (data:Record<string,any>) => {
+        dispatch(addeditdata(data))
+        router.push("/all-institutes/showInstitude")
+    }
 
     return (
         <TableRow hover key={Math.random()}>
@@ -45,6 +51,7 @@ const InstitudeRow: FC<rowType> = ({
                         <Fab
                             size="small"
                             color="secondary"
+                            onClick={()=>showInstitude(row)}
 
                         >
                             <Visibility />
