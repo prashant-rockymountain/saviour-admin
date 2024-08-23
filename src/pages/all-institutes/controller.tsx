@@ -2,9 +2,10 @@ import { ApiUrl } from "src/configs/api/apiUrls";
 import axi from "src/configs/api/AxiosInterseptor";
 
 export default class UniversityController {
-  
   getUniversityList = async ({ is_active }: { is_active?: boolean }) => {
-    const data = await axi.get(`${ApiUrl.GET_UNIVERSITY_LIST_URL}${is_active ? "?is_active=true" : ""}`);
+    const data = await axi.get(
+      `${ApiUrl.GET_UNIVERSITY_LIST_URL}${is_active ? "?is_active=true" : ""}`
+    );
     return data?.data?.data;
   };
 

@@ -16,7 +16,7 @@ const AddEditProfileAssessment = () => {
           <Box>
             <Crumbs
               links={[
-                { title: "Profile Assessment", path: "/profile-assessment" },
+                { title: "All Applications", path: "/all-application" },
                 { title: `${editdata?._id ? `Edit` : `Add`} Profile` },
               ]}
             />
@@ -30,6 +30,6 @@ const AddEditProfileAssessment = () => {
   );
 };
 AddEditProfileAssessment.acl = {
-  subject: AbilityNames.PROFILEASSESSEMENT_PAGE,
+  subject: AbilityNames.ALLAPPLICATION_PAGE,
 };
 export default AddEditProfileAssessment;

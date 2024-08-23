@@ -1,55 +1,53 @@
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 import { VerticalNavItemsType } from "../../g_types/types";
 
-
 const navigation = (): VerticalNavItemsType => {
-
   const shortcontent = [
     {
-      title: 'Dashboard',
-      path: '/home',
-      icon: 'tabler:smart-home',
+      title: "Dashboard",
+      path: "/home",
+      icon: "tabler:smart-home",
     },
 
     {
-      title: 'Course Finder',
-      path: '/course-finder',
-      action: 'read',
-      subject: 'course finder',
-      icon: 'tabler:shield',
+      title: "Course Finder",
+      path: "/course-finder",
+      action: "read",
+      subject: "course finder",
+      icon: "tabler:shield",
     },
     {
-      title: 'All Institutes',
-      action: 'read',
-      subject: 'all institutes',
-      path: '/all-institutes',                      
-      icon: 'tabler:share',
+      title: "All Institutes",
+      action: "read",
+      subject: "all institutes",
+      path: "/all-institutes",
+      icon: "tabler:share",
+    },
+    // {
+    //   title: 'Profile Assesment',
+    //   action: 'read',
+    //   subject: 'profile assesment',
+    //   path: '/profile-assessment',
+    //   icon: 'tabler:user-circle',
+    // },
+    {
+      title: "All Inquiries",
+      action: "read",
+      subject: "all inquiries",
+      path: "/all-inquiries",
+      icon: "tabler:mood-look-up",
     },
     {
-      title: 'Profile Assesment',
-      action: 'read',
-      subject: 'profile assesment',
-      path: '/profile-assessment',
-      icon: 'tabler:user-circle',
-    },
-    {
-      title: 'All Inquiries',
-      action: 'read',
-      subject: 'all inquiries',
-      path: '/all-inquiries',
-      icon: 'tabler:mood-look-up',
-    },
-    {
-      title: 'All Application',
-      action: 'read',
-      subject: 'all application',
-      path: '/all-application',
-      icon: 'tabler:certificate',
+      title: "All Application",
+      action: "read",
+      subject: "all application",
+      path: "/all-application",
+      icon: "tabler:certificate",
     },
     {
       path: "/staff-member",
       action: "read",
-      subject: 'staff member',
+      subject: "staff member",
       title: "Staff Member",
       icon: "tabler:checkup-list",
     },
@@ -73,8 +71,7 @@ const navigation = (): VerticalNavItemsType => {
         },
       ],
     },
-  ]
- 
+  ];
 
   return shortcontent;
 };
