@@ -49,7 +49,7 @@ const AuthProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading);
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem("accessToken");
@@ -76,17 +76,11 @@ const AuthProvider = ({ children }: Props) => {
       router.push("/home");
     } else if (response.status === ApiStatus.STATUS_401) {
       setBtnLoading(false);
-
-      warningToast({ title: response.data?.message });
     } else if (response.status === ApiStatus.STATUS_403) {
       setBtnLoading(false);
-
-      errorToast({ title: response.data?.message });
     } else {
       setBtnLoading(false);
-
-      errorToast({ title: response.data?.message });
-    }     
+    }
   };
 
   const handleLogout = () => {
@@ -98,7 +92,7 @@ const AuthProvider = ({ children }: Props) => {
     router.push("/login");
   };
 
-  const handleRegister = (params: RegisterParams) => {};
+  const handleRegister = (params: RegisterParams) => { };
   // if (!window.navigator.onLine) {
   //   router.push("/no-internet");
   //   // window.location.href = "/no-internet";

@@ -17,12 +17,12 @@ axi.interceptors.request.use(
     // const token = getToken();
     config.headers = token
       ? {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        }
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      }
       : {
-          ...config.headers,
-        };
+        ...config.headers,
+      };
     return config;
   },
   (error) => {
@@ -37,18 +37,20 @@ axi.interceptors.response.use(
     } else if (response.status === ApiStatus.STATUS_403) {
       window.location.href = "/403";
       errorToast({ title: response.data?.message });
+      return response;
     } else {
       errorToast({ title: response.data?.message });
+      return response;
     }
   },
   function (error) {
     if (error?.response?.status === ApiStatus.STATUS_403) {
       window.location.href = "/403";
       errorToast({ title: response.data?.message });
-      return Promise.reject(error);
+      return error?.response;
     } else {
       errorToast({ title: error?.response?.data?.message });
-      return Promise.reject(error);
+      return error?.response;
     }
   }
 );
