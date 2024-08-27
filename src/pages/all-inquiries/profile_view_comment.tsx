@@ -52,9 +52,12 @@ const ProfileViewComment = () => {
                                     <span style={{ marginLeft: "10px" }}><GChip size='small' bgcolor="#FF0000" color="#FF0000" label="DEFER APP" /> </span>
 
                                 </Grid>
-                                <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: "15px" }}>
+                                <Grid item xs={12} sx={{ display: "flex", justifyContent: "space-between", mt: "15px" }}>
                                     <Button variant="contained" startIcon={<KeyboardBackspaceIcon />} onClick={()=>{router.push("/all-inquiries/profile_back")}}>
-                                        Profile Back
+                                        Profile
+                                    </Button>
+                                    <Button variant="contained" startIcon={<KeyboardBackspaceIcon />} onClick={()=>{router.push("/all-inquiries")}}>
+                                        Back
                                     </Button>
                                 </Grid>
 
