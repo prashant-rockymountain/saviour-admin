@@ -30,7 +30,7 @@ const ApplicationRow: FC<rowType> = ({
   return (
     <TableRow hover key={Math.random()}>
       {isLoading ? (
-        <TableCell colSpan={5}>
+        <TableCell colSpan={6}>
           <Skeleton variant="text" height={40} />
         </TableCell>
       ) : (

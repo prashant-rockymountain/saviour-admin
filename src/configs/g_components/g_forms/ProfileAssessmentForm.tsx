@@ -167,17 +167,7 @@ const ProfileAssessmentForm = ({
     address: yup.string().required("Address is required"),
     email: yup.string().email().required("Email is required"),
     phone: yup.string().required("First name is required"),
-    cc_details: yup.object({
-      cc_number: yup.string(),
-      cc_expiry: yup.string(),
-      cc_cvv: yup.string(),
-      cc_name: yup.string(),
-    }),
-    // course_details: yup.object({
-    //   country: yup.string().required("First name is required"),
-    //   province: yup.string().required("First name is required"),
-    //   institute: yup.string().required("First name is required"),
-    // }),
+    cc_details: yup.object({}),
     proficiency_tests: yup.object().shape({
       ielts: yup.object(),
       pte: yup.object(),
@@ -238,92 +228,90 @@ const ProfileAssessmentForm = ({
     experience: "",
     is_working: false,
   };
-  const profileData: FormTypes = editdata
-    ? editdata
-    : {
-        is_active: true,
-        first_name: "",
-        middle_name: "",
-        last_name: "",
-        passport_number: "",
-        visa_rejection: false,
-        visa_rejection_details: {
-          country: "",
-          month_year: "",
-          visa_type: "",
-        },
-        is_onshore: false,
-        gender: "male",
-        country: "",
-        state: "",
-        city: "",
-        phone: "",
-        email: "",
-        postal_code: "",
-        address: "",
-        cc_details: {
-          cc_number: "",
-          cc_expiry: "",
-          cc_cvv: "",
-          cc_name: "",
-        },
-        // course_details: {
-        //   country: "",
-        //   province: "",
-        //   institute: "",
-        // },
-        proficiency_tests: {
-          ielts: {
-            checked: false,
-            overall: null,
-            reading: null,
-            listening: null,
-            writing: null,
-            speaking: null,
-          },
-          pte: {
-            checked: false,
-            overall: null,
-            reading: null,
-            listening: null,
-            writing: null,
-            speaking: null,
-          },
-          toefl: {
-            checked: false,
-            overall: null,
-            reading: null,
-            listening: null,
-            writing: null,
-            speaking: null,
-          },
-          duolingo: {
-            checked: false,
-            overall: null,
-            reading: null,
-            listening: null,
-            writing: null,
-            speaking: null,
-          },
-        },
-        education_info: [education_obj],
-        employment: [employment_obj],
-        documents: {
-          tenth: "",
-          tweleveth: "",
-          bachelor_n_marksheet: "",
-          master_n_marksheet: "",
-          diploma_marksheet: "",
-          english_proficiency: "",
-          passport: "",
-          combined: "",
-          backlog_certificate: "",
-          admit_card: "",
-          visa: "",
-          family_info: "",
-          client_info: "",
-        },
-      };
+  const profileData: FormTypes = {
+    is_active: editdata ? editdata?.is_active : true,
+    first_name: editdata?.first_name || "",
+    middle_name: editdata?.middle_name || "",
+    last_name: editdata?.last_name || "",
+    passport_number: editdata?.passport_number || "",
+    visa_rejection: editdata ? editdata?.visa_rejection : false,
+    visa_rejection_details: editdata?.visa_rejection_details || {
+      country: "",
+      month_year: "",
+      visa_type: "",
+    },
+    is_onshore: editdata ? editdata?.is_onshore : false,
+    gender: editdata?.gender || "male",
+    country: editdata?.country || "",
+    state: editdata?.state || "",
+    city: editdata?.city || "",
+    phone: editdata?.phone || "",
+    email: editdata?.email || "",
+    postal_code: editdata?.postal_code || "",
+    address: editdata?.address || "",
+    cc_details: editdata?.cc_details || {
+      cc_number: "",
+      cc_expiry: "",
+      cc_cvv: "",
+      cc_name: "",
+    },
+    // course_details: {
+    //   country: "",
+    //   province: "",
+    //   institute: "",
+    // },
+    proficiency_tests: editdata?.proficiency_tests || {
+      ielts: {
+        checked: false,
+        overall: null,
+        reading: null,
+        listening: null,
+        writing: null,
+        speaking: null,
+      },
+      pte: {
+        checked: false,
+        overall: null,
+        reading: null,
+        listening: null,
+        writing: null,
+        speaking: null,
+      },
+      toefl: {
+        checked: false,
+        overall: null,
+        reading: null,
+        listening: null,
+        writing: null,
+        speaking: null,
+      },
+      duolingo: {
+        checked: false,
+        overall: null,
+        reading: null,
+        listening: null,
+        writing: null,
+        speaking: null,
+      },
+    },
+    education_info: editdata?.education_info || [education_obj],
+    employment: editdata?.employment || [employment_obj],
+    documents: editdata?.documents || {
+      tenth: "",
+      tweleveth: "",
+      bachelor_n_marksheet: "",
+      master_n_marksheet: "",
+      diploma_marksheet: "",
+      english_proficiency: "",
+      passport: "",
+      combined: "",
+      backlog_certificate: "",
+      admit_card: "",
+      visa: "",
+      family_info: "",
+      client_info: "",
+    },
+  };
   const {
     register,
     handleSubmit,
@@ -355,7 +343,7 @@ const ProfileAssessmentForm = ({
   });
 
   const queryClient = useQueryClient();
-  const onSubmit = (data: FormTypes) => {
+  const onSubmit = (data: any) => {
     id ? mutate({ payload: data, id: id }) : mutate(data);
   };
   const router = useRouter();
@@ -422,15 +410,11 @@ const ProfileAssessmentForm = ({
       ? applicationController.updateStudent
       : applicationController.addStudent,
     onSuccess: (data) => {
-      console.log(data, "sjdb");
       successToast({
         title: `${id ? "Updated Successfully" : "Added Successfully"}`,
       });
       queryClient.invalidateQueries({ queryKey: ["graduation"] });
-      // router.push("/all-application");
-    },
-    onError: (error) => {
-      console.log(error, "error_in_");
+      router.push("/all-application");
     },
   });
   const values = watch();
@@ -559,7 +543,7 @@ const ProfileAssessmentForm = ({
                             defaultValue={
                               !isLoading &&
                               getCurrentCountry(
-                                values?.visa_rejection_details?.country
+                                values!.visa_rejection_details!.country!
                               )
                             }
                             sx={{ mt: 2 }}
@@ -1263,7 +1247,7 @@ const ProfileAssessmentForm = ({
                           </Select>
                           <FormHelperText error={true}>
                             {!!errors?.education_info?.[index]?.type &&
-                              errors?.education_info?.[index]?.type.message}
+                              errors?.education_info?.[index]?.type?.message}
                           </FormHelperText>
                         </FormControl>
                       )}
@@ -1555,7 +1539,7 @@ const ProfileAssessmentForm = ({
                 <FormLabel>Status</FormLabel>
                 <Switch
                   {...register("is_active")}
-                  defaultChecked={values.is_active}
+                  defaultChecked={values?.is_active!}
                 />
               </Grid>
 
@@ -1566,7 +1550,7 @@ const ProfileAssessmentForm = ({
                   type="submit"
                   label={id ? "Update" : "Submit"}
                   initialize={isInitialized}
-                  isLoading={false}
+                  isLoading={isPending}
                 />
               </Grid>
             </Grid>
