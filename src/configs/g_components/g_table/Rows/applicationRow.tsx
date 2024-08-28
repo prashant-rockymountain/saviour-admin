@@ -36,12 +36,16 @@ const ApplicationRow: FC<rowType> = ({
       ) : (
         <>
           <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left">{row?.name}</TableCell>
+          <TableCell align="left">
+            {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
+          </TableCell>
+          <TableCell align="left">{row?.email}</TableCell>
+          <TableCell align="left">{row?.phone}</TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip status={row?.is_active} />
           </TableCell>
-          <TableCell align="center">
+          <TableCell align="right">
             {
               <Fab
                 size="small"

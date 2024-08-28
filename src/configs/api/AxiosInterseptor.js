@@ -17,12 +17,12 @@ axi.interceptors.request.use(
     // const token = getToken();
     config.headers = token
       ? {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      }
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        }
       : {
-        ...config.headers,
-      };
+          ...config.headers,
+        };
     return config;
   },
   (error) => {
@@ -32,6 +32,8 @@ axi.interceptors.request.use(
 
 axi.interceptors.response.use(
   function (response) {
+    console.log(response, "apierror_response");
+
     if (response.status === ApiStatus.STATUS_200) {
       return response;
     } else if (response.status === ApiStatus.STATUS_403) {
@@ -50,7 +52,10 @@ axi.interceptors.response.use(
       return error?.response;
     } else {
       errorToast({ title: error?.response?.data?.message });
-      return error?.response;
+      // console.log(Promise.reject(error), "serrord");
+
+      return Promise.reject(error);
+      // console.log(error, "apierror");
     }
   }
 );

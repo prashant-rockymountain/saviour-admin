@@ -66,19 +66,23 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogin = async (params: LoginParams) => {
     setBtnLoading(true);
-    let response = await axi.post(ApiUrl.LOGIN_URL, { ...params });
-    if (response.status === ApiStatus.STATUS_200) {
-      setBtnLoading(false);
-      successToast({ title: "Login Successfully" });
-      setUser(response.data.data.userData);
-      localStorage.setItem("accessToken", response?.data.data?.access_token);
-      dispatch(userlogin(response?.data?.data));
-      router.push("/home");
-    } else if (response.status === ApiStatus.STATUS_401) {
-      setBtnLoading(false);
-    } else if (response.status === ApiStatus.STATUS_403) {
-      setBtnLoading(false);
-    } else {
+    try {
+      let response = await axi.post(ApiUrl.LOGIN_URL, { ...params });
+      if (response.status === ApiStatus.STATUS_200) {
+        setBtnLoading(false);
+        successToast({ title: "Login Successfully" });
+        setUser(response.data.data.userData);
+        localStorage.setItem("accessToken", response?.data.data?.access_token);
+        dispatch(userlogin(response?.data?.data));
+        router.push("/home");
+      } else if (response.status === ApiStatus.STATUS_401) {
+        setBtnLoading(false);
+      } else if (response.status === ApiStatus.STATUS_403) {
+        setBtnLoading(false);
+      } else {
+        setBtnLoading(false);
+      }
+    } catch (error) {
       setBtnLoading(false);
     }
   };
@@ -92,7 +96,7 @@ const AuthProvider = ({ children }: Props) => {
     router.push("/login");
   };
 
-  const handleRegister = (params: RegisterParams) => { };
+  const handleRegister = (params: RegisterParams) => {};
   // if (!window.navigator.onLine) {
   //   router.push("/no-internet");
   //   // window.location.href = "/no-internet";

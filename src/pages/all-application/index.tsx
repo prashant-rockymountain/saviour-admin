@@ -11,29 +11,32 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import ApplicationRow from "src/configs/g_components/g_table/Rows/applicationRow";
+import ApplicationController from "./controller";
 // import GraduationController from "./controller";
 
 const TABLE_HEAD = [
   { label: "Sr No.", align: "left" },
   { label: "Name", align: "left" },
+  { label: "Email", align: "left" },
+  { label: "Phone", align: "left" },
   { label: "Status", align: "center" },
   { label: "action", align: "right" },
 ];
 const AllApplication = () => {
-  //   const graduationController = new GraduationController();
+  const StudentController = new ApplicationController();
   const dispatch = useDispatch();
-  //   const {
-  //     data: graduationData,
-  //     isLoading,
-  //     isSuccess,
-  //   } = useQuery({
-  //     queryKey: ["graduation", "GraduationList"],
-  //     queryFn: graduationController.getGraduationList,
-  //   });
+  const {
+    data: ApplicationData,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["Application", "ApplicationList"],
+    queryFn: StudentController.getALLStudent,
+  });
   const [filteredData, setFilteredData] = useState<Array<Record<string, any>>>(
     []
   );
-  const all_application_data: Array<any> = [];
+  const all_application_data: Array<any> = ApplicationData?.data;
   //   useEffect(() => {
   //     if (isSuccess) {
   //       setFilteredData(profile_assessment_data as Array<Record<string, any>>);
@@ -46,10 +49,10 @@ const AllApplication = () => {
           <CardContent>
             <Grid container>
               <Grid item xs={3}>
-                <Searchbar
+                {/* <Searchbar
                   data={all_application_data}
                   setFilteredData={setFilteredData}
-                />
+                /> */}
               </Grid>
               <Grid item xs={9}>
                 <Link href={"/all-application/addEdit"}>
@@ -68,9 +71,9 @@ const AllApplication = () => {
         <Grid item xs={12} sx={{ my: 4 }}>
           <GTable
             headData={TABLE_HEAD}
-            data={filteredData}
+            data={all_application_data}
             row={ApplicationRow}
-            isLoading={false}
+            isLoading={isLoading}
           />
         </Grid>
       </Grid>

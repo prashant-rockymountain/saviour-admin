@@ -1,10 +1,11 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import { useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Autocomplete,
   Box,
   Button,
   Card,
@@ -36,6 +37,8 @@ import ApplicationController from "src/pages/all-application/controller";
 import { LoadingButton } from "@mui/lab";
 import GUpload from "../g_upload";
 import CourseFinderController from "src/pages/course-finder/controller";
+import { Record } from "immutable";
+import { error } from "console";
 // import GraduationController from "src/pages/graduation/controller";
 
 export interface FormTypes {
@@ -45,11 +48,7 @@ export interface FormTypes {
   last_name: string;
   passport_number: string;
   visa_rejection: boolean;
-  visa_rejection_details?: {
-    country: string;
-    month_year: string;
-    visa_type: string;
-  };
+  visa_rejection_details?: visa_rejection_details;
   is_onshore: boolean;
   gender: "male" | "female";
   country: string;
@@ -59,34 +58,48 @@ export interface FormTypes {
   email: string;
   postal_code: string;
   address: string;
-  cc_details: {
+  cc_details?: {
     cc_number: string;
     cc_expiry: string;
-    cc_cvv: number;
+    cc_cvv: string;
     cc_name: string;
   };
-  course_details: {
-    country: string;
-    province: string;
-    institute: string;
-  };
+  // course_details: Record<string, string>;
   proficiency_tests: {
-    ielts: boolean;
-    pte: boolean;
-    toefl: boolean;
-    duolingo: boolean;
+    ielts: {
+      checked: boolean;
+      overall: number | null;
+      reading: number | null;
+      speaking: number | null;
+      writing: number | null;
+      listening: number | null;
+    };
+    pte: {
+      checked: boolean;
+      overall: number | null;
+      reading: number | null;
+      speaking: number | null;
+      writing: number | null;
+      listening: number | null;
+    };
+    duolingo: {
+      checked: boolean;
+      overall: number | null;
+      reading: number | null;
+      speaking: number | null;
+      writing: number | null;
+      listening: number | null;
+    };
+    toefl: {
+      checked: boolean;
+      overall: number | null;
+      reading: number | null;
+      speaking: number | null;
+      writing: number | null;
+      listening: number | null;
+    };
   };
-  education_info: [
-    {
-      level: string;
-      stream: string;
-      passing_year: number;
-      result: string;
-      backlog_number: number;
-      type: string;
-      institute: string;
-    }
-  ];
+  education_info: [Record<string, string>];
   employment: [
     {
       company: string;
@@ -97,30 +110,25 @@ export interface FormTypes {
       is_working: boolean;
     }
   ];
-  tenth: Blob;
-  tweleveth: Blob;
-  bachelor_n_marksheet: Blob;
-  master_n_marksheet: Blob;
-  diploma_marksheet: Blob;
-  english_proficiency: Blob;
-  passport: Blob;
-  combined: Blob;
-  backlog_certificate?: Blob;
-  admit_card: Blob;
-  visa: Blob;
-  family_info: Blob;
-  client_info?: Blob;
-
-  // study_area: Array<studyAreaInterface>;
+  documents: Record<string, string>;
 }
-interface editformdata {
+interface visa_rejection_details {
+  country: string;
+  visa_type: string;
+  month_year: string;
+}
+
+const ProfileAssessmentForm = ({
+  editdata,
+  id,
+}: {
   editdata: FormTypes;
   id: string;
-}
-const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
-  //   const graduationController = new GraduationController();
+}) => {
   const applicationController = new ApplicationController();
   const locationController = new CourseFinderController();
+  const [statesArray, setStatesArray] = useState<any[]>([]);
+  const [cityArray, setCityArray] = useState<any[]>([]);
   const schema = yup.object().shape({
     is_active: yup.bool(),
     first_name: yup
@@ -162,19 +170,19 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
     cc_details: yup.object({
       cc_number: yup.string(),
       cc_expiry: yup.string(),
-      cc_cvv: yup.number(),
+      cc_cvv: yup.string(),
       cc_name: yup.string(),
     }),
-    course_details: yup.object({
-      country: yup.string().required("First name is required"),
-      province: yup.string().required("First name is required"),
-      institute: yup.string().required("First name is required"),
-    }),
-    proficiency_tests: yup.object({
-      ielts: yup.bool(),
-      pte: yup.bool(),
-      toefl: yup.bool(),
-      duolingo: yup.bool(),
+    // course_details: yup.object({
+    //   country: yup.string().required("First name is required"),
+    //   province: yup.string().required("First name is required"),
+    //   institute: yup.string().required("First name is required"),
+    // }),
+    proficiency_tests: yup.object().shape({
+      ielts: yup.object(),
+      pte: yup.object(),
+      toefl: yup.object(),
+      duolingo: yup.object(),
     }),
     education_info: yup.array().of(
       yup.object().shape({
@@ -197,20 +205,21 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
         is_working: yup.bool(),
       })
     ),
-
-    tenth: yup.string(),
-    tweleveth: yup.string(),
-    bachelor_n_marksheet: yup.string(),
-    master_n_marksheet: yup.string(),
-    diploma_marksheet: yup.string(),
-    english_proficiency: yup.string(),
-    passport: yup.string(),
-    combined: yup.string(),
-    backlog_certificate: yup.string(),
-    admit_card: yup.string(),
-    visa: yup.string(),
-    family_info: yup.string(),
-    client_info: yup.string(),
+    documents: yup.object({
+      tenth: yup.string(),
+      tweleveth: yup.string(),
+      bachelor_n_marksheet: yup.string(),
+      master_n_marksheet: yup.string(),
+      diploma_marksheet: yup.string(),
+      english_proficiency: yup.string(),
+      passport: yup.string(),
+      combined: yup.string(),
+      backlog_certificate: yup.string(),
+      admit_card: yup.string(),
+      visa: yup.string(),
+      family_info: yup.string(),
+      client_info: yup.string(),
+    }),
   });
   const education_obj = {
     level: "",
@@ -229,64 +238,92 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
     experience: "",
     is_working: false,
   };
-  // const [profileData, setProfileData] = useState({
-  const profileData = {
-    is_active: true,
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    passport_number: "",
-    visa_rejection: false,
-    visa_rejection_details: {
-      country: "",
-      month_year: "",
-      visa_type: "",
-    },
-    is_onshore: false,
-    gender: "",
-    country: "india",
-    state: "",
-    city: "",
-    phone: "",
-    email: "",
-    postal_code: "",
-    address: "",
-    cc_details: {
-      cc_number: "",
-      cc_expiry: "",
-      cc_cvv: "",
-      cc_name: "",
-    },
-    course_details: {
-      country: "",
-      province: "",
-      institute: "",
-    },
-    proficiency_tests: {
-      ielts: false,
-      pte: false,
-      toefl: false,
-      duolingo: false,
-    },
-    education_info: [education_obj],
-    employment: [employment_obj],
-    tenth: "",
-    tweleveth: "",
-    bachelor_n_marksheet: "",
-    master_n_marksheet: "",
-    diploma_marksheet: "",
-    english_proficiency: "",
-    passport: "",
-    combined: "",
-    backlog_certificate: "",
-    admit_card: "",
-    visa: "",
-    family_info: "",
-    client_info: "",
-  };
-  // });
-  // console.log(profileData, "profile");
-
+  const profileData: FormTypes = editdata
+    ? editdata
+    : {
+        is_active: true,
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        passport_number: "",
+        visa_rejection: false,
+        visa_rejection_details: {
+          country: "",
+          month_year: "",
+          visa_type: "",
+        },
+        is_onshore: false,
+        gender: "male",
+        country: "",
+        state: "",
+        city: "",
+        phone: "",
+        email: "",
+        postal_code: "",
+        address: "",
+        cc_details: {
+          cc_number: "",
+          cc_expiry: "",
+          cc_cvv: "",
+          cc_name: "",
+        },
+        // course_details: {
+        //   country: "",
+        //   province: "",
+        //   institute: "",
+        // },
+        proficiency_tests: {
+          ielts: {
+            checked: false,
+            overall: null,
+            reading: null,
+            listening: null,
+            writing: null,
+            speaking: null,
+          },
+          pte: {
+            checked: false,
+            overall: null,
+            reading: null,
+            listening: null,
+            writing: null,
+            speaking: null,
+          },
+          toefl: {
+            checked: false,
+            overall: null,
+            reading: null,
+            listening: null,
+            writing: null,
+            speaking: null,
+          },
+          duolingo: {
+            checked: false,
+            overall: null,
+            reading: null,
+            listening: null,
+            writing: null,
+            speaking: null,
+          },
+        },
+        education_info: [education_obj],
+        employment: [employment_obj],
+        documents: {
+          tenth: "",
+          tweleveth: "",
+          bachelor_n_marksheet: "",
+          master_n_marksheet: "",
+          diploma_marksheet: "",
+          english_proficiency: "",
+          passport: "",
+          combined: "",
+          backlog_certificate: "",
+          admit_card: "",
+          visa: "",
+          family_info: "",
+          client_info: "",
+        },
+      };
   const {
     register,
     handleSubmit,
@@ -295,9 +332,10 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
     setValue,
     control,
     watch,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { ...profileData },
+    defaultValues: { ...(profileData as FormTypes) },
   });
   const {
     append: empAppend,
@@ -318,25 +356,94 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
 
   const queryClient = useQueryClient();
   const onSubmit = (data: FormTypes) => {
-    mutate(data);
+    id ? mutate({ payload: data, id: id }) : mutate(data);
   };
-  const isLoading = false;
   const router = useRouter();
-  const {} = useQuery({ queryFn: locationController.getAllFilteredLocations });
+  const { data, isLoading: locationLoading } = useQuery({
+    queryKey: ["All_Locations"],
+    queryFn: () =>
+      locationController.getAllFilteredLocations({
+        city: [],
+        state: [],
+        country: [],
+      }),
+  });
+  const isLoading = locationLoading;
+  const countryList = data?.data?.data;
+  const getCurrentCountry = (id: string) => {
+    const currentCountry = countryList?.find(
+      (item: Record<string, any>) => item._id === id
+    );
+    return currentCountry;
+  };
+  const getCurrentState = (country: string, state: string) => {
+    const statesArray = getCurrentCountry(country)?.states;
+    const currentState = statesArray?.find(
+      (item: Record<string, any>) => item._id === state
+    );
+    return currentState;
+  };
+  const getCurrentCity = (country: string, state: string, city: string) => {
+    const currentCity = getCurrentState(country, state)?.cities?.find(
+      (item: Record<string, any>) => item._id === city
+    );
+    return currentCity;
+  };
+  const proficiency_tests_array: Array<keyof test> = [
+    "ielts",
+    "pte",
+    "toefl",
+    "duolingo",
+  ];
+  const getStateArray = (name: keyof FormTypes) => {
+    const matchedState = countryList?.find(
+      (item: any) => item._id === watch(`${name}`)
+    );
+    // if (name == "country") setStatesArray(matchedState?.states);
+    return matchedState?.states;
+  };
+
+  // useEffect(() => {
+  const getCityArray = () => {
+    const statesArray = countryList?.find(
+      (item: any) => item._id === watch("country")
+    )?.states;
+    const cities = statesArray?.find(
+      (item: any) => item._id === getValues("state")
+    )?.cities;
+    return cities;
+    // setCityArray(cities?.cities);
+  };
+  // }, [watch().state, countryList, statesArray]);
+
   const { mutate, isPending } = useMutation({
     mutationKey: ["student-add"],
-    mutationFn: applicationController.addStudent,
-    onSuccess: () => {
+    mutationFn: id
+      ? applicationController.updateStudent
+      : applicationController.addStudent,
+    onSuccess: (data) => {
+      console.log(data, "sjdb");
       successToast({
         title: `${id ? "Updated Successfully" : "Added Successfully"}`,
       });
       queryClient.invalidateQueries({ queryKey: ["graduation"] });
-      // router.push("/graduation");
+      // router.push("/all-application");
+    },
+    onError: (error) => {
+      console.log(error, "error_in_");
     },
   });
   const values = watch();
-  const isInitialized = false;
+  // console.log("values", getValues(), errors);
 
+  const isInitialized = locationLoading;
+
+  interface test {
+    ielts: Record<string, any>;
+    pte: Record<string, any>;
+    toefl: Record<string, any>;
+    duolingo: Record<string, any>;
+  }
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -403,6 +510,7 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                     <Select
                       size={"small"}
                       sx={{ mt: 2 }}
+                      value={values.gender}
                       {...register("gender")}
                       error={!!errors.gender}
                     >
@@ -434,33 +542,57 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                   <CardHeader title="Visa Rejection" variant={"body1"} />
                   <Grid item xs={12}>
                     <Grid container spacing={6} mb={6}>
-                      <Grid item xs={12} sm={6} md={4}>
+                      <Grid item xs={12} md={4}>
                         {isLoading ? (
                           <Skeleton variant="text" width={140} />
                         ) : (
                           <FormLabel>Country</FormLabel>
                         )}
                         {isLoading ? (
-                          <Skeleton variant="text" width="100%" height={45} />
+                          <Skeleton
+                            variant="rectangular"
+                            width="100%"
+                            height={56}
+                          />
                         ) : (
-                          <FormControl fullWidth>
-                            <Select
-                              size={"small"}
-                              displayEmpty={true}
-                              sx={{ mt: 2 }}
-                              {...register("visa_rejection_details.country")}
-                              error={!!errors?.visa_rejection_details?.country}
-                            >
-                              <MenuItem value={"fixed"}>Fixed</MenuItem>
-                              <MenuItem value={"percentage"}>
-                                Percentage
-                              </MenuItem>
-                            </Select>
-                            <FormHelperText error={true}>
-                              {errors?.visa_rejection_details?.country &&
-                                errors.visa_rejection_details.country.message}
-                            </FormHelperText>
-                          </FormControl>
+                          <Autocomplete
+                            defaultValue={
+                              !isLoading &&
+                              getCurrentCountry(
+                                values?.visa_rejection_details?.country
+                              )
+                            }
+                            sx={{ mt: 2 }}
+                            options={countryList?.length > 0 ? countryList : []}
+                            size="small"
+                            onChange={(
+                              event: React.SyntheticEvent,
+                              value: any
+                            ) => {
+                              setValue(
+                                "visa_rejection_details.country",
+                                value?._id
+                              );
+                              clearErrors(["visa_rejection_details.country"]);
+                            }}
+                            loading={isLoading}
+                            fullWidth
+                            getOptionLabel={(option) =>
+                              option?.name?.slice(0, 1).toUpperCase() +
+                                option?.name?.slice(1) || ""
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                placeholder="Select Country"
+                                helperText={
+                                  errors.visa_rejection_details?.country
+                                    ?.message
+                                }
+                                error={!!errors.visa_rejection_details?.country}
+                              />
+                            )}
+                          />
                         )}
                       </Grid>
                       <Grid item xs={12} sm={6} md={4}>
@@ -491,14 +623,27 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                           <FormControl fullWidth>
                             <Select
                               size={"small"}
-                              displayEmpty={true}
+                              // displayEmpty={true}
+                              value={values.visa_rejection_details.visa_type}
                               sx={{ mt: 2 }}
                               {...register("visa_rejection_details.visa_type")}
                               // error={!!errors?.visa_rejection_details.visa_type}
                             >
-                              <MenuItem value={"fixed"}>Fixed</MenuItem>
-                              <MenuItem value={"percentage"}>
-                                Percentage
+                              <MenuItem value={"PR Visa"}>PR Visa</MenuItem>
+                              <MenuItem value={"Student Visa"}>
+                                Student Visa
+                              </MenuItem>
+                              <MenuItem value={"Visitor Visa"}>
+                                Visitor Visa
+                              </MenuItem>
+                              <MenuItem value={"Spouse Visa"}>
+                                Spouse Visa
+                              </MenuItem>
+                              <MenuItem value={"Business Visa"}>
+                                Business Visa
+                              </MenuItem>
+                              <MenuItem value={"Other Visa"}>
+                                Other Visa
                               </MenuItem>
                             </Select>
                             <FormHelperText error={true}>
@@ -513,81 +658,172 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                   </Grid>
                 </>
               )}
-              <Grid item xs={12} sm={6} md={4}>
+
+              <Grid
+                item
+                xs={12}
+                md={
+                  getValues("state")?.length > 0
+                    ? 4
+                    : getValues("country")?.length > 0
+                    ? 6
+                    : 12
+                }
+              >
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
                 ) : (
                   <FormLabel>Country</FormLabel>
                 )}
                 {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
+                  <Skeleton variant="rectangular" width="100%" height={56} />
                 ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      {...register("country")}
-                      error={!!errors.country}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {errors.country && errors.country.message}
-                    </FormHelperText>
-                  </FormControl>
+                  <Autocomplete
+                    defaultValue={
+                      countryList?.length > 0 &&
+                      getCurrentCountry(values?.country)
+                    }
+                    sx={{ mt: 2 }}
+                    options={countryList?.length > 0 ? countryList : []}
+                    size="small"
+                    onChange={(event: React.SyntheticEvent, value: any) => {
+                      setValue("country", value?._id);
+                      setValue("state", "");
+                      setValue("city", "");
+                      clearErrors(["country"]);
+                    }}
+                    loading={isLoading}
+                    fullWidth
+                    getOptionLabel={(option) =>
+                      option?.name?.slice(0, 1).toUpperCase() +
+                        option?.name?.slice(1) || ""
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="Select Country "
+                        helperText={errors.country?.message}
+                        error={!!errors.country}
+                      />
+                    )}
+                  />
                 )}
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>State</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      displayEmpty={true}
-                      sx={{ mt: 2 }}
-                      {...register("state")}
-                      error={!!errors.state}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {errors.state && errors.state.message}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>City</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      {...register("city")}
-                      error={!!errors.city}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {errors.city && errors.city.message}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              </Grid>
+
+              {getValues("country")?.length > 0 && (
+                <>
+                  <Grid
+                    item
+                    md={getValues("state")?.length > 0 ? 4 : 6}
+                    xs={12}
+                  >
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rectangular"
+                        width="100%"
+                        height={56}
+                      />
+                    ) : (
+                      <>
+                        <FormLabel>State</FormLabel>
+                        <Autocomplete
+                          defaultValue={
+                            !isLoading &&
+                            getCurrentState(values.country, values.state)
+                          }
+                          sx={{ mt: 2 }}
+                          disablePortal
+                          options={
+                            getStateArray("country")?.length > 0
+                              ? getStateArray("country")
+                              : []
+                          }
+                          size="small"
+                          noOptionsText={
+                            getValues("country")
+                              ? "State is not added yet"
+                              : "Please Select Country"
+                          }
+                          onChange={(
+                            event: React.SyntheticEvent,
+                            value: any
+                          ) => {
+                            setValue("state", value?._id);
+                            clearErrors(["state"]);
+                          }}
+                          fullWidth
+                          getOptionLabel={(option) =>
+                            getValues("country") === option?.country
+                              ? option?.name.slice(0, 1).toUpperCase() +
+                                option?.name.slice(1)
+                              : ""
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              placeholder="Select State"
+                              error={!!errors.state}
+                              helperText={errors.state?.message}
+                            />
+                          )}
+                        />
+                      </>
+                    )}
+                  </Grid>
+                </>
+              )}
+
+              {values.state?.length > 0 && (
+                <Grid item md={4} xs={12}>
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" width="100%" height={56} />
+                  ) : (
+                    <>
+                      <FormLabel>City</FormLabel>
+                      <Autocomplete
+                        sx={{ mt: 2 }}
+                        defaultValue={
+                          !isLoading &&
+                          getCurrentCity(
+                            values.country,
+                            values.state,
+                            values.city
+                          )
+                        }
+                        options={
+                          getCityArray()?.length > 0 ? getCityArray() : []
+                        }
+                        size="small"
+                        noOptionsText={
+                          getValues("state")
+                            ? "city is not added yet"
+                            : "Please Select state"
+                        }
+                        onChange={(event: React.SyntheticEvent, value: any) => {
+                          setValue("city", value?._id);
+                          clearErrors(["city"]);
+                        }}
+                        fullWidth
+                        getOptionLabel={(option) =>
+                          getValues("state") === option?.state &&
+                          getValues("country") === option?.country
+                            ? option?.name.slice(0, 1).toUpperCase() +
+                              option?.name.slice(1)
+                            : ""
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            placeholder="Select City"
+                            error={!!errors.city}
+                            helperText={errors.city?.message}
+                          />
+                        )}
+                      />
+                    </>
+                  )}
+                </Grid>
+              )}
               <Grid item xs={12} sm={6} md={4}>
                 <Customfield
                   placeholder="Enter Mobile Number without Country Code"
@@ -690,66 +926,109 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
               </Grid>
             </Grid>
           </CardContent>
-          <CardHeader title={"Course Details"} />
+          {/* <CardHeader title={"Course Details"} />
           <CardContent>
             <Grid container spacing={6}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
                 ) : (
                   <FormLabel>Country</FormLabel>
                 )}
                 {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
+                  <Skeleton variant="rectangular" width="100%" height={56} />
                 ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      //   value={courseData.country}
-                      // defaultValue={values.commission_type}
-                      {...register("course_details.country")}
-                      error={!!errors.course_details?.country}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {errors?.course_details?.country &&
-                        errors.course_details.country.message}
-                    </FormHelperText>
-                  </FormControl>
+                  <Autocomplete
+                    defaultValue={currentCountry}
+                    sx={{ mt: 2 }}
+                    options={countryList?.length > 0 ? countryList : []}
+                    size="small"
+                    onChange={(event: React.SyntheticEvent, value: any) => {
+                      setValue("course_details.country", value?._id);
+                      clearErrors(["course_details.country"]);
+                    }}
+                    loading={isLoading}
+                    fullWidth
+                    getOptionLabel={(option) =>
+                      option?.name?.slice(0, 1).toUpperCase() +
+                        option?.name?.slice(1) || ""
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="Select Country "
+                        helperText={errors.course_details?.country?.message}
+                        error={!!errors.course_details?.country}
+                      />
+                    )}
+                  />
                 )}
               </Grid>
-              <Grid item xs={12} sm={6}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Province</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      //   value={courseData.country}
-                      // defaultValue={values.commission_type}
-                      {...register("course_details.province")}
-                      error={!!errors.course_details?.province}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {errors.course_details?.province &&
-                        errors.course_details?.province.message}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={6}>
+
+              {getValues("course_details.country")?.length > 0 && (
+                <>
+                  <Grid
+                    item
+                    md={getValues("course_details.country")?.length > 0 ? 4 : 6}
+                    xs={12}
+                  >
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rectangular"
+                        width="100%"
+                        height={56}
+                      />
+                    ) : (
+                      <>
+                        <FormLabel>Province</FormLabel>
+                        <Autocomplete
+                          defaultValue={currentState}
+                          sx={{ mt: 2 }}
+                          disablePortal
+                          // {...register("state")}
+                          options={
+                            getStateArray("course_details.country")?.length > 0
+                              ? getStateArray("course_details.country")
+                              : []
+                          }
+                          size="small"
+                          noOptionsText={
+                            getValues("course_details.province")
+                              ? "State is not added yet"
+                              : "Please Select Country"
+                          }
+                          onChange={(
+                            event: React.SyntheticEvent,
+                            value: any
+                          ) => {
+                            setValue("course_details.province", value?._id);
+                            clearErrors(["state"]);
+                          }}
+                          fullWidth
+                          getOptionLabel={(option) =>
+                            getValues("course_details.country") ===
+                            option?.country
+                              ? option?.name.slice(0, 1).toUpperCase() +
+                                option?.name.slice(1)
+                              : ""
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              placeholder="Select State"
+                              error={!!errors?.course_details?.province}
+                              helperText={
+                                errors?.course_details?.province?.message
+                              }
+                            />
+                          )}
+                        />
+                      </>
+                    )}
+                  </Grid>
+                </>
+              )}
+              <Grid item xs={12} sm={6} md={4}>
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
                 ) : (
@@ -779,48 +1058,73 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
               </Grid>
             </Grid>
             <Divider sx={{ mt: 5 }} />
-          </CardContent>
+          </CardContent> */}
           <CardHeader title={"English Proficiency Info"} />
           <CardContent>
             <Grid container spacing={6}>
-              <Grid item xs={4} sm={2.5} md={2} lg={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox defaultChecked={values.proficiency_tests.ielts} />
-                  }
-                  label="IELTS"
-                  {...register("proficiency_tests.ielts")}
-                />
-              </Grid>
-              <Grid item xs={4} sm={2.5} md={2} lg={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox defaultChecked={values.proficiency_tests.pte} />
-                  }
-                  label="PTE"
-                  {...register("proficiency_tests.pte")}
-                />
-              </Grid>
-              <Grid item xs={4} sm={2.5} md={2} lg={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox defaultChecked={values.proficiency_tests.toefl} />
-                  }
-                  label="TOEFL"
-                  {...register("proficiency_tests.toefl")}
-                />
-              </Grid>
-              <Grid item xs={4} sm={2.5} md={2} lg={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      defaultChecked={values.proficiency_tests.duolingo}
-                    />
-                  }
-                  label="DUOLINGO"
-                  {...register("proficiency_tests.duolingo")}
-                />
-              </Grid>
+              {proficiency_tests_array.map(
+                (item: keyof test, index: number) => (
+                  <>
+                    <Grid item xs={4} sm={2.5} md={2} lg={1}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            defaultChecked={
+                              values.proficiency_tests[`${item}`]?.checked
+                            }
+                          />
+                        }
+                        label={item.toUpperCase()}
+                        {...register(`proficiency_tests.${item}.checked`)}
+                      />
+                    </Grid>
+                  </>
+                )
+              )}
+
+              {proficiency_tests_array.map(
+                (item: keyof test) =>
+                  watch(`proficiency_tests.${item}.checked`) && (
+                    <Grid item xs={12}>
+                      <>
+                        <CardHeader title={`${item.toUpperCase()}`} />
+                        <Grid container gap={6}>
+                          {[
+                            "overall",
+                            "reading",
+                            "listening",
+                            "writing",
+                            "speaking",
+                          ].map((typeI: string) => (
+                            <Grid item xs={12} md={2}>
+                              <Customfield
+                                placeholder={`Enter ${typeI}`}
+                                initialize={isLoading}
+                                labelName={typeI.toUpperCase()}
+                                size={"small"}
+                                fullWidth={true}
+                                type="number"
+                                // helperText={
+                                //   errors?.proficiency_tests?.[item]?.[typeI]
+                                //     .message
+                                // }
+                                // error={
+                                //   !!errors?.proficiency_tests?.[item]?.[typeI]
+                                // }
+                                register={register(
+                                  // @ts-ignore
+                                  `proficiency_tests.${item}.${typeI}`,
+                                  { valueAsNumber: true }
+                                )}
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
+                        <Divider sx={{ mt: 5 }} />
+                      </>
+                    </Grid>
+                  )
+              )}
             </Grid>
             <Divider sx={{ mt: 5 }} />
           </CardContent>
@@ -846,14 +1150,14 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                             // value={educationData.education_info[0].level}
                             // defaultValue={values.commission_type}
                             {...register(`education_info.${index}.level`)}
-                            // error={!!errors.commission_type}
+                            error={!!errors?.education_info?.[index]?.level}
                           >
                             <MenuItem value={"fixed"}>Fixed</MenuItem>
                             <MenuItem value={"percentage"}>Percentage</MenuItem>
                           </Select>
                           <FormHelperText error={true}>
-                            {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
+                            {!!errors?.education_info?.[index]?.level &&
+                              errors?.education_info?.[index].level.message}
                           </FormHelperText>
                         </FormControl>
                       )}
@@ -874,14 +1178,14 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                             // value={`education_info.${index}.stream`}
                             // defaultValue={values.commission_type}
                             {...register(`education_info.${index}.stream`)}
-                            // error={!!errors.commission_type}
+                            error={!!errors?.education_info?.[index]?.stream}
                           >
                             <MenuItem value={"fixed"}>Fixed</MenuItem>
                             <MenuItem value={"percentage"}>Percentage</MenuItem>
                           </Select>
                           <FormHelperText error={true}>
-                            {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
+                            {errors?.education_info?.[index]?.stream &&
+                              errors?.education_info?.[index]?.stream.message}
                           </FormHelperText>
                         </FormControl>
                       )}
@@ -896,6 +1200,10 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                         register={register(
                           `education_info.${index}.passing_year`
                         )}
+                        error={!!errors?.education_info?.[index]?.passing_year}
+                        helperText={
+                          errors?.education_info?.[index]?.passing_year?.message
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} sm={4} md={3}>
@@ -906,6 +1214,10 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                         size={"small"}
                         fullWidth={true}
                         register={register(`education_info.${index}.result`)}
+                        error={!!errors?.education_info?.[index]?.result}
+                        helperText={
+                          errors?.education_info?.[index]?.result?.message
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} sm={4} md={3}>
@@ -915,9 +1227,17 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                         labelName="No of Backlogs"
                         size={"small"}
                         fullWidth={true}
+                        type="number"
                         register={register(
                           `education_info.${index}.backlog_number`
                         )}
+                        error={
+                          !!errors?.education_info?.[index]?.backlog_number
+                        }
+                        helperText={
+                          errors?.education_info?.[index]?.backlog_number
+                            ?.message
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} sm={4} md={3}>
@@ -936,14 +1256,14 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                             // value={values.education_info[index].type}
                             // defaultValue={values.commission_type}
                             {...register(`education_info.${index}.type`)}
-                            // error={!!errors.commission_type}
+                            error={!!errors?.education_info?.[index]?.type}
                           >
-                            <MenuItem value={"fixed"}>Fixed</MenuItem>
-                            <MenuItem value={"percentage"}>Percentage</MenuItem>
+                            <MenuItem value={"on campus"}>ON CAMPUS</MenuItem>
+                            <MenuItem value={"off campus"}>OFF CAMPUS</MenuItem>
                           </Select>
                           <FormHelperText error={true}>
-                            {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
+                            {!!errors?.education_info?.[index]?.type &&
+                              errors?.education_info?.[index]?.type.message}
                           </FormHelperText>
                         </FormControl>
                       )}
@@ -956,6 +1276,10 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
                         size={"small"}
                         fullWidth={true}
                         register={register(`education_info.${index}.institute`)}
+                        error={!!errors?.education_info?.[index]?.institute}
+                        helperText={
+                          errors?.education_info?.[index]?.institute?.message
+                        }
                       />
                     </Grid>
                     {/* @ts-ignore */}
@@ -1096,118 +1420,131 @@ const ProfileAssessmentForm: FC<editformdata> = ({ editdata, id }) => {
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.tenth}
-                  name="tenth"
+                  value={values.documents.tenth}
+                  name="documents.tenth"
                   labelName="10th Grade"
                   initialize={false}
+                  error={errors.documents?.tenth}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.tweleveth}
-                  name="tweleveth"
+                  value={values.documents.tweleveth}
+                  name="documents.tweleveth"
                   labelName="12th Grade"
                   initialize={isInitialized}
+                  error={errors.documents?.tweleveth}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.bachelor_n_marksheet}
-                  name="bachelor_n_marksheet"
+                  value={values.documents.bachelor_n_marksheet}
+                  name="documents.bachelor_n_marksheet"
                   labelName="Bachelor Degree & Marksheet"
                   initialize={isInitialized}
+                  error={errors.documents?.bachelor_n_marksheet}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.master_n_marksheet}
-                  name="master_n_marksheet"
+                  value={values.documents.master_n_marksheet}
+                  name="documents.master_n_marksheet"
                   labelName="Master Degree & Marksheet"
                   initialize={isInitialized}
+                  error={errors.documents?.master_n_marksheet}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.diploma_marksheet}
-                  name="diploma_marksheet"
+                  value={values.documents.diploma_marksheet}
+                  name="documents.diploma_marksheet"
                   labelName="Diploma Marksheet"
                   initialize={isInitialized}
+                  error={errors.documents?.diploma_marksheet}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.english_proficiency}
-                  name="english_proficiency"
+                  value={values.documents.english_proficiency}
+                  name="documents.english_proficiency"
                   labelName="English Proficiency Score"
                   initialize={isInitialized}
+                  error={errors.documents?.english_proficiency}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.passport}
-                  name="passport"
+                  value={values.documents.passport}
+                  name="documents.passport"
                   labelName="Passport Copy(1st & Last Page)"
                   initialize={isInitialized}
+                  error={errors.documents?.passport}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.combined}
-                  name="combined"
+                  value={values.documents.combined}
+                  name="documents.combined"
                   labelName="Combined - All Documents"
                   initialize={isInitialized}
+                  error={errors.documents?.combined}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.backlog_certificate}
-                  name="backlog_certificate"
+                  value={values.documents.backlog_certificate}
+                  name="documents.backlog_certificate"
                   labelName="Backlog Certificate"
                   initialize={isInitialized}
+                  error={errors.documents?.backlog_certificate}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.admit_card}
-                  name="admit_card"
+                  value={values.documents.admit_card}
+                  name="documents.admit_card"
                   labelName="Admit Card (12th Grade)"
                   initialize={isInitialized}
+                  error={errors.documents?.admit_card}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.visa}
-                  name="visa"
+                  value={values.documents.visa}
+                  name="documents.visa"
                   labelName="Visa Form"
                   initialize={isInitialized}
+                  error={errors.documents?.visa}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.family_info}
-                  name="family_info"
+                  value={values.documents.family_info}
+                  name="documents.family_info"
                   labelName="Family Information"
                   initialize={isInitialized}
+                  error={errors.documents?.family_info}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <GUpload
                   setValue={setValue}
-                  value={values.client_info}
-                  name="client_info"
+                  value={values.documents.client_info}
+                  name="documents.client_info"
                   labelName="Client Information ( IT Papers, Experience letter, Bank Certificate and Statement, Financial Documents with CA Report, SOP (if needed))"
                   initialize={isInitialized}
+                  error={errors.documents?.client_info}
                 />
               </Grid>
             </Grid>

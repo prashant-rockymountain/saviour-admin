@@ -43,7 +43,9 @@ export const ApiUrl = {
   EDIT_STAFF_MEMBER_URL: "admin/staff/edit/",
   GET_STAFF_MEMBER_URL: "admin/staff/get",
   GET_FILTERED_LOCATION:"admin/location/all",
-  ADD_STUDENT_URL:"admin/student/add"
+  ADD_STUDENT_URL:"admin/student/add",
+  EDIT_STUDENT_URL:"admin/student/edit/:",
+  GET_ALL_STUDENT_URL:"admin/student/all"
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,

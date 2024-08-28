@@ -7,4 +7,13 @@ export default class ApplicationController {
     const data = await axi.post(ApiUrl.ADD_STUDENT_URL, payload);
     return data;
   };
+  updateStudent = async ({ payload, id }: { payload: any; id: string }) => {
+    const data = await axi.put(ApiUrl.EDIT_STUDENT_URL + id, payload);
+    return data;
+  };
+
+  getALLStudent = async () => {
+    const data = await axi.get(ApiUrl.GET_ALL_STUDENT_URL);
+    return data?.data;
+  };
 }

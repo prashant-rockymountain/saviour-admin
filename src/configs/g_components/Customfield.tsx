@@ -44,7 +44,6 @@ const Customfield: FC<customfield> = ({
         <Skeleton variant="text" width={"100%"} height={45} />
       ) : (
         <TextField
-          
           type={type || "text"}
           sx={{ mt: 2 }}
           placeholder={placeholder}
