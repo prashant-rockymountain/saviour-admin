@@ -39,6 +39,7 @@ import GUpload from "../g_upload";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { Record } from "immutable";
 import { error } from "console";
+import { StepperFormController } from "src/pages/stepperForm/controller";
 // import GraduationController from "src/pages/graduation/controller";
 
 export interface FormTypes {
@@ -127,6 +128,8 @@ const ProfileAssessmentForm = ({
 }) => {
   const applicationController = new ApplicationController();
   const locationController = new CourseFinderController();
+  const stepperFormController = new StepperFormController();
+
   const [statesArray, setStatesArray] = useState<any[]>([]);
   const [cityArray, setCityArray] = useState<any[]>([]);
   const schema = yup.object().shape({
@@ -356,14 +359,20 @@ const ProfileAssessmentForm = ({
         country: [],
       }),
   });
+  const { data: levelData, isLoading: levelLoading } = useQuery({
+    queryKey: ["All_streams"],
+    queryFn: stepperFormController.getAllStream,
+  });
   const isLoading = locationLoading;
   const countryList = data?.data?.data;
+
   const getCurrentCountry = (id: string) => {
     const currentCountry = countryList?.find(
       (item: Record<string, any>) => item._id === id
     );
     return currentCountry;
   };
+
   const getCurrentState = (country: string, state: string) => {
     const statesArray = getCurrentCountry(country)?.states;
     const currentState = statesArray?.find(
@@ -371,18 +380,14 @@ const ProfileAssessmentForm = ({
     );
     return currentState;
   };
+
   const getCurrentCity = (country: string, state: string, city: string) => {
     const currentCity = getCurrentState(country, state)?.cities?.find(
       (item: Record<string, any>) => item._id === city
     );
     return currentCity;
   };
-  const proficiency_tests_array: Array<keyof test> = [
-    "ielts",
-    "pte",
-    "toefl",
-    "duolingo",
-  ];
+
   const getStateArray = (name: keyof FormTypes) => {
     const matchedState = countryList?.find(
       (item: any) => item._id === watch(`${name}`)
@@ -391,7 +396,6 @@ const ProfileAssessmentForm = ({
     return matchedState?.states;
   };
 
-  // useEffect(() => {
   const getCityArray = () => {
     const statesArray = countryList?.find(
       (item: any) => item._id === watch("country")
@@ -402,6 +406,32 @@ const ProfileAssessmentForm = ({
     return cities;
     // setCityArray(cities?.cities);
   };
+
+  const getStreamArray = (id: string) => {
+    const streamArray = levelData?.data?.find(
+      (item: Record<string, any>) => id == item.education_level._id
+    )?.streams;
+    return streamArray;
+  };
+
+  // const getCurrentLevel = (id: string) => {
+  //   const currentLevel = levelData?.data?.find(
+  //     (item: Record<string, any>) => id == item.education_level._id
+  //   );
+  //   console.log(currentLevel,"currentLevel");
+
+  //   return currentLevel;
+  // };
+
+  const proficiency_tests_array: Array<keyof test> = [
+    "ielts",
+    "pte",
+    "toefl",
+    "duolingo",
+  ];
+
+  // useEffect(() => {
+
   // }, [watch().state, countryList, statesArray]);
 
   const { mutate, isPending } = useMutation({
@@ -418,7 +448,7 @@ const ProfileAssessmentForm = ({
     },
   });
   const values = watch();
-  // console.log("values", getValues(), errors);
+  console.log(values, "student");
 
   const isInitialized = locationLoading;
 
@@ -1131,13 +1161,20 @@ const ProfileAssessmentForm = ({
                           <Select
                             size={"small"}
                             sx={{ mt: 2 }}
-                            // value={educationData.education_info[0].level}
+                            value={values!.education_info[0].level}
                             // defaultValue={values.commission_type}
                             {...register(`education_info.${index}.level`)}
                             error={!!errors?.education_info?.[index]?.level}
                           >
-                            <MenuItem value={"fixed"}>Fixed</MenuItem>
-                            <MenuItem value={"percentage"}>Percentage</MenuItem>
+                            {levelData?.data?.map(
+                              (level: Record<string, any>) => (
+                                <MenuItem
+                                  value={`${level?.education_level?._id}`}
+                                >
+                                  {level.education_level?.program_type}
+                                </MenuItem>
+                              )
+                            )}
                           </Select>
                           <FormHelperText error={true}>
                             {!!errors?.education_info?.[index]?.level &&
@@ -1159,13 +1196,18 @@ const ProfileAssessmentForm = ({
                           <Select
                             size={"small"}
                             sx={{ mt: 2 }}
-                            // value={`education_info.${index}.stream`}
+                            value={values!.education_info[index].stream}
                             // defaultValue={values.commission_type}
                             {...register(`education_info.${index}.stream`)}
                             error={!!errors?.education_info?.[index]?.stream}
                           >
-                            <MenuItem value={"fixed"}>Fixed</MenuItem>
-                            <MenuItem value={"percentage"}>Percentage</MenuItem>
+                            {getStreamArray(
+                              values && values!.education_info[index]!.level
+                            )?.map((stream: Record<string, any>) => (
+                              <MenuItem value={`${stream._id}`}>
+                                {stream.name}
+                              </MenuItem>
+                            ))}
                           </Select>
                           <FormHelperText error={true}>
                             {errors?.education_info?.[index]?.stream &&

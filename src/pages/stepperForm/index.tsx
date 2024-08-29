@@ -101,16 +101,15 @@ function ColorlibStepIcon(props: StepIconProps) {
 const steps = [
   "Course Details",
   "Student Info",
-  "English Proficiency Test",
-  "Education Info",
-  "Employment Info",
-  "Documents",
+  // "English Proficiency Test",
+  // "Education Info",
+  // "Employment Info",
+  // "Documents",
 ];
 
 const StepperForm = () => {
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(0);
   const isLoading = false;
-
 
   const getStepContent = (step: number) => {
     switch (step) {
@@ -126,30 +125,30 @@ const StepperForm = () => {
             <StudentInfo setActiveStep={setActiveStep} />
           </>
         );
-      case 2:
-        return (
-          <>
-            <TestForm setActiveStep={setActiveStep} />
-          </>
-        );
-      case 3:
-        return (
-          <>
-            <EducationInfo setActiveStep={setActiveStep} />
-          </>
-        );
-      case 4:
-        return (
-          <>
-            <EmploymentInfo setActiveStep={setActiveStep} />
-          </>
-        );
-      case 5:
-        return (
-          <>
-            <DocumentsForm setActiveStep={setActiveStep} />
-          </>
-        );
+      // case 2:
+      //   return (
+      //     <>
+      //       <TestForm setActiveStep={setActiveStep} />
+      //     </>
+      //   );
+      // case 3:
+      //   return (
+      //     <>
+      //       <EducationInfo setActiveStep={setActiveStep} />
+      //     </>
+      //   );
+      // case 4:
+      //   return (
+      //     <>
+      //       <EmploymentInfo setActiveStep={setActiveStep} />
+      //     </>
+      //   );
+      // case 5:
+      //   return (
+      //     <>
+      //       <DocumentsForm setActiveStep={setActiveStep} />
+      //     </>
+      //   );
     }
   };
 
@@ -183,7 +182,6 @@ const StepperForm = () => {
         <Grid item xs={12}>
           {getStepContent(activeStep)}
         </Grid>
-
       </Grid>
     </>
   );

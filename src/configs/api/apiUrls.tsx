@@ -45,7 +45,8 @@ export const ApiUrl = {
   GET_FILTERED_LOCATION:"admin/location/all",
   ADD_STUDENT_URL:"admin/student/add",
   EDIT_STUDENT_URL:"admin/student/edit/",
-  GET_ALL_STUDENT_URL:"admin/student/all"
+  GET_ALL_STUDENT_URL:"admin/student/all",
+  GET_ALL_STREAMS_URL:"admin/graduation/stream/all",
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,
