@@ -12,9 +12,9 @@ const AllInstitutes = () => {
 
     const TABLE_HEAD = [
         { label: "sr no", align: "left" },
-        { label: "University", align: "left" },
-        { label: "City", align: "center" },
-        { label: "state", align: "center" },
+        { label: "Logo", align: "center" },
+        { label: "University Name", align: "center" },
+        { label: "Location", align: "center" },
         { label: "Action", align: "right" },
     ];
 

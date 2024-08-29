@@ -1,12 +1,28 @@
 import { LocationOnOutlined, MapOutlined, TextSnippetOutlined, VideocamOutlined } from '@mui/icons-material'
-import { Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material'
+import { Chip, Divider, Grid, Typography } from '@mui/material'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 const InstitudeSiderbar = () => {
+
+    const [highlight,sethighlight] = useState()
+    const [credential, setcredential] = useState<Record<string, any>[]>([])
+    const [studyarea, setstudyarea] = useState<Record<string, any>[]>([])
+    const [areacategory, setareacateogory] = useState<Record<string, any>[]>([])
+
+
+    const editdata = useSelector((state: Record<string, any>) => state?.data?.alleditdata?.editdata)
+    const map = `https://maps.google.com?q=${editdata?.university?.location?.latitude},${editdata?.university?.location?.longitude}`
     const keyDetailsData = [
-        { "label": "Video Link", icondata: <VideocamOutlined sx={{ ml: 1 }} color='primary' />, linkdata: "https://www.youtube.com/watch?v=cCtFyhQR2H4" },
-        { "label": "Map Link", icondata: <LocationOnOutlined sx={{ ml: 1.7 }} color='primary' />, linkdata: "https://www.google.com/maps/place/St.+Clair+College+Windsor+Campus/@42.2465362,-83.0190515,17z/data=!3m1!4b1!4m6!3m5!1s0x883b2e90d65754af:0x6ecb67c712510aaa!8m2!3d42.2465362!4d-83.0190515!16zL20vMDNka2I1?entry=ttu" },
-        { "label": "Brochure", icondata: <TextSnippetOutlined sx={{ ml: 1.7 }} color='primary' />, linkdata: "https://www.stclaircollege.ca/sites/default/files/paragraphs/files/2023-24-Handbook.pdf" },
-        { "label": "City Guide", icondata: <MapOutlined sx={{ ml: 1 }} color='primary' />, linkdata: "https://www.youtube.com/watch?v=nLBd5PwGD0g" },
+        { "label": "Video Link", icondata: <VideocamOutlined sx={{ ml: 1 }} color='primary' />, linkdata: editdata?.university?.video_link },
+        { "label": "Map Link", icondata: <LocationOnOutlined sx={{ ml: 1.7 }} color='primary' />, linkdata: map },
+        { "label": "Brochure", icondata: <TextSnippetOutlined sx={{ ml: 1.7 }} color='primary' />, linkdata: editdata?.university?.brochure_link },
+        { "label": "City Guide", icondata: <MapOutlined sx={{ ml: 1 }} color='primary' />, linkdata: editdata?.university?.city_link },
     ]
+
+    const redirectUrls = (url: string) => {
+        window.open(url, '_blank')
+    }
+    console.log(editdata.university)
 
     return (
         <Grid container spacing={5}>
@@ -15,15 +31,15 @@ const InstitudeSiderbar = () => {
             </Grid>
             {keyDetailsData.map((row: Record<string, any>, index: number) => (
                 <Grid item xs={6} key={Math.random()}>
-                    <Typography variant='body1' fontWeight={600} fontSize={16} sx={{ display: "flex", alignItems: "center" }}>{row.label} : &nbsp;&nbsp;{row.icondata}</Typography>
+                    <Typography variant='body1' fontWeight={600} fontSize={16} sx={{ display: "flex", alignItems: "center" }}>{row.label} : &nbsp;<span onClick={() => redirectUrls(row?.linkdata)} style={{ cursor: "pointer" }}>{row.icondata}</span></Typography>
                 </Grid>
             ))}
-            <Grid item xs={12} mt={2} sx={{overflowX:"hidden"}}>
-                <Typography sx={{ pr: 4 }} variant='body1' fontWeight={600} fontSize={16}>Campus : &nbsp;<span style={{ fontWeight: 300 }}>https://www.stclaircollege.ca/https://www.sssssdh</span></Typography>
+            <Grid item xs={12} mt={2} sx={{ overflowX: "hidden" }}>
+                <Typography sx={{ pr: 4 }} variant='body1' fontWeight={600} fontSize={16}>Campus : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 300, textTransform: "uppercase" }}>{editdata?.university?.location?.city?.name}</span></Typography>
             </Grid>
 
             <Grid item xs={12}>
-                <Typography variant='body1' fontWeight={600} fontSize={16}>Website : &nbsp;<a style={{ fontWeight: 300,color:"#da2627" }} href='https://www.stclaircollege.ca/' target='_blank'>https://www.stclaircollege.ca/</a></Typography>
+                <Typography variant='body1' fontWeight={600} fontSize={16}>Website : &nbsp;<a style={{ fontWeight: 300, color: "#da2627" }} href={editdata?.university?.website_link} target='_blank'>{editdata?.university?.website_link}</a></Typography>
             </Grid>
             <Grid item xs={12}>
                 <Divider />
@@ -32,7 +48,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>CREDENTIALS</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(13)).map((ele) => (<Chip sx={{ m: 2 }} color='primary' label="Chip Filled (20) " />))}
+                {Array.from(new Array(13)).map((ele) => (<Chip sx={{ m: 2 }} key={Math.random()} color='primary' label="Chip Filled (20) " />))}
             </Grid>
             <Grid item xs={12}>
                 <Divider />
@@ -41,7 +57,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>AREA OF STUDY</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(16)).map((ele) => (<Chip sx={{ m: 2 }} label="Chip Filled (18)" />))}
+                {Array.from(new Array(16)).map((ele) => (<Chip key={Math.random()} sx={{ m: 2 }} label="Chip Filled (18)" />))}
             </Grid>
             <Grid item xs={12}>
                 <Divider />
@@ -50,7 +66,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>AREA OF STUDY SUB CATEGORY</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(16)).map((ele) => (<Chip sx={{ m: 2 }} label="Chip Filled (18)" />))}
+                {Array.from(new Array(16)).map((ele) => (<Chip key={Math.random()} sx={{ m: 2 }} label="Chip Filled (18)" />))}
             </Grid>
         </Grid>
     )

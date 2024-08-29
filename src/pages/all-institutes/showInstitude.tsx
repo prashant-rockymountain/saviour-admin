@@ -1,12 +1,13 @@
-import { LocationOnOutlined, MapOutlined, TextSnippetOutlined, VideocamOutlined } from '@mui/icons-material'
-import { Button, Card, CardContent, Chip, Collapse, Divider, Grid, Typography } from '@mui/material'
-import React, { Fragment, useState } from 'react'
+import { Button, Card, CardContent, Collapse, Divider, Grid, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import InstitudeSiderbar from './InstitudeSiderbar'
-import Image from 'next/image'
+import { useSelector } from 'react-redux'
+import { ApiUrl } from 'src/configs/api/apiUrls'
+import { Interweave } from 'interweave'
 
 const showInstitude = () => {
   const [read, setread] = useState(false)
-
+  const editdata = useSelector((state: Record<string, any>) => state?.data?.alleditdata?.editdata)
 
   return (
     <Grid container spacing={6}>
@@ -19,27 +20,19 @@ const showInstitude = () => {
 
                   <Grid item xs={12} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span>
-                      <Typography fontWeight={"bold"} pb={1} fontSize={20}>ST. CLAIR COLLEGE</Typography>
-                      <Typography variant='body1' fontWeight={500} fontSize={17}>WINDSOR, ONTARIO, CANADA</Typography>
+                      <Typography fontWeight={"bold"} pb={1} textTransform={"uppercase"} fontSize={20}>{editdata?.university?.name?.name}</Typography>
+                      <Typography variant='body1' textTransform={"uppercase"} fontWeight={500} fontSize={17}>{editdata?.university?.location?.city?.name}, {editdata?.university?.location?.state?.name}, {editdata?.university?.location?.country?.name}</Typography>
                     </span>
-                    <img style={{ borderRadius: 7 }} width={"25%"} src={"https://gocoolgroup.com/crmportal/uploads/uni_logo/1670823242air_College.jpg"} alt='College Image' />
+                    <img style={{ borderRadius: 7 }} width={"25%"} src={ApiUrl.IMAGE_BASE_URL + editdata?.university?.university_logo} alt='College Image' />
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />
                   </Grid>
                   <Grid item xs={12}>
                     <Collapse orientation="vertical" style={{ transition: "1s all" }} in={read} collapsedSize={44}>
-                      <Typography paragraph textAlign={"justify"}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, reiciendis dicta maxime aut,
-                        enim molestias voluptate porro provident perspiciatis vel id necessitatibus error quod iste dolore
-                        magnam ullam atque in.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, reiciendis dicta maxime aut,
-                        enim molestias voluptate porro provident perspiciatis vel id necessitatibus error quod iste dolore
-                        magnam ullam atque in.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, reiciendis dicta maxime aut,
-                        enim molestias voluptate porro provident perspiciatis vel id necessitatibus error quod iste dolore
-                        magnam ullam atque in.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, reiciendis dicta maxime aut,
-                        enim molestias voluptate porro provident perspiciatis vel id necessitatibus error quod iste dolore
-                        magnam ullam atque in.
-                      </Typography>
+                      {/* <Typography paragraph textAlign={"justify"}> */}
+                        <Interweave content={editdata?.university?.about} />
+                      {/* </Typography> */}
                     </Collapse>
 
                   </Grid>
