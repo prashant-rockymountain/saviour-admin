@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import { rowType } from "src/configs/g_types/types";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
@@ -24,7 +24,6 @@ const InquiriesRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-
   const dispatch = useDispatch();
   const router = useRouter();
   const hanclick = (data: string) => {
@@ -42,15 +41,20 @@ const InquiriesRow: FC<rowType> = ({
       ) : (
         <>
           <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left" >
-            {row?.name}
+          <TableCell align="left">d</TableCell>
+          <TableCell align="left">
+            {row?.student?.first_name +
+              " " +
+              row?.student?.middle_name +
+              " " +
+              row?.student?.last_name}
           </TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip label="dsd" status={row?.is_active} />
           </TableCell>
           <TableCell align="center">
-          {
+            {
               <Fab
                 size="small"
                 color="secondary"

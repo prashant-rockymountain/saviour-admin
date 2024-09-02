@@ -98,59 +98,59 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = [
-  "Course Details",
-  "Student Info",
-  // "English Proficiency Test",
-  // "Education Info",
-  // "Employment Info",
-  // "Documents",
-];
+// const steps = [
+//   "Course Details",
+//   "Student Info",
+// "English Proficiency Test",
+// "Education Info",
+// "Employment Info",
+// "Documents",
+// ];
 
 const StepperForm = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  // const [activeStep, setActiveStep] = useState(0);
   const isLoading = false;
 
-  const getStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return (
-          <>
-            <CourseDetails setActiveStep={setActiveStep} />
-          </>
-        );
-      case 1:
-        return (
-          <>
-            <StudentInfo setActiveStep={setActiveStep} />
-          </>
-        );
-      // case 2:
-      //   return (
-      //     <>
-      //       <TestForm setActiveStep={setActiveStep} />
-      //     </>
-      //   );
-      // case 3:
-      //   return (
-      //     <>
-      //       <EducationInfo setActiveStep={setActiveStep} />
-      //     </>
-      //   );
-      // case 4:
-      //   return (
-      //     <>
-      //       <EmploymentInfo setActiveStep={setActiveStep} />
-      //     </>
-      //   );
-      // case 5:
-      //   return (
-      //     <>
-      //       <DocumentsForm setActiveStep={setActiveStep} />
-      //     </>
-      //   );
-    }
-  };
+  // const getStepContent = (step: number) => {
+  //   switch (step) {
+  //     case 0:
+  //       return (
+  //         <>
+  //           <CourseDetails setActiveStep={setActiveStep} />
+  //         </>
+  //       );
+  //     case 1:
+  //       return (
+  //         <>
+  //           <StudentInfo setActiveStep={setActiveStep} />
+  //         </>
+  //       );
+  // case 2:
+  //   return (
+  //     <>
+  //       <TestForm setActiveStep={setActiveStep} />
+  //     </>
+  //   );
+  // case 3:
+  //   return (
+  //     <>
+  //       <EducationInfo setActiveStep={setActiveStep} />
+  //     </>
+  //   );
+  // case 4:
+  //   return (
+  //     <>
+  //       <EmploymentInfo setActiveStep={setActiveStep} />
+  //     </>
+  //   );
+  // case 5:
+  //   return (
+  //     <>
+  //       <DocumentsForm setActiveStep={setActiveStep} />
+  //     </>
+  //   );
+  // }
+  // };
 
   return (
     <>
@@ -159,28 +159,12 @@ const StepperForm = () => {
           <Crumbs
             links={[
               { title: "Dashboard", path: "/" },
-              { title: "Add Profile" },
+              { title: "Add Application" },
             ]}
           />
         </Grid>
         <Grid item xs={12}>
-          <Stepper
-            alternativeLabel
-            activeStep={activeStep}
-            connector={<ColorlibConnector />}
-          >
-            {steps?.map((label) => (
-              <Step key={label}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}>
-                  {label}
-                </StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Grid>
-
-        <Grid item xs={12}>
-          {getStepContent(activeStep)}
+          <CourseDetails />
         </Grid>
       </Grid>
     </>

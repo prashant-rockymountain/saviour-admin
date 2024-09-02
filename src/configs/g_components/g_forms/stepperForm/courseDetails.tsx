@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Autocomplete,
   Button,
   Card,
   CardContent,
@@ -11,11 +12,13 @@ import {
   MenuItem,
   Select,
   Skeleton,
+  TextField,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Customfield from "src/configs/g_components/Customfield";
+import ApplicationController from "src/pages/all-students/controller";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { StepperFormController } from "src/pages/stepperForm/controller";
 import * as yup from "yup";
@@ -27,13 +30,10 @@ interface courseDetailsTypes {
   program: string;
   intake_month: string;
   intake_year: string;
+  student_info: string;
 }
 
-const CourseDetails = ({
-  setActiveStep,
-}: {
-  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-}) => {
+const CourseDetails = () => {
   const locationController = new CourseFinderController();
   const [courseData, setcourseData] = useState<courseDetailsTypes>({
     name: "",
@@ -43,6 +43,7 @@ const CourseDetails = ({
     program: "",
     intake_month: "",
     intake_year: "",
+    student_info: "",
   });
   const { data, isLoading: locationLoading } = useQuery({
     queryKey: ["All_Locations"],
@@ -53,11 +54,19 @@ const CourseDetails = ({
         country: [],
       }),
   });
- 
-  
+
   const countryList = data?.data?.data;
   const isLoading = false;
 
+  const StudentController = new ApplicationController();
+  const {
+    data: ApplicationData,
+    // isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["Application", "TrueApplicationList"],
+    queryFn: StudentController.getALLStudent,
+  });
   const schema = yup.object().shape({
     name: yup.string(),
     country: yup.string(),
@@ -66,6 +75,7 @@ const CourseDetails = ({
     program: yup.string(),
     intake_month: yup.string(),
     intake_year: yup.string(),
+    student_info: yup.string().required("Please Select a Student"),
   });
 
   const {
@@ -73,6 +83,8 @@ const CourseDetails = ({
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
+    clearErrors,
   } = useForm({
     defaultValues: { ...courseData },
     resolver: yupResolver(schema),
@@ -80,7 +92,7 @@ const CourseDetails = ({
   const values = watch();
   console.log(values, "register");
   const onSubmit = () => {
-    setActiveStep((prev) => prev + 1);
+    // setActiveStep((prev) => prev + 1);
   };
   return (
     <>
@@ -306,13 +318,51 @@ const CourseDetails = ({
                   </FormControl>
                 )}
               </Grid>
+              <Grid item xs={12} sm={12}>
+                {isLoading ? (
+                  <Skeleton variant="text" width={140} />
+                ) : (
+                  <FormLabel>Select Student</FormLabel>
+                )}
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <Autocomplete
+                    // defaultValue={[]}
+                    sx={{ mt: 2 }}
+                    options={!isLoading && ApplicationData?.data}
+                    size="small"
+                    onChange={(event: React.SyntheticEvent, value: any) => {
+                      setValue("student_info", value?._id);
+                      clearErrors(["student_info"]);
+                    }}
+                    loading={isLoading}
+                    fullWidth
+                    getOptionLabel={(option) =>
+                      option?.first_name +
+                        " " +
+                        option?.middle_name +
+                        " " +
+                        option?.last_name || ""
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="Please Select Student or Search"
+                        helperText={errors.student_info?.message}
+                        error={!!errors.student_info}
+                      />
+                    )}
+                  />
+                )}
+              </Grid>
               <Grid
                 item
                 xs={12}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Button variant="contained" type="submit">
-                  Next
+                  Submit
                 </Button>
               </Grid>
             </Grid>

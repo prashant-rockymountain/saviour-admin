@@ -38,10 +38,10 @@ const navigation = (): VerticalNavItemsType => {
       icon: "tabler:mood-look-up",
     },
     {
-      title: "All Application",
+      title: "All Students",
       action: "read",
-      subject: "all application",
-      path: "/all-application",
+      subject: AbilityNames.ALLSTUDENTS_PAGE,
+      path: "/all-students",
       icon: "tabler:certificate",
     },
     {

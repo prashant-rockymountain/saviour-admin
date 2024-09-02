@@ -10,8 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
-import ApplicationRow from "src/configs/g_components/g_table/Rows/applicationRow";
 import ApplicationController from "./controller";
+import StudentsRow from "src/configs/g_components/g_table/Rows/studentsRow";
 // import GraduationController from "./controller";
 
 const TABLE_HEAD = [
@@ -22,7 +22,7 @@ const TABLE_HEAD = [
   { label: "Status", align: "center" },
   { label: "action", align: "right" },
 ];
-const AllApplication = () => {
+const AllStudents = () => {
   const StudentController = new ApplicationController();
   const dispatch = useDispatch();
   const {
@@ -55,7 +55,7 @@ const AllApplication = () => {
                 /> */}
               </Grid>
               <Grid item xs={9}>
-                <Link href={"/all-application/addEdit"}>
+                <Link href={"/all-students/addEdit"}>
                   <Button
                     sx={{ float: "right" }}
                     variant="contained"
@@ -72,7 +72,7 @@ const AllApplication = () => {
           <GTable
             headData={TABLE_HEAD}
             data={all_application_data}
-            row={ApplicationRow}
+            row={StudentsRow}
             isLoading={isLoading}
           />
         </Grid>
@@ -81,8 +81,8 @@ const AllApplication = () => {
   );
 };
 
-AllApplication.acl = {
-  subject: AbilityNames.ALLAPPLICATION_PAGE,
+AllStudents.acl = {
+  subject: AbilityNames.ALLSTUDENTS_PAGE,
 };
 
-export default AllApplication;
+export default AllStudents;

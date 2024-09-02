@@ -7,33 +7,32 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 
-
 import RoleRow from "src/configs/g_components/g_table/Rows/roleRow";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 import RoleController from "../role/controller";
 import InquiriesRow from "src/configs/g_components/g_table/Rows/inquiriesRow";
+import { AllApplicationController } from "./controller";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },
   { label: "Code", align: "left" },
-  { label: "Name", align: "center" },
+  { label: "Name", align: "left" },
   { label: "University", align: "center" },
   { label: "Program", align: "center" },
   { label: "In Take", align: "center" },
   { label: "Action", align: "center" },
-  
 ];
 
 const AllInquiries = () => {
-  const roleController = new RoleController();
+  const applicationController = new AllApplicationController();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["Role"],
-    queryFn: roleController.getRole,
+    queryKey: ["All_application"],
+    queryFn: applicationController.getAllApplication,
   });
 
   const dispatch = useDispatch();
-  const rows = data?.data?.data;
+  const rows = data?.data;
   const [filteredData, setFilteredData] =
     useState<Array<Record<string, any>>>(rows);
 
@@ -52,7 +51,7 @@ const AllInquiries = () => {
                       height={20}
                     ></Skeleton>
                   ) : (
-                    <Searchbar  data={rows} setFilteredData={setFilteredData} />
+                    <Searchbar data={rows} setFilteredData={setFilteredData} />
                   )}
                 </Grid>
                 {/* <Grid item sm={8} sx={{ textAlign: "right" }}>

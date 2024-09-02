@@ -16,7 +16,7 @@ const AddEditProfileAssessment = () => {
           <Box>
             <Crumbs
               links={[
-                { title: "All Applications", path: "/all-application" },
+                { title: "All Applications", path: "/all-students" },
                 { title: `${editdata?._id ? `Edit` : `Add`} Profile` },
               ]}
             />

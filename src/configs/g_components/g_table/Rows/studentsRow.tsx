@@ -16,7 +16,7 @@ import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
 import CustomChip from "../../CustomChip";
 
-const ApplicationRow: FC<rowType> = ({
+const StudentsRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
@@ -52,7 +52,7 @@ const ApplicationRow: FC<rowType> = ({
                 color="secondary"
                 onClick={() => {
                   dispatch(addeditdata(row));
-                  router.push("/all-application/addEdit");
+                  router.push("/all-students/addEdit");
                 }}
               >
                 <EditIcon />
@@ -65,4 +65,4 @@ const ApplicationRow: FC<rowType> = ({
   );
 };
 
-export default ApplicationRow;
+export default StudentsRow;

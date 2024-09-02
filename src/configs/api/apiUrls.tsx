@@ -47,6 +47,7 @@ export const ApiUrl = {
   EDIT_STUDENT_URL:"admin/student/edit/",
   GET_ALL_STUDENT_URL:"admin/student/all",
   GET_ALL_STREAMS_URL:"admin/graduation/stream/all",
+  GET_ALL_APPLICATION_URL:"admin/student/applications/all"
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,

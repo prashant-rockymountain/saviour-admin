@@ -22,7 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Customfield from "src/configs/g_components/Customfield";
-import ApplicationController from "src/pages/all-application/controller";
+import ApplicationController from "src/pages/all-students/controller";
 import CourseFinderController from "src/pages/course-finder/controller";
 import * as yup from "yup";
 import { ISchema } from "yup";

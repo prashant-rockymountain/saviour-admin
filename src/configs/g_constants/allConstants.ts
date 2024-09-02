@@ -2,7 +2,7 @@ export enum AbilityNames {
   ACL_PAGE = "acl-page",
   ROLE_PAGE = "role-page",
   ROLEOPTION_PAGE = "roleoption-page",
-  ALLAPPLICATION_PAGE = "allapplication-page",
+  ALLSTUDENTS_PAGE = "allstudents-page",
 }
 
 export enum ApiStatus {

@@ -8,26 +8,32 @@ const Searchbar = ({
   data: Array<Record<string, any>> | undefined;
   setFilteredData: React.Dispatch<React.SetStateAction<Record<string, any>[]>>;
 }) => {
-
   const [value, setValue] = useState<string>("");
- 
- useEffect(() => {
+
+  useEffect(() => {
     if (typeof data === "undefined") {
       return;
     }
-    if(data.length===0){
-      return
+    if (data.length === 0) {
+      return;
     }
-  
+
     setFilteredData([
       ...data?.filter((item: Record<string, any>) =>
-        (item.name || item.program_type || item?.university?.name?.name)
+        (
+          item.name ||
+          item.program_type ||
+          item?.university?.name?.name ||
+          item?.student?.first_name +
+            item?.student?.middle_name +
+            item?.student?.last_name
+        )
           .toLowerCase()
           .replace(/\s+/g, "")
           .includes(value.replace(/\s+/g, "").toLowerCase())
       ),
     ]);
-  }, [value, data])
+  }, [value, data]);
 
   return (
     <TextField

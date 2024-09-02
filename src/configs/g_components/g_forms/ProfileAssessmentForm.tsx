@@ -33,7 +33,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import { successToast } from "../g_toaster";
-import ApplicationController from "src/pages/all-application/controller";
+import ApplicationController from "src/pages/all-students/controller";
 import { LoadingButton } from "@mui/lab";
 import GUpload from "../g_upload";
 import CourseFinderController from "src/pages/course-finder/controller";
@@ -444,7 +444,7 @@ const ProfileAssessmentForm = ({
         title: `${id ? "Updated Successfully" : "Added Successfully"}`,
       });
       queryClient.invalidateQueries({ queryKey: ["graduation"] });
-      router.push("/all-application");
+      router.push("/all-students");
     },
   });
   const values = watch();
