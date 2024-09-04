@@ -4,6 +4,7 @@ const baseurl =
     : "https://saviour-backend.loopretail.tngwebsolutions.com/api/";
 
 export const ApiUrl = {
+  EL_BASE_URL:"https://27f62e29414142e0bd475cfc8c2a713d.us-central1.gcp.cloud.es.io/universities/_search",
   BASE_URL: baseurl,
   IMAGE_BASE_URL: "https://storage.googleapis.com/saviour-visa/",
   DELETE_GOOGLE_IMAGE_URL:"/upload/delete?url=",
@@ -47,7 +48,10 @@ export const ApiUrl = {
   EDIT_STUDENT_URL:"admin/student/edit/",
   GET_ALL_STUDENT_URL:"admin/student/all",
   GET_ALL_STREAMS_URL:"admin/graduation/stream/all",
-  GET_ALL_APPLICATION_URL:"admin/student/applications/all"
+  GET_ALL_APPLICATION_URL:"admin/student/applications/all",
+  GRADUATION_LIST_URL:"admin/graduation/list",
+  CAPMUS_NAME_URL:"admin/campus-name/all",
+  ELASTIC_TEST:"university/get-test"
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,

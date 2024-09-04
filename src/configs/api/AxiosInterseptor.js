@@ -6,20 +6,23 @@ import { errorToast } from "../g_components/g_toaster";
 
 const axi = axios.create({
   baseURL: ApiUrl.BASE_URL,
-  // timeout: 30000,
-  // withCredentials: true,
 });
 
 axi.interceptors.request.use(
   (config) => {
+    console.log(config, "CONFIIIII");
     const token = getToken();
 
     // const token = getToken();
     config.headers = token
-      ? {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        }
+      ? config.url.includes("_search")
+        ? {
+            ...config.headers,
+          }
+        : {
+            ...config.headers,
+            Authorization: `Bearer ${token}`,
+          }
       : {
           ...config.headers,
         };
@@ -52,10 +55,8 @@ axi.interceptors.response.use(
       return error?.response;
     } else {
       errorToast({ title: error?.response?.data?.message });
-      // console.log(Promise.reject(error), "serrord");
 
       return Promise.reject(error);
-      // console.log(error, "apierror");
     }
   }
 );
