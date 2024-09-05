@@ -19,6 +19,8 @@ interface customfield {
   multiline?: any;
   rows?: number;
   maxRows?: number;
+  InputProps?: any;
+  value?:string|number;
   variant?: "outlined" | "filled" | "standard";
 }
 const Customfield: FC<customfield> = ({

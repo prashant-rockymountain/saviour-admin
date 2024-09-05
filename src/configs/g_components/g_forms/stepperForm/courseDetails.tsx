@@ -14,36 +14,48 @@ import {
   Skeleton,
   TextField,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import Customfield from "src/configs/g_components/Customfield";
 import ApplicationController from "src/pages/all-students/controller";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { StepperFormController } from "src/pages/stepperForm/controller";
 import * as yup from "yup";
+import CustomButton from "../../CustomButton";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { successToast } from "../../g_toaster";
+import { addeditdata } from "src/reduxStore/editDataSlice";
 interface courseDetailsTypes {
-  name: string;
+  institute_name: string;
   country: string;
-  campus: string;
+  campus_name: string;
   credentials: string;
-  program: string;
+  program_name: string;
   intake_month: string;
   intake_year: string;
-  student_info: string;
+  student: string;
 }
 
 const CourseDetails = () => {
+  const editData = useSelector(
+    (state: any) => state?.data?.alleditdata?.editdata
+  );
+  const dispatch = useDispatch();
+  console.log(editData, "register");
+  const stepperFormController = new StepperFormController();
   const locationController = new CourseFinderController();
   const [courseData, setcourseData] = useState<courseDetailsTypes>({
-    name: "",
-    country: "",
-    campus: "",
-    credentials: "",
-    program: "",
+    institute_name: editData?.university_details?.name?._id,
+    country: editData?.university_details?.location?.country?._id,
+    campus_name: editData?.university_details?.location?.city?._id,
+    credentials: editData?.course_details?.program?._id,
+    program_name: editData?.course_details?._id,
     intake_month: "",
     intake_year: "",
-    student_info: "",
+    student: "",
   });
   const { data, isLoading: locationLoading } = useQuery({
     queryKey: ["All_Locations"],
@@ -56,26 +68,25 @@ const CourseDetails = () => {
   });
 
   const countryList = data?.data?.data;
-  const isLoading = false;
-
+  const router = useRouter();
   const StudentController = new ApplicationController();
   const {
     data: ApplicationData,
-    // isLoading,
     isSuccess,
+    isLoading,
   } = useQuery({
     queryKey: ["Application", "TrueApplicationList"],
     queryFn: StudentController.getALLStudent,
   });
   const schema = yup.object().shape({
-    name: yup.string(),
+    institute_name: yup.string(),
     country: yup.string(),
-    campus: yup.string(),
+    campus_name: yup.string(),
     credentials: yup.string(),
-    program: yup.string(),
+    program_name: yup.string(),
     intake_month: yup.string(),
     intake_year: yup.string(),
-    student_info: yup.string().required("Please Select a Student"),
+    student: yup.string().required("Please Select a Student"),
   });
 
   const {
@@ -90,9 +101,16 @@ const CourseDetails = () => {
     resolver: yupResolver(schema),
   });
   const values = watch();
-  console.log(values, "register");
-  const onSubmit = () => {
-    // setActiveStep((prev) => prev + 1);
+  const { mutate, isPending } = useMutation({
+    mutationFn: stepperFormController.addApplication,
+    onSuccess: (data) => {
+      dispatch(addeditdata(null));
+      successToast({ title: "Application Added Successfully!" });
+      router.push("/course-finder");
+    },
+  });
+  const onSubmit = (data: any) => {
+    mutate(data);
   };
   return (
     <>
@@ -102,37 +120,16 @@ const CourseDetails = () => {
           <CardContent>
             <Grid container spacing={6}>
               <Grid item xs={12} sm={6}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Country</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      // value={courseData.country}
-                      // defaultValue={values.commission_type}
-                      {...register("country")}
-                      // error={!!errors.commission_type}
-                    >
-                      {countryList?.map(
-                        (country: Record<string, any>, index: number) => (
-                          <MenuItem value={`${country?._id}`}>
-                            {country?.name}
-                          </MenuItem>
-                        )
-                      )}
-                    </Select>
-                    <FormHelperText error={true}>
-                      {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
-                    </FormHelperText>
-                  </FormControl>
-                )}
+                <Customfield
+                  placeholder="Country"
+                  initialize={isLoading}
+                  labelName="Country"
+                  size={"small"}
+                  fullWidth={true}
+                  value={editData?.university_details?.location?.country?.name}
+                  // register={register("country")}
+                  InputProps={{ readOnly: true }}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Customfield
@@ -141,102 +138,48 @@ const CourseDetails = () => {
                   labelName="Name of Institute"
                   size={"small"}
                   fullWidth={true}
-                  register={register("name")}
+                  value={editData?.university_details?.name?.name}
+                  // register={register("institute_name")}
+                  InputProps={{ readOnly: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Campus</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      displayEmpty={true}
-                      // value={values.campus}
-                      sx={{ mt: 2 }}
-                      // renderValue={(selected: string) => {
-                      //   if (selected?.length === 0) {
-                      //     return (
-                      //       <span style={{ fontStyle: "italic" }}>
-                      //         Select Campus
-                      //       </span>
-                      //     );
-                      //   }
-                      //   return selected;
-                      // }}
-                      // defaultValue={values.commission_type}
-                      {...register("campus")}
-                      // error={!!errors.commission_type}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
-                    </FormHelperText>
-                  </FormControl>
-                )}
+                <Customfield
+                  placeholder="Campus"
+                  initialize={isLoading}
+                  labelName="Campus"
+                  size={"small"}
+                  fullWidth={true}
+                  value={editData?.university_details?.location?.city?.name}
+                  // register={register("campus_name")}
+                  InputProps={{ readOnly: true }}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Credentials</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      // defaultValue={values.commission_type}
-                      {...register("credentials")}
-                      // error={!!errors.commission_type}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
-                    </FormHelperText>
-                  </FormControl>
-                )}
+                <Customfield
+                  placeholder="Credentials"
+                  initialize={isLoading}
+                  labelName="Credentials"
+                  size={"small"}
+                  fullWidth={true}
+                  value={editData?.course_details?.program?.program_type}
+                  // register={register("credentials")}
+                  InputProps={{ readOnly: true }}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Program Name</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      // defaultValue={values.commission_type}
-                      {...register("program")}
-                      // error={!!errors.commission_type}
-                    >
-                      <MenuItem value={"fixed"}>Fixed</MenuItem>
-                      <MenuItem value={"percentage"}>Percentage</MenuItem>
-                    </Select>
-                    <FormHelperText error={true}>
-                      {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
-                    </FormHelperText>
-                  </FormControl>
-                )}
+                <Customfield
+                  placeholder="Program Name"
+                  initialize={isLoading}
+                  labelName="Program Name"
+                  size={"small"}
+                  fullWidth={true}
+                  value={editData?.course_details?.name}
+                  // register={register("program_name")}
+                  InputProps={{ readOnly: true }}
+                />
               </Grid>
+
               <Grid item xs={12} sm={3}>
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
@@ -333,8 +276,8 @@ const CourseDetails = () => {
                     options={!isLoading && ApplicationData?.data}
                     size="small"
                     onChange={(event: React.SyntheticEvent, value: any) => {
-                      setValue("student_info", value?._id);
-                      clearErrors(["student_info"]);
+                      setValue("student", value?._id);
+                      clearErrors(["student"]);
                     }}
                     loading={isLoading}
                     fullWidth
@@ -349,8 +292,8 @@ const CourseDetails = () => {
                       <TextField
                         {...params}
                         placeholder="Please Select Student or Search"
-                        helperText={errors.student_info?.message}
-                        error={!!errors.student_info}
+                        helperText={errors.student?.message}
+                        error={!!errors.student}
                       />
                     )}
                   />
@@ -361,9 +304,13 @@ const CourseDetails = () => {
                 xs={12}
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <Button variant="contained" type="submit">
-                  Submit
-                </Button>
+                <CustomButton
+                  variant="contained"
+                  type="submit"
+                  label={"Submit"}
+                  initialize={isLoading}
+                  isLoading={isPending}
+                />
               </Grid>
             </Grid>
           </CardContent>

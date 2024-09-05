@@ -23,6 +23,8 @@ import CourseFinderController from "./controller";
 import { usePathname, useSearchParams } from "next/navigation";
 import { elRequest } from "src/configs/api/handleElasticSearch";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { addeditdata } from "src/reduxStore/editDataSlice";
 export interface LocationIdObj {
   country: Record<string, Array<string>>;
   city: Record<string, Array<string>>;
@@ -120,7 +122,7 @@ const CourseFinder = () => {
       (item) => item[1].length > 0
     );
 
-    const payload = !(locationNewArr.length>0||UniversityNewArr.length>0)
+    const payload = !(locationNewArr.length > 0 || UniversityNewArr.length > 0)
       ? {
           from: 0,
           size: 10,
@@ -141,7 +143,6 @@ const CourseFinder = () => {
                 ...locationNewArr.map((item) => ({
                   terms: {
                     [`university.location.${item[0]}.name`]: item[1].name,
-                    
                   },
                 })),
                 ...UniversityNewArr.map((university) =>
@@ -154,9 +155,7 @@ const CourseFinder = () => {
                     : university[0] == "onlyco_open"
                     ? {
                         terms: {
-                          [`university.onlyco_open`]: 
-                            university[1]
-                          ,
+                          [`university.onlyco_open`]: university[1],
                         },
                       }
                     : university[0] == "co_open"
@@ -263,9 +262,10 @@ const CourseFinder = () => {
   const universities = universityData?.data?.data;
   const allPrograms = programData?.data?.data;
   const AllCourses = ElasticData?.data?.data?.hits?.hits;
-  console.log(AllCourses, "COURSES");
-
+  // console.log(AllCourses, "COURSES");
+  const disptach = useDispatch();
   useEffect(() => {
+    disptach(addeditdata(null));
     sendPayload();
   }, [Unifilter, locationIdArr, searchParams]);
 
@@ -622,6 +622,13 @@ const CourseFinder = () => {
                           university_name={item._source.university.name.name}
                           name={innerCourse.name}
                           program={""}
+                          data={{
+                            course_details: {
+                              ...innerCourse,
+                              program: courses?.graduation_type,
+                            },
+                            university_details: item?._source?.university,
+                          }}
                         />
                       </Grid>
                     ))

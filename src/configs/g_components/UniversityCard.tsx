@@ -16,18 +16,27 @@ import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import { FC } from "react";
 import { ApiUrl } from "../api/apiUrls";
+import { useDispatch } from "react-redux";
+import { addeditdata } from "src/reduxStore/editDataSlice";
+import { useRouter } from "next/router";
 
 export const UniversityCard = ({
   image,
   program,
   university_name,
   name,
+  data,
 }: {
   image: string;
   program: string;
   university_name: string;
   name: string;
+  data: Record<string, any>;
 }) => {
+  const disptach = useDispatch();
+  const router = useRouter();
+  console.log(data, "jtdata");
+
   return (
     <Card>
       <CardContent>
@@ -60,9 +69,7 @@ export const UniversityCard = ({
                 <Typography variant="h6" fontSize={"1.1rem"}>
                   <b> {name}</b>
                 </Typography>
-                <Typography gutterBottom>
-                  {university_name}
-                </Typography>
+                <Typography gutterBottom>{university_name}</Typography>
               </Grid>
               <Grid item xs={4} direction={"column"}>
                 <Box
@@ -115,8 +122,15 @@ export const UniversityCard = ({
                     <CustomChip label="CAD 459" status={true} />
                   </Typography>
                   <Grid item>
-                    <Button variant="contained"
-                    >Apply Now</Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        disptach(addeditdata(data)),
+                          router.push("/stepperForm");
+                      }}
+                    >
+                      Apply Now
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>

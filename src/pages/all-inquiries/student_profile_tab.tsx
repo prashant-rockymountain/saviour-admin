@@ -1,48 +1,78 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
 
+const StudentProfile = ({ data }: { data: Record<string, any> }) => {
+  console.log(data, "Student_Profile");
 
-
-const StudentProfile = () => {
-    return (
-        <>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography sx={{fontSize:"20px", fontWeight:"bold",color:"black"}}>Student Profile</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"20px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Full Name : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"20px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Education : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Student Code : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Stream : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Gender : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Passing Year : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Passport Number : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Result : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>Email : dhsjdh</Typography>
-                </Grid>
-                <Grid item xs={6} sx={{mt:"10px"}}>
-                    <Typography sx={{fontSize:"18px", fontWeight:"bold",color:"black"}}>BackLogs : dhsjdh</Typography>
-                </Grid>
-
-            </Grid>
-        </>
-    )
-}
-export default StudentProfile
+  return (
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography
+            sx={{ fontSize: "20px", color: "black", fontWeight: "bold" }}
+          >
+            Student Profile
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "20px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Full Name :</span>{" "}
+            {data?.first_name + " " + data?.middle_name + " " + data?.last_name}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "20px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}> Education :</span>{" "}
+            {data?.education_info.at(-1)?.level}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Student Code :</span> dhsjdh
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Stream :</span>
+            {data?.education_info.at(-1)?.stream}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Gender :</span> {data?.gender}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}> Passing Year :</span>{" "}
+            {data?.education_info.at(-1)?.passing_year}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Passport Number :</span>{" "}
+            {data?.passport_number}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Result :</span>{" "}
+            {data?.education_info.at(-1)?.result}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>Email</span> : {data?.email}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "black" }}>
+            <span style={{ fontWeight: "bold" }}> BackLogs</span> :{" "}
+            {data?.education_info.at(-1)?.backlog_number}
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+export default StudentProfile;

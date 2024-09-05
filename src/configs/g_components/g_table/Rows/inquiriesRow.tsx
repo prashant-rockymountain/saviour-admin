@@ -35,7 +35,7 @@ const InquiriesRow: FC<rowType> = ({
   return (
     <TableRow hover key={Math.random()}>
       {isLoading ? (
-        <TableCell colSpan={6}>
+        <TableCell colSpan={7}>
           <Skeleton variant="text" height={40} />
         </TableCell>
       ) : (
@@ -49,6 +49,8 @@ const InquiriesRow: FC<rowType> = ({
               " " +
               row?.student?.last_name}
           </TableCell>
+          <TableCell align="center"> </TableCell>
+          <TableCell align="center"> </TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip label="dsd" status={row?.is_active} />
@@ -62,8 +64,8 @@ const InquiriesRow: FC<rowType> = ({
                   clickbutton != undefined
                     ? () => hanclick
                     : () => {
-                        // dispatch(addeditdata(row));
-                        router.push("/all-inquiries/profile_view_comment");
+                        dispatch(addeditdata(row));
+                        router.push("/all-inquiries/profile_back");
                       }
                 }
               >

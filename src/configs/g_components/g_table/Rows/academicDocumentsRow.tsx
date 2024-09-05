@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import { rowType } from "src/configs/g_types/types";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
 import CustomChip from "../../CustomChip";
+import { ApiUrl } from "src/configs/api/apiUrls";
 
 const AcademicDocumentsRow: FC<rowType> = ({
   isLoading,
@@ -41,29 +42,18 @@ const AcademicDocumentsRow: FC<rowType> = ({
       ) : (
         <>
           <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left" >
-            {row?.name}
-          </TableCell>
+          <TableCell align="left">{row[0]}</TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip status={row?.is_active} />
           </TableCell>
           <TableCell align="center">
             {
-              <Fab
-                size="small"
-                color="secondary"
-                onClick={
-                  clickbutton != undefined
-                    ? () => hanclick
-                    : () => {
-                        // dispatch(addeditdata(row));
-                        router.push("/all-inquiries/profile_view_comment");
-                      }
-                }
-              >
-                <VisibilityIcon />
-              </Fab>
+              <a href={`${ApiUrl.IMAGE_BASE_URL + row[1]}`} target="_blank">
+                <Fab size="small" color="secondary">
+                  <VisibilityIcon />
+                </Fab>
+              </a>
             }
           </TableCell>
         </>
