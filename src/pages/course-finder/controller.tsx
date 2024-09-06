@@ -11,7 +11,7 @@ return data
     }
    async  getAllFilteredUniversities({city,state,country}:{city:string[],country:string[],state:string[]}){
 const data=await axi.get(
-    `${ApiUrl.GET_UNIVERSITY_LIST_URL}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}`
+    `${ApiUrl.CAMPUS_FILTER_LIS}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}`
 )
 console.log(data);
 

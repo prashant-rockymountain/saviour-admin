@@ -35,7 +35,6 @@ export const UniversityCard = ({
 }) => {
   const disptach = useDispatch();
   const router = useRouter();
-  console.log(data, "jtdata");
 
   return (
     <Card>

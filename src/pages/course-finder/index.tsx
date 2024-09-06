@@ -25,17 +25,22 @@ import { elRequest } from "src/configs/api/handleElasticSearch";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
-export interface LocationIdObj {
+
+interface LocationIdObj {
   country: Record<string, Array<string>>;
   city: Record<string, Array<string>>;
   state: Record<string, Array<string>>;
 }
-export interface UniFilterObj {
+interface UniFilterObj {
   universityName: string[];
   programType: string[];
   courseDuration: string[];
   onlyco_open: Boolean;
   co_open: Boolean;
+}
+interface filterObj {
+  locations: LocationIdObj;
+  Universities: UniFilterObj;
 }
 
 const CourseFinder = () => {
@@ -43,18 +48,27 @@ const CourseFinder = () => {
   const { replace } = useRouter();
   const searchParams = useSearchParams();
   const courseLength = ["1", "1.5", "2", "3", "4", "5"];
-  const [locationIdArr, setLocationIdArr] = useState<LocationIdObj>({
-    country: {
-      name: [],
-      ids: [],
+  const [filterationObj, setFilterationObj] = useState<filterObj>({
+    locations: {
+      country: {
+        name: [],
+        ids: [],
+      },
+      city: {
+        name: [],
+        ids: [],
+      },
+      state: {
+        name: [],
+        ids: [],
+      },
     },
-    city: {
-      name: [],
-      ids: [],
-    },
-    state: {
-      name: [],
-      ids: [],
+    Universities: {
+      universityName: [],
+      programType: [],
+      courseDuration: [],
+      onlyco_open: false,
+      co_open: false,
     },
   });
   // const [searchObj, setSearchObj] = useState<Record<string, string>>({
@@ -62,13 +76,6 @@ const CourseFinder = () => {
   //   state: "",
   //   city: "",
   // });
-  const [Unifilter, setUnifilter] = useState<UniFilterObj>({
-    universityName: [],
-    programType: [],
-    courseDuration: [],
-    onlyco_open: false,
-    co_open: false,
-  });
 
   const courseFinderController = new CourseFinderController();
   const { data: programData } = useQuery({
@@ -77,178 +84,168 @@ const CourseFinder = () => {
   });
 
   const { data } = useQuery({
-    queryKey: ["filterCountries", locationIdArr],
+    queryKey: ["filterCountries", filterationObj.locations],
     queryFn: () =>
       courseFinderController.getAllFilteredLocations({
-        city: locationIdArr.city.ids,
-        country: locationIdArr.country.ids,
-        state: locationIdArr.state.ids,
+        city: filterationObj.locations.city.ids,
+        country: filterationObj.locations.country.ids,
+        state: filterationObj.locations.state.ids,
       }),
 
     placeholderData: (previousData) => previousData,
   });
 
   const { data: universityData } = useQuery({
-    queryKey: ["filterUniversities", locationIdArr],
+    queryKey: ["filterUniversities", filterationObj.locations],
     queryFn: () =>
       courseFinderController.getAllFilteredUniversities({
-        city: locationIdArr.city.ids,
-        country: locationIdArr.country.ids,
-        state: locationIdArr.state.ids,
+        city: filterationObj.locations.city.ids,
+        country: filterationObj.locations.country.ids,
+        state: filterationObj.locations.state.ids,
       }),
 
     placeholderData: (previousData) => previousData,
   });
   const {
     mutate,
-    data: ElasticData,
+    data:  ElasticData,
     isPending,
-  } = useMutation({ mutationFn: elRequest });
-  function sendPayload() {
-    // const check =
-    //   locationIdArr.city.name.length ||
-    //   locationIdArr.country.name.length ||
-    //   locationIdArr.state.name.length ||
-    //   Unifilter.onlyco_open ||
-    //   Unifilter.co_open ||
-    //   Unifilter.courseDuration.length ||
-    //   Unifilter.programType.length ||
-    //   Unifilter.universityName.length;
-
-    let locationNewArr = Object.entries(locationIdArr).filter(
-      (item) => item[1].name.length > 0
-    );
-    let UniversityNewArr = Object.entries(Unifilter).filter(
-      (item) => item[1].length > 0
-    );
-
-    const payload = !(locationNewArr.length > 0 || UniversityNewArr.length > 0)
-      ? {
-          from: 0,
-          size: 10,
-          query: {
-            bool: {
-              must: [],
-              filter: [],
-            },
+  } = useMutation({ mutationKey: ["elastic"], mutationFn: elRequest });
+  function sendPayload(payloadObj?: filterObj ) {
+    let locationNewArr, UniversityNewArr, payload;
+    locationNewArr = Object.entries(payloadObj!.locations).filter(
+        (item) => item[1].name.length > 0
+      );
+      UniversityNewArr = Object.entries(payloadObj!.Universities).filter(
+        (item) => item[1].length > 0
+      );
+      console.log(UniversityNewArr,"UNI");
+      
+      payload = 
+     !( locationNewArr.length>0||UniversityNewArr.length>0)?
+      {
+        from: 0,
+        size: 10,
+        query: {
+          bool: {
+            must: [],
+            filter: [],
+          }
+        }}:{
+        from: +searchParams.get("search")!,
+        size: 10,
+        query: {
+          bool: {
+            must: [],
+            filter: [
+              ...locationNewArr!.map((item:any) => ({
+                terms: {
+                  [`university.location.${item[0]}.name`]: item[1].name,
+                },
+              })),
+              ...UniversityNewArr!.map((university:any) =>
+                university[0] == "universityName"
+                  ? {
+                      terms: {
+                        [`university.name.name`]: university[1],
+                      },
+                    }
+                  : university[0] == "onlyco_open"
+                  ? {
+                      terms: {
+                        [`university.onlyco_open`]: university[1],
+                      },
+                    }
+                  : university[0] == "co_open"
+                  ? {
+                      terms: {
+                        [`university.co_open`]: university[1],
+                      },
+                    }
+                  : university[0] == "programType"
+                  ? {
+                      nested: {
+                        path: "course_details",
+                        query: {
+                          bool: {
+                            must: [
+                              {
+                                terms: {
+                                  "course_details.graduation_type.program_type":
+                                    university[1],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    }
+                  : {
+                      nested: {
+                        path: "course_details.courses",
+                        query: {
+                          bool: {
+                            must: [
+                              {
+                                terms: {
+                                  "course_details.courses.course_id.duration":
+                                    university[1],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    }
+              ),
+            ],
           },
         }
-      : {
-          from: +searchParams.get("search")!,
-          size: 10,
-          query: {
-            bool: {
-              must: [],
-              filter: [
-                ...locationNewArr.map((item) => ({
-                  terms: {
-                    [`university.location.${item[0]}.name`]: item[1].name,
-                  },
-                })),
-                ...UniversityNewArr.map((university) =>
-                  university[0] == "universityName"
-                    ? {
-                        terms: {
-                          [`university.name.name`]: university[1],
-                        },
-                      }
-                    : university[0] == "onlyco_open"
-                    ? {
-                        terms: {
-                          [`university.onlyco_open`]: university[1],
-                        },
-                      }
-                    : university[0] == "co_open"
-                    ? {
-                        terms: {
-                          [`university.co_open`]: university[1],
-                        },
-                      }
-                    : university[0] == "programType"
-                    ? {
-                        nested: {
-                          path: "course_details",
-                          query: {
-                            bool: {
-                              must: [
-                                {
-                                  terms: {
-                                    "course_details.graduation_type.program_type":
-                                      university[1],
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        },
-                      }
-                    : {
-                        nested: {
-                          path: "course_details.courses",
-                          query: {
-                            bool: {
-                              must: [
-                                {
-                                  terms: {
-                                    "course_details.courses.course_id.duration":
-                                      university[1],
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        },
-                      }
-                ),
-              ],
-            },
-          },
-        };
+      };
+
+
+
 
     mutate(payload as any);
   }
 
-  function handleLocationBoxChange(
-    type: keyof LocationIdObj,
-    id: string,
-    name: string
+  function handleChange(
+    key: keyof filterObj,
+    type: keyof LocationIdObj | keyof UniFilterObj,
+    id?: string | undefined,
+    name?: string
   ) {
-    const copy = JSON.parse(JSON.stringify(locationIdArr));
-
-    if (copy[type]["name"].includes(name)) {
-      copy[type]["name"] = copy[type]["name"].filter(
-        (item: string) => item !== name
-      );
-    } else {
-      copy[type]["name"].push(name);
-    }
-    if (copy[type]["ids"].includes(id)) {
-      copy[type]["ids"] = copy[type]["ids"].filter(
-        (item: string) => item !== id
-      );
-    } else {
-      copy[type]["ids"].push(id);
-    }
-    setLocationIdArr({ ...copy });
-  }
-  function handleUniBoxChange(type: keyof UniFilterObj, id?: string) {
-    const copy = JSON.parse(JSON.stringify(Unifilter));
-    if (
-      type !== "co_open" &&
-      type !== "onlyco_open" &&
-      typeof id !== "undefined"
-    ) {
-      if (copy[type].includes(id)) {
-        console.log("hello");
-
-        copy[type] = copy[type].filter((item: string) => item !== id);
+    const copy = JSON.parse(JSON.stringify(filterationObj));
+    if (key === "locations") {
+      if (copy[key][type]["name"].includes(name)) {
+        copy[key][type]["name"] = copy[key][type]["name"].filter(
+          (item: string) => item !== name
+        );
       } else {
-        copy[type].push(id);
+        copy[key][type]["name"].push(name);
+      }
+      if (copy[key][type]["ids"].includes(id)) {
+        copy[key][type]["ids"] = copy[key][type]["ids"].filter(
+          (item: string) => item !== id
+        );
+      } else {
+        copy[key][type]["ids"].push(id);
       }
     } else {
-      copy[type] = !copy[type];
+      if (type !== "co_open" && type !== "onlyco_open") {
+        if (copy[key][type].includes(name)) {
+          copy[key][type] = copy[key][type].filter(
+            (item: string) => item !== name
+          );
+        } else {
+          copy[key][type].push(name);
+        }
+      } else {
+        copy[key][type] = !copy[key][type];
+      }
     }
-    setUnifilter({ ...copy });
+    sendPayload(copy);
+    setFilterationObj({ ...copy });
   }
   // function handleSearch(val: string, type: string) {
   //   setSearchObj((pre) => ({ ...pre, [type]: val }));
@@ -261,13 +258,12 @@ const CourseFinder = () => {
   const locations = data?.data;
   const universities = universityData?.data?.data;
   const allPrograms = programData?.data?.data;
-  const AllCourses = ElasticData?.data?.data?.hits?.hits;
-  // console.log(AllCourses, "COURSES");
+  const AllCourses = ElasticData?.data.hits?.hits;
   const disptach = useDispatch();
   useEffect(() => {
     disptach(addeditdata(null));
-    sendPayload();
-  }, [Unifilter, locationIdArr, searchParams]);
+    sendPayload(filterationObj);
+  }, [searchParams]);
 
   return (
     <>
@@ -280,14 +276,18 @@ const CourseFinder = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      onChange={() => handleUniBoxChange("onlyco_open")}
+                      onChange={() =>
+                        handleChange("Universities", "onlyco_open")
+                      }
                     />
                   }
                   label="Only Open Programs"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox onChange={() => handleUniBoxChange("co_open")} />
+                    <Checkbox
+                      onChange={() => handleChange("Universities", "co_open")}
+                    />
                   }
                   label="Co op Programs"
                 />
@@ -330,11 +330,12 @@ const CourseFinder = () => {
                                 key={country._id}
                                 control={
                                   <Checkbox
-                                    checked={locationIdArr?.country?.ids?.includes(
+                                    checked={filterationObj.locations.country.ids.includes(
                                       country._id
                                     )}
                                     onChange={(e) =>
-                                      handleLocationBoxChange(
+                                      handleChange(
+                                        "locations",
                                         "country",
                                         country._id,
                                         country.name
@@ -384,11 +385,12 @@ const CourseFinder = () => {
                             key={stat._id}
                             control={
                               <Checkbox
-                                checked={locationIdArr.state.ids.includes(
+                                checked={filterationObj.locations.state.ids.includes(
                                   stat._id
                                 )}
                                 onChange={(e) =>
-                                  handleLocationBoxChange(
+                                  handleChange(
+                                    "locations",
                                     "state",
                                     stat._id,
                                     stat.name
@@ -442,11 +444,12 @@ const CourseFinder = () => {
                                     key={city._id}
                                     control={
                                       <Checkbox
-                                        checked={locationIdArr.city.ids.includes(
+                                        checked={filterationObj.locations.city.ids.includes(
                                           city._id
                                         )}
                                         onChange={(e) =>
-                                          handleLocationBoxChange(
+                                          handleChange(
+                                            "locations",
                                             "city",
                                             city._id,
                                             city.name
@@ -495,19 +498,24 @@ const CourseFinder = () => {
                         }}
                       >
                         {universities?.map((uni: Record<string, any>) => (
-                          <FormGroup key={uni.university._id}>
+                          <FormGroup key={uni._id}>
                             <FormControlLabel
                               control={
                                 <Checkbox
+                                  checked={filterationObj.Universities.universityName.includes(
+                                    uni.name
+                                  )}
                                   onChange={(e) =>
-                                    handleUniBoxChange(
+                                    handleChange(
+                                      "Universities",
                                       "universityName",
-                                      uni?.university?.name?.name
+                                      undefined,
+                                      uni?.name
                                     )
                                   }
                                 />
                               }
-                              label={uni?.university?.name?.name}
+                              label={uni?.name}
                             />
                           </FormGroup>
                         ))}
@@ -546,9 +554,14 @@ const CourseFinder = () => {
                             key={pro._id}
                             control={
                               <Checkbox
+                                checked={filterationObj.Universities.programType
+                                  .includes(pro.program_type)
+                                }
                                 onChange={(e) =>
-                                  handleUniBoxChange(
+                                  handleChange(
+                                    "Universities",
                                     "programType",
+                                    undefined,
                                     pro.program_type
                                   )
                                 }
@@ -580,10 +593,17 @@ const CourseFinder = () => {
                       {courseLength.map((item: string) => (
                         <FormControlLabel
                           key={item}
+                          
                           control={
                             <Checkbox
+                            checked={filterationObj.Universities.courseDuration.includes(item)}
                               onChange={(e) =>
-                                handleUniBoxChange("courseDuration", item)
+                                handleChange(
+                                  "Universities",
+                                  "courseDuration",
+                                  undefined,
+                                  item
+                                )
                               }
                             />
                           }
@@ -612,37 +632,50 @@ const CourseFinder = () => {
                 <CircularProgress />
               </Grid>
             ) : (
-              AllCourses?.map((item: Record<string, any>) =>
-                item._source.course_details?.map(
-                  (courses: Record<string, any>) =>
-                    courses?.courses.map((innerCourse: Record<string, any>) => (
-                      <Grid item xs={12}>
-                        <UniversityCard
-                          image={item._source.university.university_logo}
-                          university_name={item._source.university.name.name}
-                          name={innerCourse.name}
-                          program={""}
-                          data={{
-                            course_details: {
-                              ...innerCourse,
-                              program: courses?.graduation_type,
-                            },
-                            university_details: item?._source?.university,
-                          }}
-                        />
-                      </Grid>
-                    ))
-                )
-              )
+              <>
+                {AllCourses?.map((item: Record<string, any>) =>
+                  item._source.course_details?.map(
+                    (courses: Record<string, any>) =>
+                      courses?.courses.map(
+                        (innerCourse: Record<string, any>) => (
+                          <Grid item xs={12}>
+                            <UniversityCard
+                              image={item._source.university.university_logo}
+                              university_name={
+                                item._source.university.name.name
+                              }
+                              name={innerCourse.name}
+                              program={""}
+                              data={{
+                                course_details: {
+                                  ...innerCourse,
+                                  program: courses?.graduation_type,
+                                },
+                                university_details: item?._source?.university,
+                              }}
+                            />
+                          </Grid>
+                        )
+                      )
+                  )
+                )}
+                {AllCourses?.length > 0 && (
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ display: "flex", placeContent: "center" }}
+                  >
+                    <Pagination
+                    defaultPage={+searchParams.get("search")!}
+                      count={10}
+                      variant="outlined"
+                      shape="rounded"
+                      onChange={handlePagination}
+                    />
+                  </Grid>
+                )}
+              </>
             )}
-            <Grid item xs={12} sx={{ display: "flex", placeContent: "center" }}>
-              <Pagination
-                count={10}
-                variant="outlined"
-                shape="rounded"
-                onChange={handlePagination}
-              />
-            </Grid>
           </Grid>
         </Grid>
       </Grid>

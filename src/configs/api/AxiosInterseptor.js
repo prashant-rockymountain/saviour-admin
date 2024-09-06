@@ -17,7 +17,7 @@ axi.interceptors.request.use(
     config.headers = token
       ? config.url.includes("_search")
         ? {
-            ...config.headers,
+          Authorization: `Basic ${Buffer.from('elastic:Jc64FIHgDnmKqVpcTBIWa6P3').toString('base64')}`,
           }
         : {
             ...config.headers,

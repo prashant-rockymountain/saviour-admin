@@ -51,6 +51,7 @@ export const ApiUrl = {
   GET_ALL_APPLICATION_URL:"admin/student/applications/all",
   GRADUATION_LIST_URL:"admin/graduation/list",
   CAPMUS_NAME_URL:"admin/campus-name/all",
+  CAMPUS_FILTER_LIS:"admin/campus-name/list",
   ELASTIC_TEST:"university/get-test",
   ADD_APPLICATION_URL:"admin/student/applications/add",
 };
