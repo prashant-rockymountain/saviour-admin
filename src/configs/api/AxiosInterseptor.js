@@ -5,6 +5,7 @@ import { ApiStatus } from "../g_constants/allConstants";
 import { errorToast } from "../g_components/g_toaster";
 
 const axi = axios.create({
+  // baseURL: ApiUrl.BASE_URL,
   baseURL: ApiUrl.BASE_URL,
 });
 

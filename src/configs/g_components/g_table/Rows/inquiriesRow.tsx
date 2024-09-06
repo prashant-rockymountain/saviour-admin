@@ -43,11 +43,7 @@ const InquiriesRow: FC<rowType> = ({
           <TableCell>{serialNumber}</TableCell>
           <TableCell align="left">d</TableCell>
           <TableCell align="left">
-            {row?.student?.first_name +
-              " " +
-              row?.student?.middle_name +
-              " " +
-              row?.student?.last_name}
+            {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
           </TableCell>
           <TableCell align="center"> </TableCell>
           <TableCell align="center"> </TableCell>

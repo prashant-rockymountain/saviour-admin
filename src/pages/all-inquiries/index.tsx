@@ -33,8 +33,10 @@ const AllInquiries = () => {
 
   const dispatch = useDispatch();
   const rows = data?.data;
+  
   const [filteredData, setFilteredData] =
-    useState<Array<Record<string, any>>>(rows);
+  useState<Array<Record<string, any>>>(rows);
+  console.log(filteredData, "application");
 
   return (
     <>

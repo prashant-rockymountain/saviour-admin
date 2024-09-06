@@ -15,7 +15,7 @@ const Searchbar = ({
       return;
     }
     if (data.length === 0) {
-      return;
+      setFilteredData([]);
     }
 
     setFilteredData([
@@ -24,9 +24,7 @@ const Searchbar = ({
           item.name ||
           item.program_type ||
           item?.university?.name?.name ||
-          item?.student?.first_name +
-            item?.student?.middle_name +
-            item?.student?.last_name
+          item?.first_name + item?.middle_name + item?.last_name
         )
           .toLowerCase()
           .replace(/\s+/g, "")

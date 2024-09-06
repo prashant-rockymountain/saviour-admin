@@ -30,6 +30,7 @@ const GTable: FC<tableTypes> = ({
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   }
+  console.log(data, "change");
 
   return (
     <>
