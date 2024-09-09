@@ -71,11 +71,11 @@ const CourseFinder = () => {
       co_open: false,
     },
   });
-  // const [searchObj, setSearchObj] = useState<Record<string, string>>({
-  //   country: "",
-  //   state: "",
-  //   city: "",
-  // });
+  const [searchObj, setSearchObj] = useState<Record<string, string>>({
+    country: "",
+    state: "",
+    city: "",
+  });
 
   const courseFinderController = new CourseFinderController();
   const { data: programData } = useQuery({
@@ -247,9 +247,15 @@ const CourseFinder = () => {
     sendPayload(copy);
     setFilterationObj({ ...copy });
   }
-  // function handleSearch(val: string, type: string) {
-  //   setSearchObj((pre) => ({ ...pre, [type]: val }));
-  // }
+  function handleSearch(val: string, type: string) {
+    console.log(val,":",type);
+    let copy=JSON.parse(JSON.stringify(searchObj))
+    copy[type]=val
+    console.log(copy,"COPY");
+    
+    setSearchObj({...copy})
+    // setSearchObj((pre) => ({ ...pre, [type]: val }));
+  }
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("search", `${val}`);
@@ -264,6 +270,7 @@ const CourseFinder = () => {
     disptach(addeditdata(null));
     sendPayload(filterationObj);
   }, [searchParams]);
+console.log(searchObj,"OBJ");
 
   return (
     <>
@@ -310,6 +317,7 @@ const CourseFinder = () => {
                     <Grid item xs={12} sx={{ p: 3 }}>
                       <TextField
                         fullWidth
+                        onChange={(e)=>handleSearch(e.target.value,"country")}
                         size="small"
                         placeholder="Search country"
                       />
@@ -371,6 +379,7 @@ const CourseFinder = () => {
                       <TextField
                         fullWidth
                         size="small"
+                        onChange={(e)=>handleSearch(e.target.value,"state")}
                         placeholder="Search states"
                       />
                     </Grid>
@@ -422,6 +431,7 @@ const CourseFinder = () => {
                     <Grid item xs={12} sx={{ p: 3 }}>
                       <TextField
                         size="small"
+                        onChange={(e)=>handleSearch(e.target.value,"city")}
                         placeholder="Search city"
                         fullWidth
                       />
@@ -638,7 +648,7 @@ const CourseFinder = () => {
                     (courses: Record<string, any>) =>
                       courses?.courses.map(
                         (innerCourse: Record<string, any>) => (
-                          <Grid item xs={12}>
+                          <Grid item xs={12} key={innerCourse._id}>
                             <UniversityCard
                               image={item._source.university.university_logo}
                               university_name={
