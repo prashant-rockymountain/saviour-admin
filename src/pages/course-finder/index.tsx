@@ -44,6 +44,8 @@ interface filterObj {
 }
 
 const CourseFinder = () => {
+  const [states,setStates]=useState<any[]>([])
+  const [city,setCities]=useState<any[]>([])
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
@@ -108,103 +110,101 @@ const CourseFinder = () => {
   });
   const {
     mutate,
-    data:  ElasticData,
+    data: ElasticData,
     isPending,
-  } = useMutation({ mutationKey: ["elastic"], mutationFn: elRequest });
-  function sendPayload(payloadObj?: filterObj ) {
+  } = useMutation({ mutationKey: ["elastic"], mutationFn: elRequest,onError(err){console.log(err)} });
+  function sendPayload(payloadObj?: filterObj) {
     let locationNewArr, UniversityNewArr, payload;
     locationNewArr = Object.entries(payloadObj!.locations).filter(
-        (item) => item[1].name.length > 0
-      );
-      UniversityNewArr = Object.entries(payloadObj!.Universities).filter(
-        (item) => item[1].length > 0
-      );
-      console.log(UniversityNewArr,"UNI");
-      
-      payload = 
-     !( locationNewArr.length>0||UniversityNewArr.length>0)?
-      {
-        from: 0,
-        size: 10,
-        query: {
-          bool: {
-            must: [],
-            filter: [],
-          }
-        }}:{
-        from: +searchParams.get("search")!,
-        size: 10,
-        query: {
-          bool: {
-            must: [],
-            filter: [
-              ...locationNewArr!.map((item:any) => ({
-                terms: {
-                  [`university.location.${item[0]}.name`]: item[1].name,
-                },
-              })),
-              ...UniversityNewArr!.map((university:any) =>
-                university[0] == "universityName"
-                  ? {
-                      terms: {
-                        [`university.name.name`]: university[1],
-                      },
-                    }
-                  : university[0] == "onlyco_open"
-                  ? {
-                      terms: {
-                        [`university.onlyco_open`]: university[1],
-                      },
-                    }
-                  : university[0] == "co_open"
-                  ? {
-                      terms: {
-                        [`university.co_open`]: university[1],
-                      },
-                    }
-                  : university[0] == "programType"
-                  ? {
-                      nested: {
-                        path: "course_details",
-                        query: {
-                          bool: {
-                            must: [
-                              {
-                                terms: {
-                                  "course_details.graduation_type.program_type":
-                                    university[1],
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    }
-                  : {
-                      nested: {
-                        path: "course_details.courses",
-                        query: {
-                          bool: {
-                            must: [
-                              {
-                                terms: {
-                                  "course_details.courses.course_id.duration":
-                                    university[1],
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    }
-              ),
-            ],
+      (item) => item[1].name.length > 0
+    );
+    UniversityNewArr = Object.entries(payloadObj!.Universities).filter(
+      (item) => item[1].length > 0
+    );
+    console.log(UniversityNewArr, "UNI");
+
+    payload = !(locationNewArr.length > 0 || UniversityNewArr.length > 0)
+      ? {
+          from: 0,
+          size: 10,
+          query: {
+            bool: {
+              must: [],
+              filter: [],
+            },
           },
         }
-      };
-
-
-
+      : {
+          from: +searchParams.get("search")!,
+          size: 10,
+          query: {
+            bool: {
+              must: [],
+              filter: [
+                ...locationNewArr!.map((item: any) => ({
+                  terms: {
+                    [`university.location.${item[0]}.name`]: item[1].name,
+                  },
+                })),
+                ...UniversityNewArr!.map((university: any) =>
+                  university[0] == "universityName"
+                    ? {
+                        terms: {
+                          [`university.name.name`]: university[1],
+                        },
+                      }
+                    : university[0] == "onlyco_open"
+                    ? {
+                        terms: {
+                          [`university.onlyco_open`]: university[1],
+                        },
+                      }
+                    : university[0] == "co_open"
+                    ? {
+                        terms: {
+                          [`university.co_open`]: university[1],
+                        },
+                      }
+                    : university[0] == "programType"
+                    ? {
+                        nested: {
+                          path: "course_details",
+                          query: {
+                            bool: {
+                              must: [
+                                {
+                                  terms: {
+                                    "course_details.graduation_type.program_type":
+                                      university[1],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      }
+                    : {
+                        nested: {
+                          path: "course_details.courses",
+                          query: {
+                            bool: {
+                              must: [
+                                {
+                                  terms: {
+                                    "course_details.courses.course_id.duration":
+                                      university[1],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      }
+                ),
+              ],
+            },
+          },
+        };
 
     mutate(payload as any);
   }
@@ -248,20 +248,23 @@ const CourseFinder = () => {
     setFilterationObj({ ...copy });
   }
   function handleSearch(val: string, type: string) {
-    console.log(val,":",type);
-    let copy=JSON.parse(JSON.stringify(searchObj))
-    copy[type]=val
-    console.log(copy,"COPY");
-    
-    setSearchObj({...copy})
-    // setSearchObj((pre) => ({ ...pre, [type]: val }));
+    console.log(val, ":", type);
+    let copy = JSON.parse(JSON.stringify(searchObj));
+    copy[type] = val;
+    console.log(copy, "COPY");
+
+    setSearchObj({ ...copy });
   }
+
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("search", `${val}`);
     replace(`${pathname}?${params.toString()}`);
   }
-  const locations = data?.data;
+  const locations = data?.data;                                                                                                                                              
+
+
+  
   const universities = universityData?.data?.data;
   const allPrograms = programData?.data?.data;
   const AllCourses = ElasticData?.data.hits?.hits;
@@ -270,7 +273,18 @@ const CourseFinder = () => {
     disptach(addeditdata(null));
     sendPayload(filterationObj);
   }, [searchParams]);
-console.log(searchObj,"OBJ");
+
+  useEffect(()=>{
+    if(locations!==undefined){
+
+      setStates(()=>[...locations.data.map((item:any)=>item?.states)].flat(Infinity))
+      setCities(()=>[...locations.data.map((item:any)=>item?.states.map((inner:any)=>inner?.cities))].flat(Infinity))
+    }
+
+  },[locations])
+
+
+console.log(AllCourses,"course");
 
   return (
     <>
@@ -317,7 +331,9 @@ console.log(searchObj,"OBJ");
                     <Grid item xs={12} sx={{ p: 3 }}>
                       <TextField
                         fullWidth
-                        onChange={(e)=>handleSearch(e.target.value,"country")}
+                        onChange={(e) =>
+                          handleSearch(e.target.value, "country")
+                        }
                         size="small"
                         placeholder="Search country"
                       />
@@ -379,7 +395,7 @@ console.log(searchObj,"OBJ");
                       <TextField
                         fullWidth
                         size="small"
-                        onChange={(e)=>handleSearch(e.target.value,"state")}
+                        onChange={(e) => handleSearch(e.target.value, "state")}
                         placeholder="Search states"
                       />
                     </Grid>
@@ -388,7 +404,7 @@ console.log(searchObj,"OBJ");
                     sx={{ height: "35vh", overflowY: "scroll", pt: 1, pl: 5 }}
                   >
                     <FormGroup sx={{ ml: 0 }}>
-                      {locations?.data?.map((country: Record<string, any>) =>
+                      {/* {locations?.data?.map((country: Record<string, any>) =>
                         country.states.map((stat: Record<string, any>) => (
                           <FormControlLabel
                             key={stat._id}
@@ -410,7 +426,31 @@ console.log(searchObj,"OBJ");
                             label={stat.name}
                           />
                         ))
-                      )}
+                      )} */}
+                      {states?.map((stat:any)=>(
+                        
+                          <FormControlLabel
+                            key={stat._id}
+                            control={
+                              <Checkbox
+                                checked={filterationObj.locations.state.ids.includes(
+                                  stat._id
+                                )}
+                                onChange={(e) =>
+                                  handleChange(
+                                    "locations",
+                                    "state",
+                                    stat._id,
+                                    stat.name
+                                  )
+                                }
+                              />
+                            }
+                            label={stat.name}
+                          />
+                        ))
+           
+                      }
                     </FormGroup>
                   </AccordionDetails>
                 </Accordion>
@@ -431,7 +471,7 @@ console.log(searchObj,"OBJ");
                     <Grid item xs={12} sx={{ p: 3 }}>
                       <TextField
                         size="small"
-                        onChange={(e)=>handleSearch(e.target.value,"city")}
+                        onChange={(e) => handleSearch(e.target.value, "city")}
                         placeholder="Search city"
                         fullWidth
                       />
@@ -446,7 +486,7 @@ console.log(searchObj,"OBJ");
                         }}
                       >
                         <FormGroup>
-                          {locations?.data?.map(
+                          {/* {locations?.data?.map(
                             (country: Record<string, any>) =>
                               country.states.map((stat: Record<string, any>) =>
                                 stat.cities.map((city: Record<string, any>) => (
@@ -471,7 +511,31 @@ console.log(searchObj,"OBJ");
                                   />
                                 ))
                               )
-                          )}
+                          )} */}
+                          {city?.map((city:any)=>(
+
+                                  <FormControlLabel
+                                    key={city._id}
+                                    control={
+                                      <Checkbox
+                                        checked={filterationObj.locations.city.ids.includes(
+                                          city._id
+                                        )}
+                                        onChange={(e) =>
+                                          handleChange(
+                                            "locations",
+                                            "city",
+                                            city._id,
+                                            city.name
+                                          )
+                                        }
+                                      />
+                                    }
+                                    label={city?.name}
+                                  />
+                                ))
+        
+                                  }
                         </FormGroup>
                       </AccordionDetails>
                     </Grid>
@@ -564,9 +628,9 @@ console.log(searchObj,"OBJ");
                             key={pro._id}
                             control={
                               <Checkbox
-                                checked={filterationObj.Universities.programType
-                                  .includes(pro.program_type)
-                                }
+                                checked={filterationObj.Universities.programType.includes(
+                                  pro.program_type
+                                )}
                                 onChange={(e) =>
                                   handleChange(
                                     "Universities",
@@ -603,10 +667,11 @@ console.log(searchObj,"OBJ");
                       {courseLength.map((item: string) => (
                         <FormControlLabel
                           key={item}
-                          
                           control={
                             <Checkbox
-                            checked={filterationObj.Universities.courseDuration.includes(item)}
+                              checked={filterationObj.Universities.courseDuration.includes(
+                                item
+                              )}
                               onChange={(e) =>
                                 handleChange(
                                   "Universities",
@@ -644,30 +709,33 @@ console.log(searchObj,"OBJ");
             ) : (
               <>
                 {AllCourses?.map((item: Record<string, any>) =>
-                  item._source.course_details?.map(
-                    (courses: Record<string, any>) =>
-                      courses?.courses.map(
-                        (innerCourse: Record<string, any>) => (
-                          <Grid item xs={12} key={innerCourse._id}>
+   
+                   
+           
+                          <Grid item xs={12} key={item._id}>
                             <UniversityCard
                               image={item._source.university.university_logo}
                               university_name={
                                 item._source.university.name.name
                               }
-                              name={innerCourse.name}
+                              name={item.name}
                               program={""}
                               data={{
                                 course_details: {
-                                  ...innerCourse,
-                                  program: courses?.graduation_type,
+                                  _id:item.course_id?._id,
+                                  name:item.name,
+                                  intake:item.intake,
+                                  price:item.price,
+
+                                  program: item?.graduation_type,
                                 },
                                 university_details: item?._source?.university,
                               }}
                             />
                           </Grid>
-                        )
-                      )
-                  )
+                
+                      
+                  
                 )}
                 {AllCourses?.length > 0 && (
                   <Grid
@@ -676,7 +744,7 @@ console.log(searchObj,"OBJ");
                     sx={{ display: "flex", placeContent: "center" }}
                   >
                     <Pagination
-                    defaultPage={+searchParams.get("search")!}
+                      defaultPage={+searchParams.get("search")!}
                       count={10}
                       variant="outlined"
                       shape="rounded"

@@ -4,7 +4,7 @@ const baseurl =
     : "https://saviour-backend.loopretail.tngwebsolutions.com/api/";
 
 export const ApiUrl = {
-  EL_BASE_URL:"https://27f62e29414142e0bd475cfc8c2a713d.us-central1.gcp.cloud.es.io/universities/_search",
+  EL_BASE_URL:"https://f70d21ec3dcb476bbd8a178309209d8e.us-central1.gcp.cloud.es.io:443/universities/_search",
   BASE_URL: baseurl,
   IMAGE_BASE_URL: "https://storage.googleapis.com/saviour-visa/",
   DELETE_GOOGLE_IMAGE_URL:"/upload/delete?url=",
