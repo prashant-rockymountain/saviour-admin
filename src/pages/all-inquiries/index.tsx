@@ -11,7 +11,7 @@ import RoleRow from "src/configs/g_components/g_table/Rows/roleRow";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 import RoleController from "../role/controller";
 import InquiriesRow from "src/configs/g_components/g_table/Rows/inquiriesRow";
-import { AllApplicationController } from "./controller";
+import AllApplicationController from "./controller";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },

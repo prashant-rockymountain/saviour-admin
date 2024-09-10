@@ -13,7 +13,6 @@ import {
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import React, { useState } from "react";
-import CampusRow from "src/configs/g_components/g_table/Rows/campusRow";
 import GTable from "src/configs/g_components/g_table/Table/g_table";
 import { textcolor } from "src/configs/theme/palette";
 import Searchbar from "src/configs/g_components/Searchbar";
