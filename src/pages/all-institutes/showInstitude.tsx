@@ -17,7 +17,6 @@ const showInstitude = () => {
             <Card>
               <CardContent>
                 <Grid container spacing={5}>
-
                   <Grid item xs={12} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span>
                       <Typography fontWeight={"bold"} pb={1} textTransform={"uppercase"} fontSize={20}>{editdata?.university?.name?.name}</Typography>
@@ -31,7 +30,7 @@ const showInstitude = () => {
                   <Grid item xs={12}>
                     <Collapse orientation="vertical" style={{ transition: "1s all" }} in={read} collapsedSize={44}>
                       {/* <Typography paragraph textAlign={"justify"}> */}
-                        <Interweave content={editdata?.university?.about} />
+                      <Interweave content={editdata?.university?.about} />
                       {/* </Typography> */}
                     </Collapse>
 
@@ -43,9 +42,7 @@ const showInstitude = () => {
               </CardContent>
             </Card>
           </Grid>
-
         </Grid>
-
       </Grid>
       <Grid item lg={4} xs={12}>
         <Card>

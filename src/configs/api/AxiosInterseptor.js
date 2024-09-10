@@ -36,8 +36,6 @@ axi.interceptors.request.use(
 
 axi.interceptors.response.use(
   function (response) {
-    console.log(response, "apierror_response");
-
     if (response.status === ApiStatus.STATUS_200) {
       return response;
     } else if (response.status === ApiStatus.STATUS_403) {

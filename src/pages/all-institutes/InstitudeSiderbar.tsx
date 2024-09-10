@@ -3,13 +3,6 @@ import { Chip, Divider, Grid, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 const InstitudeSiderbar = () => {
-
-    const [highlight,sethighlight] = useState()
-    const [credential, setcredential] = useState<Record<string, any>[]>([])
-    const [studyarea, setstudyarea] = useState<Record<string, any>[]>([])
-    const [areacategory, setareacateogory] = useState<Record<string, any>[]>([])
-
-
     const editdata = useSelector((state: Record<string, any>) => state?.data?.alleditdata?.editdata)
     const map = `https://maps.google.com?q=${editdata?.university?.location?.latitude},${editdata?.university?.location?.longitude}`
     const keyDetailsData = [
@@ -19,10 +12,30 @@ const InstitudeSiderbar = () => {
         { "label": "City Guide", icondata: <MapOutlined sx={{ ml: 1 }} color='primary' />, linkdata: editdata?.university?.city_link },
     ]
 
+    const commonFunction = (key: string) => {
+        if (key === "graduation_type") {
+            // let defaultArray = JSON.parse(JSON.stringify())
+        } else {
+            let retrunValue = editdata?.course_details?.map((ele: Record<string, any>) => ele[key]);
+            return retrunValue
+        }
+    }
+
+    const [highlight, sethighlight] = useState("")
+    const [credential, setcredential] = useState<Record<string, any>[]>(commonFunction("graduation_type"))
+    const [studyarea, setstudyarea] = useState<Record<string, any>[]>(commonFunction("study_area"))
+    const [areacategory, setareacateogory] = useState<Record<string, any>[]>(commonFunction("study_area_category").flat(Infinity))
+
+    console.log(credential)
+    console.log(studyarea)
+    console.log(areacategory)
+
+
+
     const redirectUrls = (url: string) => {
         window.open(url, '_blank')
     }
-    console.log(editdata.university)
+
 
     return (
         <Grid container spacing={5}>
@@ -48,7 +61,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>CREDENTIALS</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(13)).map((ele) => (<Chip sx={{ m: 2 }} key={Math.random()} color='primary' label="Chip Filled (20) " />))}
+                {credential.map((ele) => (<Chip sx={{ m: 2, fontSize: 15, height: 36, textTransform: "capitalize" }} key={Math.random()} color='primary' label={ele?.program_type} />))}
             </Grid>
             <Grid item xs={12}>
                 <Divider />
@@ -57,7 +70,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>AREA OF STUDY</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(16)).map((ele) => (<Chip key={Math.random()} sx={{ m: 2 }} label="Chip Filled (18)" />))}
+                {studyarea.map((ele) => (<Chip key={Math.random()} sx={{ m: 2, fontSize: 15, height: 36, textTransform: "capitalize" }} label={ele?.name} />))}
             </Grid>
             <Grid item xs={12}>
                 <Divider />
@@ -66,7 +79,7 @@ const InstitudeSiderbar = () => {
                 <Typography variant='h6' fontWeight={"bold"} fontSize={20}>AREA OF STUDY SUB CATEGORY</Typography>
             </Grid>
             <Grid item xs={12}>
-                {Array.from(new Array(16)).map((ele) => (<Chip key={Math.random()} sx={{ m: 2 }} label="Chip Filled (18)" />))}
+                {areacategory.map((ele) => (<Chip key={Math.random()} sx={{ m: 2, fontSize: 15, height: 36, textTransform: "capitalize" }} label={ele?.name} />))}
             </Grid>
         </Grid>
     )
