@@ -722,12 +722,11 @@ console.log(AllCourses,"course");
                               program={""}
                               data={{
                                 course_details: {
-                                  _id:item.course_id?._id,
-                                  name:item.name,
-                                  intake:item.intake,
-                                  price:item.price,
-
-                                  program: item?.graduation_type,
+                                  _id:item?._source?.course_id?._id,
+                                  name:item?._source?.name,
+                                  intake:item?._source?.intake,
+                                  price:item?._source?.price,
+                                  program: item?._source?.graduation_type,
                                 },
                                 university_details: item?._source?.university,
                               }}

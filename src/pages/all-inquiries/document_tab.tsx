@@ -10,7 +10,7 @@ const Document = ({ data }: { data: Record<string, any> }) => {
   const TABLE_HEAD = [
     { label: "SR.No", align: "left" },
     { label: "Documents", align: "left" },
-    { label: "Link", align: "center" },
+    { label: "Status", align: "center" },
     { label: "Action", align: "center" },
   ];
   const roleController = new RoleController();
@@ -19,9 +19,9 @@ const Document = ({ data }: { data: Record<string, any> }) => {
   //     queryKey: ["Role"],
   //     queryFn: roleController.getRole,
   //   });
-  const docData = Object.entries(data).filter(
-    (item: any) => item[1]?.length > 0
-  );
+  // console.log(data, "documents");
+
+  const docData = Object?.entries(data);
   const dispatch = useDispatch();
 
   return (

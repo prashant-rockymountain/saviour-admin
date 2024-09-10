@@ -34,9 +34,11 @@ const ProfileBack = () => {
   const editData = useSelector(
     (state: Record<string, any>) => state?.data?.alleditdata?.editdata
   );
-  const { student: studentData } = editData;
+  const studentData = editData;
+  console.log(editData, "editData");
   const { documents } = studentData;
   console.log(documents, "editData");
+
   return (
     <>
       <Grid container spacing={6}>
@@ -202,8 +204,8 @@ const ProfileBack = () => {
                 >
                   <Tab label="Profile" value="1" />
                   <Tab label="Documents" value="2" />
-                  <Tab label="Offered Courses" value="3" />
-                  <Tab label="Application" value="4" />
+                  <Tab label="Application" value="3" />
+                  <Tab label="Other Service" value="4" />
                 </TabList>
               </Box>
               <TabPanel value="1" sx={{ p: "24px 0px" }}>
@@ -228,7 +230,7 @@ const ProfileBack = () => {
                 <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      <OfferedCourses />
+                      <Application  />
                     </CardContent>
                   </Card>
                 </Grid>
@@ -237,7 +239,7 @@ const ProfileBack = () => {
                 <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      <Application />
+                      <OfferedCourses />
                     </CardContent>
                   </Card>
                 </Grid>

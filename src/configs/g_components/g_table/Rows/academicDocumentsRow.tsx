@@ -45,16 +45,19 @@ const AcademicDocumentsRow: FC<rowType> = ({
           <TableCell align="left">{row[0]}</TableCell>
           <TableCell align="center">
             {" "}
-            <CustomChip status={row?.is_active} />
+            <CustomChip
+              status={row[1]?.length > 0 ? true : false}
+              label={row[1]?.length > 0 ? "Uploaded" : "Not-uploaded"}
+            />
           </TableCell>
           <TableCell align="center">
-            {
+            {row[1]?.length > 0 && (
               <a href={`${ApiUrl.IMAGE_BASE_URL + row[1]}`} target="_blank">
                 <Fab size="small" color="secondary">
                   <VisibilityIcon />
                 </Fab>
               </a>
-            }
+            )}
           </TableCell>
         </>
       )}

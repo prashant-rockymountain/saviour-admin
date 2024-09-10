@@ -45,12 +45,12 @@ const InquiriesRow: FC<rowType> = ({
           <TableCell align="left">
             {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
           </TableCell>
-          <TableCell align="center"> </TableCell>
+          {/* <TableCell align="center"> </TableCell>
           <TableCell align="center"> </TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip label="dsd" status={row?.is_active} />
-          </TableCell>
+          </TableCell> */}
           <TableCell align="center">
             {
               <Fab

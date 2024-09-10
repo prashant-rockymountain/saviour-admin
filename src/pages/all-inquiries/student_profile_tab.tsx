@@ -23,7 +23,7 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
         <Grid item xs={6} sx={{ mt: "20px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>
             <span style={{ fontWeight: "bold" }}> Education :</span>{" "}
-            {data?.education_info.at(-1)?.level}
+            {data?.education_info?.at(-1)?.level}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ mt: "10px" }}>
@@ -34,7 +34,7 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
         <Grid item xs={6} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>
             <span style={{ fontWeight: "bold" }}>Stream :</span>
-            {data?.education_info.at(-1)?.stream}
+            {data?.education_info?.at(-1)?.stream}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ mt: "10px" }}>
@@ -45,7 +45,7 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
         <Grid item xs={6} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>
             <span style={{ fontWeight: "bold" }}> Passing Year :</span>{" "}
-            {data?.education_info.at(-1)?.passing_year}
+            {data?.education_info?.at(-1)?.passing_year}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ mt: "10px" }}>
@@ -57,7 +57,7 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
         <Grid item xs={6} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>
             <span style={{ fontWeight: "bold" }}>Result :</span>{" "}
-            {data?.education_info.at(-1)?.result}
+            {data?.education_info?.at(-1)?.result}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ mt: "10px" }}>
@@ -68,7 +68,7 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
         <Grid item xs={6} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>
             <span style={{ fontWeight: "bold" }}> BackLogs</span> :{" "}
-            {data?.education_info.at(-1)?.backlog_number}
+            {data?.education_info?.at(-1)?.backlog_number}
           </Typography>
         </Grid>
       </Grid>

@@ -2,12 +2,10 @@ import { Avatar, Grid, Typography } from "@mui/material";
 import React from "react";
 import GChip from "src/configs/g_components/g_chip";
 
-
-
 const OfferedCourses = () => {
-    return (
-        <>
-            <Grid container spacing={3}>
+  return (
+    <>
+      {/* <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography sx={{ fontSize: "20px", fontWeight: "bold", color: "black" }}>Offer Courses</Typography>
                 </Grid>
@@ -29,8 +27,8 @@ const OfferedCourses = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-        </>
-    )
-}
-export default OfferedCourses
+            </Grid> */}
+    </>
+  );
+};
+export default OfferedCourses;
