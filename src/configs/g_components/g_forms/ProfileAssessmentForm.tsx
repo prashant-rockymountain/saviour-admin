@@ -39,7 +39,7 @@ import GUpload from "../g_upload";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { Record } from "immutable";
 import { error } from "console";
-import { StepperFormController } from "src/pages/stepperForm/controller";
+import StepperFormController from "src/pages/stepperForm/controller";
 // import GraduationController from "src/pages/graduation/controller";
 
 export interface FormTypes {
