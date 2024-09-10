@@ -13,12 +13,8 @@ const InstitudeSiderbar = () => {
     ]
 
     const commonFunction = (key: string) => {
-        if (key === "graduation_type") {
-            // let defaultArray = JSON.parse(JSON.stringify())
-        } else {
             let retrunValue = editdata?.course_details?.map((ele: Record<string, any>) => ele[key]);
             return retrunValue
-        }
     }
 
     const [highlight, sethighlight] = useState("")
