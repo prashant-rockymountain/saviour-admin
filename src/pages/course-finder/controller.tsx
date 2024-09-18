@@ -9,18 +9,35 @@ const data=await axi.get(
 return data
 
     }
+   async  getAllFilteredCountry(){
+const data=await axi.get(`${ApiUrl.GET_COUNTRY_URL}`)
+return data?.data?.data
+
+    }
+   async  getAllFilteredState({country}:{country:string[]}){
+const data=await axi.get(
+    `${ApiUrl.GET_STATE_URL}?country=${country.toString()}`
+)
+return data?.data?.data
+
+    }
+   async  getAllFilteredCity({state}:{state:string[]}){
+const data=await axi.get(
+    `${ApiUrl.GET_CITIES_URL}?state=${state.toString()}`)
+return data?.data?.data
+
+    }
    async  getAllFilteredUniversities({city,state,country}:{city:string[],country:string[],state:string[]}){
 const data=await axi.get(
     `${ApiUrl.CAMPUS_FILTER_LIS}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}`
 )
-console.log(data);
 
-return data
+return data?.data?.data
 
     }
     async getProgramTypeList(param:string){
         const data=await axi.get(`${ApiUrl.GRADUATION_LIST_URL}${param}`)
-        return data
+        return data?.data?.data
     }
     async getCampuName(param:string){
         const data=await axi.get(`${ApiUrl.CAPMUS_NAME_URL}${param}`)

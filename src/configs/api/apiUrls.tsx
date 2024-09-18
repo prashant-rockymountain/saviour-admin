@@ -35,7 +35,7 @@ export const ApiUrl = {
   CHECK_VALID_TOKEN: "super-admin/check-token-validity",
   GET_CAMPUS_LIST_URL: "campus/get",
   EDIT_CAMPUS_URL: "campus/edit/",
-  ADD_CAMPUS_URL: "campus/add",
+  ADD_CAMPUS_URL: "campus/add", 
   GET_UNIVERSITY_LIST_URL: "admin/university/all",
   GET_UNIVERSITY_URL: "university/get-university/:",
   ADD_UNIVERSITY_URL: "university/add",
@@ -54,6 +54,9 @@ export const ApiUrl = {
   CAMPUS_FILTER_LIS:"admin/campus-name/list",
   ELASTIC_TEST:"university/get-test",
   ADD_APPLICATION_URL:"admin/student/applications/add",
+  GET_COUNTRY_URL:"admin/location/countries",
+  GET_STATE_URL:"admin/location/states",
+  GET_CITIES_URL:"admin/location/cities"
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,
