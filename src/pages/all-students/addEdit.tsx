@@ -30,6 +30,6 @@ const AddEditProfileAssessment = () => {
   );
 };
 AddEditProfileAssessment.acl = {
-  subject: AbilityNames.ALLAPPLICATION_PAGE,
+  subject: AbilityNames.ALLSTUDENTS_PAGE,
 };
 export default AddEditProfileAssessment;

@@ -32,7 +32,22 @@ const AcademicDocumentsRow: FC<rowType> = ({
   };
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const documentsNameObj = {
+    tenth: "10th Grade",
+    tweleveth: "12th Grade",
+    bachelor_n_marksheet: "Bachelor Degree & Marksheet",
+    master_n_marksheet: "Master Degree & Marksheet",
+    diploma_marksheet: "Diploma Marksheet",
+    english_proficiency: "English Proficiency Score",
+    passport: "Passport Copy(1st & Last Page)",
+    combined: "Combined - All Documents",
+    backlog_certificate: "Backlog Certificate",
+    admit_card: "Admit Card (12th Grade)",
+    visa: "Visa Form",
+    family_info: "Family Information",
+    client_info:
+      "Client Information ( IT Papers, Experience letter, Bank Certificate and Statement, Financial Documents with CA Report, SOP (if needed) )",
+  };
   return (
     <TableRow hover key={Math.random()}>
       {isLoading ? (
@@ -41,8 +56,10 @@ const AcademicDocumentsRow: FC<rowType> = ({
         </TableCell>
       ) : (
         <>
-          <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left">{row[0]}</TableCell>
+          <TableCell align="left" color="#000">
+            {/* @ts-ignore */}
+            {documentsNameObj[`${row[0]}`]}
+          </TableCell>
           <TableCell align="center">
             {" "}
             <CustomChip

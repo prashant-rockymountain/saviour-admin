@@ -206,13 +206,12 @@ const CourseFinder = () => {
         copy[key][type] = !copy[key][type];
       }
     }
-    
-    setTimeout(()=>{
+
+    setTimeout(() => {
       sendPayload(copy);
-    },500)
+    }, 500);
     setFilterationObj({ ...copy });
   }
-
 
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
@@ -224,6 +223,7 @@ const CourseFinder = () => {
     disptach(addeditdata(null));
     sendPayload(filterationObj);
   }, [searchParams]);
+  console.log(AllCourses, "AllCourses");
 
   return (
     <>
@@ -231,7 +231,6 @@ const CourseFinder = () => {
         <Grid item xs={12} lg={2.5}>
           <FilterSidebar
             handleChange={handleChange}
-  
             filterationObj={filterationObj}
           />
         </Grid>
@@ -259,7 +258,7 @@ const CourseFinder = () => {
                       program={""}
                       data={{
                         course_details: {
-                          _id: item?._source?.course_id?._id,
+                          _id: item?._id,
                           name: item?._source?.name,
                           intake: item?._source?.intake,
                           price: item?._source?.price,

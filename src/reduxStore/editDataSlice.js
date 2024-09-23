@@ -5,6 +5,7 @@ const editDataSlice = createSlice({
   initialState: {
     editdata: null,
     storeUniversityData: null,
+    editStudentData: null,
   },
   reducers: {
     addeditdata(state, action) {
@@ -13,8 +14,12 @@ const editDataSlice = createSlice({
     storeUniversityData(state, action) {
       state.storeUniversityData = action.payload;
     },
+    editStudentdata(state, action) {
+      state.editStudentData = action.payload;
+    },
   },
 });
 
 export default editDataSlice.reducer;
-export const { addeditdata, storeUniversityData } = editDataSlice.actions;
+export const { addeditdata, storeUniversityData, editStudentdata } =
+  editDataSlice.actions;

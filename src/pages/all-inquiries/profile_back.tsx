@@ -35,15 +35,15 @@ const ProfileBack = () => {
     (state: Record<string, any>) => state?.data?.alleditdata?.editdata
   );
   const studentData = editData;
-  console.log(editData, "editData");
-  const { documents } = studentData;
-  console.log(documents, "editData");
+  const { documents, applications } = studentData;
+  console.log(editData, applications, "editData");
+  // console.log(documents, "editData");
 
   return (
     <>
-      <Grid container spacing={6}>
-        <Grid item lg={4} md={5} sm={12}>
-          <Card>
+      <Grid container spacing={2}>
+        <Grid item lg={4} md={3} sm={12}>
+          <Card sx={{ mt: { md: 16 } }}>
             <CardContent>
               <Grid container spacing={1}>
                 <Grid
@@ -65,7 +65,7 @@ const ProfileBack = () => {
                   <Typography
                     sx={{
                       fontWeight: "bold",
-                      color: "black",
+
                       fontSize: "18px",
                     }}
                   >
@@ -81,9 +81,7 @@ const ProfileBack = () => {
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Typography sx={{ color: "black", fontSize: "15px" }}>
-                    (GOHP_1993)
-                  </Typography>
+                  <Typography sx={{ fontSize: "15px" }}>(GOHP_1993)</Typography>
                 </Grid>
                 <Grid
                   item
@@ -193,7 +191,7 @@ const ProfileBack = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item lg={8} md={7} xs={12}>
+        <Grid item lg={8} md={9} xs={12}>
           <Box sx={{ width: "100%", typography: "body1" }}>
             <TabContext value={value}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -230,7 +228,7 @@ const ProfileBack = () => {
                 <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      <Application  />
+                      <Application data={applications} />
                     </CardContent>
                   </Card>
                 </Grid>

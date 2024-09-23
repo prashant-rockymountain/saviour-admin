@@ -169,7 +169,10 @@ const ProfileAssessmentForm = ({
     postal_code: yup.string().required("Postal Code is required"),
     address: yup.string().required("Address is required"),
     email: yup.string().email().required("Email is required"),
-    phone: yup.string().required("First name is required"),
+    phone: yup
+      .string()
+      .required("Mobile Number is required")
+      .matches(/^\d{10}$/, "Mobile Number should be 10 digit long"),
     cc_details: yup.object({}),
     proficiency_tests: yup.object().shape({
       ielts: yup.object(),
@@ -183,7 +186,6 @@ const ProfileAssessmentForm = ({
         stream: yup.string().required("Please Select Stream"),
         passing_year: yup.string().required("Please Enter Passing Year"),
         result: yup.string().required("Please Enter Result"),
-        backlog_number: yup.string(),
         type: yup.string().required("Please Select Type"),
         institute: yup.string().required("Please Select Institute"),
       })
@@ -346,7 +348,15 @@ const ProfileAssessmentForm = ({
   });
 
   const queryClient = useQueryClient();
-  const onSubmit = (data: any) => {
+  const onSubmit = (studentData: any) => {
+    const { visa_rejection_details: visa_rejection_data, ...restData } =
+      studentData;
+    const data = {
+      ...(studentData?.visa_rejection && {
+        visa_rejection_details: visa_rejection_data,
+      }),
+      ...restData,
+    };
     id ? mutate({ payload: data, id: id }) : mutate(data);
   };
   const router = useRouter();
@@ -458,6 +468,9 @@ const ProfileAssessmentForm = ({
     toefl: Record<string, any>;
     duolingo: Record<string, any>;
   }
+
+  console.log(editdata, "safdeditdata");
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

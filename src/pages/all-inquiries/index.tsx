@@ -15,10 +15,10 @@ import AllApplicationController from "./controller";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },
-  { label: "Code", align: "left" },
   { label: "Name", align: "left" },
-  // { label: "University", align: "center" },
-  // { label: "Program", align: "center" },
+  { label: "Student Id", align: "left" },
+  { label: "Application status", align: "center" },
+  { label: "Application Stage", align: "center" },
   // { label: "In Take", align: "center" },
   { label: "Action", align: "center" },
 ];
@@ -36,7 +36,6 @@ const AllInquiries = () => {
 
   const [filteredData, setFilteredData] =
     useState<Array<Record<string, any>>>(rows);
-  console.log(filteredData, "application");
 
   return (
     <>
