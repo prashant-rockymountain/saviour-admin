@@ -35,6 +35,16 @@ const data=await axi.get(
 return data?.data?.data
 
     }
+   async  getAllFilteredCourses({city,state,country,university,onlyco_open,co_open,programType,courseDuration,is_active}:{city:string[],country:string[],state:string[],university:string[],onlyco_open:boolean,co_open:boolean,programType:string[],courseDuration:string[],is_active:boolean}){
+const data=await axi.get(
+    `${ApiUrl.GET_FILTERED_COURSES}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}${`&university_name=${university.length?university.toString():""}`}${`&onlyco_open=${onlyco_open??""}`}${`&co_open=${co_open??""}`}${`&programType=${programType.length?programType.toString():""}`}${`&courseDuration=${courseDuration.length?courseDuration.toString():""}`}${`&is_active=${is_active??""}`}`
+)
+
+return data?.data?.data
+
+    }
+
+
     async getProgramTypeList(param:string){
         const data=await axi.get(`${ApiUrl.GRADUATION_LIST_URL}${param}`)
         return data?.data?.data

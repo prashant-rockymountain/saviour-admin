@@ -8,60 +8,42 @@ import {
 import React, { useEffect, useState } from "react";
 import { FilterSearch } from "src/configs/g_components/filterSearch";
 import { UniversityCard } from "src/configs/g_components/UniversityCard";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { elRequest } from "src/configs/api/handleElasticSearch";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import FilterSidebar from "src/configs/g_components/filterSidebar";
+import CourseFinderController from "./controller";
 
-interface LocationIdObj {
-  country: Record<string, Array<string>>;
-  city: Record<string, Array<string>>;
-  state: Record<string, Array<string>>;
-}
-interface UniFilterObj {
+interface filterObj {
+  country: string[];
+  city: string[];
+  state: string[];
   universityName: string[];
   programType: string[];
   courseDuration: string[];
-  onlyco_open: Boolean;
-  co_open: Boolean;
-}
-interface filterObj {
-  locations: LocationIdObj;
-  Universities: UniFilterObj;
+  onlyco_open: boolean;
+  co_open: boolean;
 }
 
 const CourseFinder = () => {
-  const disptach = useDispatch();
+  const courseFinderController = new CourseFinderController();
 
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
 
   const [filterationObj, setFilterationObj] = useState<filterObj>({
-    locations: {
-      country: {
-        name: [],
-        ids: [],
-      },
-      city: {
-        name: [],
-        ids: [],
-      },
-      state: {
-        name: [],
-        ids: [],
-      },
-    },
-    Universities: {
-      universityName: [],
-      programType: [],
-      courseDuration: [],
-      onlyco_open: false,
-      co_open: false,
-    },
+    country: [],
+    city: [],
+    state: [],
+    universityName: [],
+    programType: [],
+    courseDuration: [],
+    onlyco_open: true,
+    co_open: true,
   });
 
   const {
@@ -75,162 +57,51 @@ const CourseFinder = () => {
       console.log(err);
     },
   });
-  function sendPayload(payloadObj?: filterObj) {
-    let locationNewArr, UniversityNewArr, payload;
-    locationNewArr = Object.entries(payloadObj!.locations).filter(
-      (item) => item[1].name.length > 0
-    );
-    UniversityNewArr = Object.entries(payloadObj!.Universities).filter(
-      (item) => item[1].length > 0
-    );
-    console.log(UniversityNewArr, "UNI");
 
-    payload = !(locationNewArr.length > 0 || UniversityNewArr.length > 0)
-      ? {
-          from: 0,
-          size: 10,
-          query: {
-            bool: {
-              must: [],
-              filter: [],
-            },
-          },
-        }
-      : {
-          from: +searchParams.get("search")!,
-          size: 10,
-          query: {
-            bool: {
-              must: [],
-              filter: [
-                ...locationNewArr!.map((item: any) => ({
-                  terms: {
-                    [`university.location.${item[0]}.name`]: item[1].name,
-                  },
-                })),
-                ...UniversityNewArr!.map((university: any) =>
-                  university[0] == "universityName"
-                    ? {
-                        terms: {
-                          [`university.name.name`]: university[1],
-                        },
-                      }
-                    : university[0] == "onlyco_open"
-                    ? {
-                        terms: {
-                          [`university.onlyco_open`]: university[1],
-                        },
-                      }
-                    : university[0] == "co_open"
-                    ? {
-                        terms: {
-                          [`university.co_open`]: university[1],
-                        },
-                      }
-                    : university[0] == "programType"
-                    ? {
-                        nested: {
-                          path: "course_details",
-                          query: {
-                            bool: {
-                              must: [
-                                {
-                                  terms: {
-                                    "course_details.graduation_type.program_type":
-                                      university[1],
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        },
-                      }
-                    : {
-                        nested: {
-                          path: "course_details.courses",
-                          query: {
-                            bool: {
-                              must: [
-                                {
-                                  terms: {
-                                    "course_details.courses.course_id.duration":
-                                      university[1],
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                        },
-                      }
-                ),
-              ],
-            },
-          },
-        };
+  const {data:Courses,isPending:CourseLoading}=useQuery({
+    queryKey:["FilterCourses",filterationObj],
+    queryFn:()=>courseFinderController.getAllFilteredCourses({
+      city:filterationObj.city,
+      country:filterationObj.country,
+      co_open:filterationObj.co_open,
+      onlyco_open:filterationObj.onlyco_open,
+      courseDuration:filterationObj.courseDuration,
+      is_active:true,
+      programType:filterationObj.programType,
+      state:filterationObj.state,
+      university:filterationObj.universityName
 
-    mutate(payload as any);
-  }
+    }),
+    // placeholderData: (previousData) => previousData,
+  })
 
-  function handleChange(
-    key: keyof filterObj,
-    type: keyof LocationIdObj | keyof UniFilterObj,
-    id?: string | undefined,
-    name?: string
-  ) {
+  function handleChange(key: keyof filterObj, id: string) {
     const copy = JSON.parse(JSON.stringify(filterationObj));
-    if (key === "locations") {
-      if (copy[key][type]["name"].includes(name)) {
-        copy[key][type]["name"] = copy[key][type]["name"].filter(
-          (item: string) => item !== name
-        );
-      } else {
-        copy[key][type]["name"].push(name);
-      }
-      if (copy[key][type]["ids"].includes(id)) {
-        copy[key][type]["ids"] = copy[key][type]["ids"].filter(
-          (item: string) => item !== id
-        );
-      } else {
-        copy[key][type]["ids"].push(id);
-      }
+
+    if (copy[key].includes(id)) {
+      copy[key] = copy[key].filter((item: string) => item !== id);
     } else {
-      if (type !== "co_open" && type !== "onlyco_open") {
-        if (copy[key][type].includes(name)) {
-          copy[key][type] = copy[key][type].filter(
-            (item: string) => item !== name
-          );
-        } else {
-          copy[key][type].push(name);
-        }
-      } else {
-        copy[key][type] = !copy[key][type];
-      }
+      copy[key].push(id);
     }
 
-    setTimeout(() => {
-      sendPayload(copy);
-    }, 500);
     setFilterationObj({ ...copy });
   }
-
+function handleBoolChange(key:"onlyco_open"|"co_open"){
+setFilterationObj((pre)=>({...pre,[key]:!pre[key]}))
+}
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("search", `${val}`);
     replace(`${pathname}?${params.toString()}`);
   }
 
-  useEffect(() => {
-    disptach(addeditdata(null));
-    sendPayload(filterationObj);
-  }, [searchParams]);
-  console.log(AllCourses, "AllCourses");
-
-  return (
+return (
     <>
       <Grid container spacing={4}>
         <Grid item xs={12} lg={2.5}>
           <FilterSidebar
             handleChange={handleChange}
+            handleBoolChange={handleBoolChange}
             filterationObj={filterationObj}
           />
         </Grid>
@@ -243,28 +114,26 @@ const CourseFinder = () => {
                 </CardContent>
               </Card>
             </Grid>
-            {isPending ? (
+            {CourseLoading ? (
               <Grid item xs={12} textAlign={"center"}>
                 <CircularProgress />
               </Grid>
             ) : (
               <>
-                {AllCourses?.map((item: Record<string, any>) => (
+                {Courses?.map((item: Record<string, any>) => (
                   <Grid item xs={12} key={item._id}>
                     <UniversityCard
-                      image={item._source.university.university_logo}
-                      university_name={item._source.university.name.name}
+                      image={item.university.university_logo}
+                      university_name={item.university.name.name}
                       name={item.name}
-                      program={""}
+                      campus_name={item?.university?.location?.city?.name}
                       data={{
                         course_details: {
-                          _id: item?._id,
-                          name: item?._source?.name,
-                          intake: item?._source?.intake,
-                          price: item?._source?.price,
-                          program: item?._source?.graduation_type,
+                            ...item.course_id,
+                          price: item?.price,
+                          program: item?.graduation_type,
                         },
-                        university_details: item?._source?.university,
+                        university_details: item?.university,
                       }}
                     />
                   </Grid>

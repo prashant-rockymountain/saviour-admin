@@ -59,6 +59,7 @@ export const ApiUrl = {
   GET_STATE_URL: "admin/location/states",
   GET_CITIES_URL: "admin/location/cities",
   GET_INQUERY_PROFILE_URL: "admin/student/applications/profile/",
+  GET_FILTERED_COURSES:"admin/university/list-all-courses",
   ADMIN_UNIVERSITY_PROFILE_URL: "admin/university/university-profile/",
   ADMIN_UNIVERSITY_COURSE_URL: "admin/university/detail",
   APPLICATION_PROFILE_URL:
