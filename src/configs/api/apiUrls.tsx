@@ -56,7 +56,9 @@ export const ApiUrl = {
   ADD_APPLICATION_URL:"admin/student/applications/add",
   GET_COUNTRY_URL:"admin/location/countries",
   GET_STATE_URL:"admin/location/states",
-  GET_CITIES_URL:"admin/location/cities"
+  GET_CITIES_URL:"admin/location/cities",
+  ADMIN_UNIVERSITY_PROFILE_URL:"admin/university/university-profile/",
+  ADMIN_UNIVERSITY_COURSE_URL:"admin/university/detail"
 };
 export const graphqlQuerys = {
   ADMIN_GET_QUERY: `query{ping}`,

@@ -14,6 +14,17 @@ export default class UniversityController {
     return data?.data;
   };
 
+
+  getUniversityProfile = async ({ id }: { id: string }) => {
+    const data = await axi.get(`${ApiUrl.ADMIN_UNIVERSITY_PROFILE_URL}${id}`);
+    return data?.data?.data
+  }
+
+  getUniversityCourse = async(boydata:Record<string,any>)=>{
+    const data = await axi.post(`${ApiUrl.ADMIN_UNIVERSITY_COURSE_URL}`,boydata);
+    return data?.data?.data;
+  }
+
   // addUniversity = async (payload: any) => {
   //   const data = await axi.put(ApiUrl.ADD_UNIVERSITY_URL, payload);
   //   return data;
