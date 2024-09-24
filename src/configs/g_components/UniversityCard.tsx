@@ -35,7 +35,8 @@ export const UniversityCard = ({
 }) => {
   const disptach = useDispatch();
   const router = useRouter();
-
+  console.log(data,"diajuW");
+  
   return (
     <Card>
       <CardContent>

@@ -380,6 +380,8 @@ const ProfileAssessmentForm = ({
     const currentCountry = countryList?.find(
       (item: Record<string, any>) => item._id === id
     );
+    // console.log(currentCountry, "current", id);
+
     return currentCountry;
   };
 
@@ -454,7 +456,8 @@ const ProfileAssessmentForm = ({
         title: `${id ? "Updated Successfully" : "Added Successfully"}`,
       });
       queryClient.invalidateQueries({ queryKey: ["graduation"] });
-      router.push("/all-students");
+      // router.push("/all-students");
+      router.back();
     },
   });
   const values = watch();

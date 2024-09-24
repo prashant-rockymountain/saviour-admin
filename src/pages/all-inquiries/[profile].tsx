@@ -1,3 +1,4 @@
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {
   Avatar,
   Box,
@@ -10,7 +11,7 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GChip from "src/configs/g_components/g_chip";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
@@ -24,19 +25,36 @@ import StudentProfile from "./student_profile_tab";
 import Document from "./document_tab";
 import OfferedCourses from "./offered_courses_tab";
 import Application from "./application_tab";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import InqueryController from "./controller";
+import { addeditdata } from "src/reduxStore/editDataSlice";
 const ProfileBack = () => {
+  const inqueryController = new InqueryController();
   const router = useRouter();
   const [value, setValue] = React.useState("1");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  const editData = useSelector(
-    (state: Record<string, any>) => state?.data?.alleditdata?.editdata
-  );
-  const studentData = editData;
-  const { documents, applications } = studentData;
-  console.log(editData, applications, "editData");
+  const dispatch = useDispatch();
+  // const editData = useSelector(
+  //   (state: Record<string, any>) => state?.data?.alleditdata?.editdata
+  // );
+
+  const { profile: params } = router.query;
+
+  const { data, isSuccess } = useQuery({
+    queryKey: ["inqueryProfile", params],
+    enabled: !!params,
+    queryFn: () => inqueryController.getInqueryProfile(params),
+  });
+
+  const studentData = data?.data;
+  const documents = studentData?.documents;
+  const applications = studentData?.applications;
+  useEffect(() => {
+    dispatch(addeditdata(data?.data));
+  }, [isSuccess]);
   // console.log(documents, "editData");
 
   return (
@@ -51,11 +69,13 @@ const ProfileBack = () => {
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Avatar
+                  <AccountCircleIcon sx={{ width: "100px", height: "100px" }} />
+
+                  {/* <Avatar
                     variant="circular"
                     src="https://img.freepik.com/premium-photo/beautiful-girl-avatar_984951-127.jpg"
                     sx={{ width: "100px", height: "100px" }}
-                  />
+                  /> */}
                 </Grid>
                 <Grid
                   item

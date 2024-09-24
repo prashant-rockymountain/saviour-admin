@@ -56,8 +56,8 @@ const InquiriesRow: FC<rowType> = ({
                   clickbutton != undefined
                     ? () => hanclick
                     : () => {
-                        dispatch(addeditdata(row));
-                        router.push("/all-inquiries/profile_back");
+                        // dispatch(addeditdata(row));
+                        router.push("/all-inquiries/" + row?._id);
                       }
                 }
               >

@@ -25,8 +25,8 @@ export const ApplicationCard = ({ data }: { data: Record<string, any> }) => {
   const router = useRouter();
   console.log(data, ",oxaij");
   const { name } = data?.program_name;
-  const { address: university_name } = data?.program_name?.university?.location;
-  const { university_logo } = data?.program_name?.university;
+  const university_name = data?.program_name?.university?.location?.address;
+  const university_logo = data?.program_name?.university?.university_logo;
   const { program_type } = data?.credentials;
   return (
     <Card>
@@ -94,7 +94,9 @@ export const ApplicationCard = ({ data }: { data: Record<string, any> }) => {
                 size="small"
                 onClick={() => {
                   //   disptach(addeditdata(data)),
-                  router.push("/all-inquiries/profile_view_comment");
+                  router.push(
+                    "/all-inquiries/profile_view_comment/" + data?._id
+                  );
                 }}
               >
                 Track Application

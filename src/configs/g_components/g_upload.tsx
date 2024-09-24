@@ -49,15 +49,19 @@ const GUpload = ({
     },
   });
   const handleUpload = (e: any) => {
+    console.log("if Enter", "aoidn");
     if (e.target.files.length > 0) {
+      console.log("if Enter", "aoidn");
       mutate(e.target.files[0]);
     }
   };
   const handleClick = () => {
-    if (value.length > 0) {
+    if (value?.length > 0) {
       inputRef.current!.value = "";
       mutate(value);
     } else {
+      // inputRef.current!.value = "";
+      console.log("else Enter", "aoidn");
       inputRef.current && inputRef.current.click();
     }
   };

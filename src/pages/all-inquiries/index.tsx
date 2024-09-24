@@ -12,6 +12,7 @@ import { AbilityNames } from "src/configs/g_constants/allConstants";
 import RoleController from "../role/controller";
 import InquiriesRow from "src/configs/g_components/g_table/Rows/inquiriesRow";
 import AllApplicationController from "./controller";
+import InqueryController from "./controller";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },
@@ -24,7 +25,7 @@ const TABLE_HEAD = [
 ];
 
 const AllInquiries = () => {
-  const applicationController = new AllApplicationController();
+  const applicationController = new InqueryController();
 
   const { data, isLoading } = useQuery({
     queryKey: ["All_application"],

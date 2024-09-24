@@ -1,10 +1,11 @@
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
 import GTable from "src/configs/g_components/g_table/Table/g_table";
 import RoleController from "../role/controller";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import AcademicDocumentsRow from "src/configs/g_components/g_table/Rows/academicDocumentsRow";
+import Link from "next/link";
 
 const Document = ({ data }: { data: Record<string, any> }) => {
   const TABLE_HEAD = [
@@ -27,10 +28,17 @@ const Document = ({ data }: { data: Record<string, any> }) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid
+          item
+          xs={12}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
             Documentation
           </Typography>
+          <Link href={"/all-students/addEdit"}>
+            <Button variant="contained">Edit Documents</Button>
+          </Link>
         </Grid>
         <Grid item xs={12} sx={{ mt: "20px" }}>
           <Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>
