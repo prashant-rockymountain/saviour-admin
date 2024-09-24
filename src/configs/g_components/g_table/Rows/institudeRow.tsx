@@ -26,7 +26,7 @@ const InstitudeRow: FC<rowType> = ({
 
     const showInstitude = (data: Record<string, any>) => {
         dispatch(addeditdata(data))
-        router.push("/all-institutes/showInstitude")
+        router.push("/all-institutes/"+data?.university?._id)
     }
 
     return (
