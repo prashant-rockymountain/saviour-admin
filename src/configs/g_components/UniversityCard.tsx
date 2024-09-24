@@ -22,17 +22,19 @@ import { useRouter } from "next/router";
 
 export const UniversityCard = ({
   image,
-  program,
+  campus_name,
   university_name,
   name,
   data,
 }: {
   image: string;
-  program: string;
+  campus_name:string,
   university_name: string;
   name: string;
   data: Record<string, any>;
 }) => {
+  console.log(data,"Uni Data");
+  
   const disptach = useDispatch();
   const router = useRouter();
 
@@ -66,7 +68,7 @@ export const UniversityCard = ({
             <Grid container>
               <Grid item xs={8}>
                 <Typography variant="h6" fontSize={"1.1rem"}>
-                  <b> {name}</b>
+                  <b> {name.toCapitalize()}</b>
                 </Typography>
                 <Typography gutterBottom>{university_name}</Typography>
               </Grid>
@@ -80,7 +82,7 @@ export const UniversityCard = ({
                   }}
                 >
                   <Grid item>
-                    <CustomChip status={true} label={"January (Open)"} />
+                    <CustomChip status={true} label={`${data?.course_details?.intake}(open)`} />
                   </Grid>
                 </Box>
               </Grid>
@@ -89,25 +91,25 @@ export const UniversityCard = ({
                   <Typography fontSize={"1.1rem"}>
                     <b>Program Type</b>
                   </Typography>
-                  <CustomChip status={true} label="ADVANCED DIPLOMA" />
+                  <CustomChip status={true} label={data?.course_details?.program?.program_type} />
                 </Grid>
                 <Grid item display={"flex"} direction={"column"} gap={2}>
                   <Typography fontSize={"1.1rem"}>
                     <b>Duration</b>
                   </Typography>
-                  <CustomChip status={true} label="3 years" />
+                  <CustomChip status={true} label={`${data?.course_details?.duration} years`} />
                 </Grid>
                 <Grid item display={"flex"} direction={"column"} gap={2}>
                   <Typography fontSize={"1.1rem"}>
                     <b>App. Fees</b>
                   </Typography>
-                  <CustomChip status={true} label="ADVANCED DIPLOMA" />
+                  <CustomChip status={true} label={`$${data?.course_details?.price}`}/>
                 </Grid>
                 <Grid item display={"flex"} direction={"column"} gap={2}>
                   <Typography fontSize={"1.1rem"}>
                     <b>Campus</b>
                   </Typography>
-                  <CustomChip status={true} label="ADVANCED DIPLOMA" />
+                  <CustomChip status={true} label={campus_name.toCapitalize()}/>
                 </Grid>
                 <Grid
                   item

@@ -24,7 +24,7 @@ let defaultSearchVal:Record<string,string>={
 const FilterSidebar = ({ ...props }) => {
 const [searchData,setSearchData]=useState<Record<string,string>>(defaultSearchVal)
   const courseFinderController = new CourseFinderController();
-  const { handleChange,  filterationObj } = props;
+  const { handleChange,  filterationObj,handleBoolChange } = props;
 
   const courseLength = ["1", "1.5", "2", "3", "4", "5"];
   function handleSearch(value:string,key:string)
@@ -41,32 +41,37 @@ setSearchData((pre)=>({...pre,[key]:value}))
     queryFn: courseFinderController.getAllFilteredCountry,
   });
   const { data: sateList } = useQuery({
-    queryKey: ["stateList", filterationObj.locations.country],
+    queryKey: ["stateList", filterationObj],
     queryFn: () =>
       courseFinderController.getAllFilteredState({
-        country: filterationObj.locations.country.ids,
+        country: filterationObj.country,
       }),
+      placeholderData: (previousData) => previousData,
   });
   const { data: cityList } = useQuery({
-    queryKey: ["cityList", filterationObj.locations.state],
+    queryKey: ["cityList", filterationObj],
     queryFn: () =>
       courseFinderController.getAllFilteredCity({
-        state: filterationObj.locations.state.ids,
+        state: filterationObj.state,
       }),
+      placeholderData: (previousData) => previousData,
   });
 
   const { data: universities } = useQuery({
-    queryKey: ["filterUniversities", filterationObj.locations],
+    queryKey: ["filterUniversities", filterationObj],
     queryFn: () =>
       courseFinderController.getAllFilteredUniversities({
-        city: filterationObj.locations.city.ids,
-        country: filterationObj.locations.country.ids,
-        state: filterationObj.locations.state.ids,
+        city: filterationObj.city,
+        country: filterationObj.country,
+        state: filterationObj.state,
       }),
 
     placeholderData: (previousData) => previousData,
+    
   });
-console.log(searchData,"data");
+
+console.log(universities,"log");
+
 
   return (
     <>
@@ -77,7 +82,8 @@ console.log(searchData,"data");
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={() => handleChange("Universities", "onlyco_open")}
+                checked={filterationObj.onlyco_open}
+                  onChange={() => handleBoolChange("onlyco_open")}
                 />
               }
               label="Only Open Programs"
@@ -85,7 +91,8 @@ console.log(searchData,"data");
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={() => handleChange("Universities", "co_open")}
+                checked={filterationObj.co_open}
+                  onChange={() => handleBoolChange("co_open")}
                 />
               }
               label="Co op Programs"
@@ -133,15 +140,14 @@ console.log(searchData,"data");
                           key={country._id}
                           control={
                             <Checkbox
-                              checked={filterationObj.locations.country.ids.includes(
+                              checked={filterationObj.country.includes(
                                 country._id
                               )}
                               onChange={(e) =>
                                 handleChange(
-                                  "locations",
                                   "country",
                                   country._id,
-                                  country.name
+                      
                                 )
                               }
                             />
@@ -188,15 +194,13 @@ console.log(searchData,"data");
                       key={stat._id}
                       control={
                         <Checkbox
-                          checked={filterationObj.locations.state.ids.includes(
+                          checked={filterationObj.state.includes(
                             stat._id
                           )}
                           onChange={(e) =>
                             handleChange(
-                              "locations",
                               "state",
                               stat._id,
-                              stat.name
                             )
                           }
                         />
@@ -245,15 +249,13 @@ console.log(searchData,"data");
                           key={city._id}
                           control={
                             <Checkbox
-                              checked={filterationObj.locations.city.ids.includes(
+                              checked={filterationObj.city.includes(
                                 city._id
                               )}
                               onChange={(e) =>
                                 handleChange(
-                                  "locations",
                                   "city",
                                   city._id,
-                                  city.name
                                 )
                               }
                             />
@@ -301,15 +303,13 @@ console.log(searchData,"data");
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={filterationObj.Universities.universityName.includes(
+                              checked={filterationObj.universityName.includes(
                                 uni.name
                               )}
                               onChange={(e) =>
                                 handleChange(
-                                  "Universities",
                                   "universityName",
-                                  undefined,
-                                  uni?.name
+                                  uni._id,
                                 )
                               }
                             />
@@ -353,15 +353,13 @@ console.log(searchData,"data");
                         key={pro._id}
                         control={
                           <Checkbox
-                            checked={filterationObj.Universities.programType.includes(
+                            checked={filterationObj.programType.includes(
                               pro.program_type
                             )}
                             onChange={(e) =>
                               handleChange(
-                                "Universities",
                                 "programType",
-                                undefined,
-                                pro.program_type
+                                pro._id,
                               )
                             }
                           />
@@ -394,15 +392,13 @@ console.log(searchData,"data");
                       key={item}
                       control={
                         <Checkbox
-                          checked={filterationObj.Universities.courseDuration.includes(
+                          checked={filterationObj.courseDuration.includes(
                             item
                           )}
                           onChange={(e) =>
                             handleChange(
-                              "Universities",
                               "courseDuration",
-                              undefined,
-                              item
+                              item,
                             )
                           }
                         />
