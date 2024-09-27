@@ -1,9 +1,15 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Skeleton, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 
-const StudentProfile = ({ data }: { data: Record<string, any> }) => {
-  console.log(data, "Student_Profile");
+const StudentProfile = ({
+  data,
+  isLoading,
+}: {
+  data: Record<string, any>;
+  isLoading: boolean;
+}) => {
+  // console.log(data, "Student_Profile");
 
   return (
     <>
@@ -13,20 +19,34 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
           xs={12}
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography
-            sx={{ fontSize: "20px",  fontWeight: "bold" }}
-          >
-            Student Profile
-          </Typography>
-          <Link href={"/all-students/addEdit"}>
-            <Button variant="contained">Edit Profile</Button>
-          </Link>
+          {isLoading ? (
+            <Skeleton variant="text" width={200} />
+          ) : (
+            <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
+              Student Profile
+            </Typography>
+          )}
+          {isLoading ? (
+            <Skeleton variant="rectangular" height={40} width={150} />
+          ) : (
+            <Link href={"/all-students/addEdit"}>
+              <Button variant="contained">Edit Profile</Button>
+            </Link>
+          )}
         </Grid>
         <Grid item xs={12} sx={{ mt: "20px" }}>
-          <Typography sx={{ fontSize: "18px" }}>
-            <span style={{ fontWeight: "bold" }}>Full Name :</span>{" "}
-            {data?.first_name + " " + data?.middle_name + " " + data?.last_name}
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant="text" width={"100%"} />
+          ) : (
+            <Typography sx={{ fontSize: "18px" }}>
+              <span style={{ fontWeight: "bold" }}>Full Name :</span>{" "}
+              {data?.first_name +
+                " " +
+                data?.middle_name +
+                " " +
+                data?.last_name}
+            </Typography>
+          )}
         </Grid>
         {/* <Grid item xs={12} sx={{ mt: "20px" }}>
           <Typography sx={{ fontSize: "18px" }}>
@@ -35,9 +55,13 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
           </Typography>
         </Grid> */}
         <Grid item xs={12} sx={{ mt: "10px" }}>
-          <Typography sx={{ fontSize: "18px" }}>
-            <span style={{ fontWeight: "bold" }}>Student Code :</span> dhsjdh
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant="text" width={"100%"} />
+          ) : (
+            <Typography sx={{ fontSize: "18px" }}>
+              <span style={{ fontWeight: "bold" }}>Student Code :</span> dhsjdh
+            </Typography>
+          )}
         </Grid>
         {/* <Grid item xs={12} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px" }}>
@@ -46,9 +70,14 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
           </Typography>
         </Grid> */}
         <Grid item xs={12} sx={{ mt: "10px" }}>
-          <Typography sx={{ fontSize: "18px" }}>
-            <span style={{ fontWeight: "bold" }}>Gender :</span> {data?.gender}
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant="text" width={"100%"} />
+          ) : (
+            <Typography sx={{ fontSize: "18px" }}>
+              <span style={{ fontWeight: "bold" }}>Gender :</span>{" "}
+              {data?.gender}
+            </Typography>
+          )}
         </Grid>
         {/* <Grid item xs={12} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px" }}>
@@ -57,10 +86,14 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
           </Typography>
         </Grid> */}
         <Grid item xs={12} sx={{ mt: "10px" }}>
-          <Typography sx={{ fontSize: "18px" }}>
-            <span style={{ fontWeight: "bold" }}>Passport Number :</span>{" "}
-            {data?.passport_number}
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant="text" width={"100%"} />
+          ) : (
+            <Typography sx={{ fontSize: "18px" }}>
+              <span style={{ fontWeight: "bold" }}>Passport Number :</span>{" "}
+              {data?.passport_number}
+            </Typography>
+          )}
         </Grid>
         {/* <Grid item xs={12} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px" }}>
@@ -69,9 +102,13 @@ const StudentProfile = ({ data }: { data: Record<string, any> }) => {
           </Typography>
         </Grid> */}
         <Grid item xs={12} sx={{ mt: "10px" }}>
-          <Typography sx={{ fontSize: "18px" }}>
-            <span style={{ fontWeight: "bold" }}>Email</span> : {data?.email}
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant="text" width={"100%"} />
+          ) : (
+            <Typography sx={{ fontSize: "18px" }}>
+              <span style={{ fontWeight: "bold" }}>Email</span> : {data?.email}
+            </Typography>
+          )}
         </Grid>
         {/* <Grid item xs={6} sx={{ mt: "10px" }}>
           <Typography sx={{ fontSize: "18px", color: "black" }}>

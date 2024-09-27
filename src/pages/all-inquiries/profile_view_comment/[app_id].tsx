@@ -42,7 +42,7 @@ const ProfileViewComment = () => {
   const router = useRouter();
   const { app_id: params } = router.query;
   // const data = useSelector((state: any) => state?.data?.alleditdata?.editdata);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["application-profile"],
     queryFn: () => inqueryController.getApplicationProfile(params),
     enabled: !!params,
@@ -64,6 +64,7 @@ const ProfileViewComment = () => {
     overflowX: "auto",
     maxHeight: "700px",
   };
+
   return (
     <>
       <Grid container spacing={6}>
@@ -77,50 +78,57 @@ const ProfileViewComment = () => {
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <AccountCircleIcon sx={{ width: "100px", height: "100px" }} />
-                  {/* <Avatar
-                    variant="circular"
-                    src="https://img.freepik.com/premium-photo/beautiful-girl-avatar_984951-127.jpg"
-                    sx={{ width: "100px", height: "100px" }}
-                  /> */}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                    }}
-                  >
-                    {student?.first_name +
-                      " " +
-                      student?.middle_name +
-                      " " +
-                      student?.last_name}
-                  </Typography>
+                  {isLoading ? (
+                    <Skeleton variant="text" width={150} />
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                      }}
+                    >
+                      {student?.first_name +
+                        " " +
+                        student?.middle_name +
+                        " " +
+                        student?.last_name}
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Typography sx={{ color: "black", fontSize: "15px" }}>
-                    (GOHP_1993)
-                  </Typography>
+                  {isLoading ? (
+                    <Skeleton variant="text" width={150} />
+                  ) : (
+                    <Typography sx={{ color: "black", fontSize: "15px" }}>
+                      (GOHP_1993)
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <GChip
-                    size="medium"
-                    bgcolor="#808080"
-                    color="#808080"
-                    label="PND-VISA"
-                  />
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" height={30} width={100} />
+                  ) : (
+                    <GChip
+                      size="medium"
+                      bgcolor="#808080"
+                      color="#808080"
+                      label="PND-VISA"
+                    />
+                  )}
                 </Grid>
               </Grid>
               <Grid container spacing={2} sx={{ mt: "15px" }}>
@@ -129,75 +137,164 @@ const ProfileViewComment = () => {
                   xs={12}
                   sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <MenuBookIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
-                  <Typography
-                    sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
-                  >
-                    FANSHAWE COLLEGE
-                  </Typography>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="circular"
+                        width={25}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                      <Skeleton variant="text" width={"100%"} />
+                    </>
+                  ) : (
+                    <>
+                      <MenuBookIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
+                      <Typography
+                        sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
+                      >
+                        FANSHAWE COLLEGE
+                      </Typography>
+                    </>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <SchoolIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
-                  <Typography
-                    sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
-                  >
-                    {programName}
-                  </Typography>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="circular"
+                        width={25}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                      <Skeleton variant="text" width={"100%"} />
+                    </>
+                  ) : (
+                    <>
+                      <SchoolIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
+                      <Typography
+                        sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
+                      >
+                        {programName}
+                      </Typography>
+                    </>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <RoomIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
-                  <Typography
-                    sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
-                  >
-                    London
-                  </Typography>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="circular"
+                        width={25}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                      <Skeleton variant="text" width={"100%"} />
+                    </>
+                  ) : (
+                    <>
+                      <RoomIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
+                      <Typography
+                        sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
+                      >
+                        London
+                      </Typography>
+                    </>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <PublicIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
-                  <Typography
-                    sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
-                  >
-                    {country}
-                  </Typography>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="circular"
+                        width={25}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                      <Skeleton variant="text" width={"100%"} />
+                    </>
+                  ) : (
+                    <>
+                      <PublicIcon sx={{ fontSize: "27px", color: "gray" }} />{" "}
+                      <Typography
+                        sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
+                      >
+                        {country}
+                      </Typography>
+                    </>
+                  )}
                 </Grid>
 
-                <Grid item xs={12} sx={{ mt: "5px" }}>
-                  <span style={{ marginLeft: "10px" }}>
-                    <GChip
-                      size="small"
-                      bgcolor="#008000"
-                      color="#008000"
-                      label={data?.intake_month + "-" + data?.intake_year}
-                    />
-                  </span>
-                  <span style={{ marginLeft: "10px" }}>
-                    <GChip
-                      size="small"
-                      bgcolor="#A020F0"
-                      color="#A020F0"
-                      label={programType}
-                    />{" "}
-                  </span>
-                  <span style={{ marginLeft: "10px" }}>
-                    <GChip
-                      size="small"
-                      bgcolor="#FF0000"
-                      color="#FF0000"
-                      label="DEFER APP"
-                    />{" "}
-                  </span>
+                <Grid item xs={12} sx={{ mt: "5px", display: "flex" }}>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <span style={{ marginLeft: "10px" }}>
+                      <GChip
+                        size="small"
+                        bgcolor="#008000"
+                        color="#008000"
+                        label={data?.intake_month + "-" + data?.intake_year}
+                      />
+                    </span>
+                  )}
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <span style={{ marginLeft: "10px" }}>
+                      <GChip
+                        size="small"
+                        bgcolor="#A020F0"
+                        color="#A020F0"
+                        label={programType}
+                      />{" "}
+                    </span>
+                  )}
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={25}
+                        sx={{ mr: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <span style={{ marginLeft: "10px" }}>
+                      <GChip
+                        size="small"
+                        bgcolor="#FF0000"
+                        color="#FF0000"
+                        label="DEFER APP"
+                      />{" "}
+                    </span>
+                  )}
                 </Grid>
                 <Grid
                   item
@@ -208,24 +305,46 @@ const ProfileViewComment = () => {
                     mt: "15px",
                   }}
                 >
-                  <Button
-                    variant="contained"
-                    startIcon={<KeyboardBackspaceIcon />}
-                    onClick={() => {
-                      router.push("/all-inquiries/profile_back");
-                    }}
-                  >
-                    Profile
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<KeyboardBackspaceIcon />}
-                    onClick={() => {
-                      router.push("/all-inquiries");
-                    }}
-                  >
-                    Back
-                  </Button>
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="rectangular"
+                        width={120}
+                        height={35}
+                        sx={{ mr: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      startIcon={<KeyboardBackspaceIcon />}
+                      onClick={() => {
+                        router.push("/all-inquiries/" + student?._id);
+                      }}
+                    >
+                      Profile
+                    </Button>
+                  )}
+                  {isLoading ? (
+                    <>
+                      <Skeleton
+                        variant="rectangular"
+                        width={120}
+                        height={35}
+                        sx={{ mr: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      startIcon={<KeyboardBackspaceIcon />}
+                      onClick={() => {
+                        router.push("/all-inquiries");
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </CardContent>

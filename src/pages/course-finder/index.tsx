@@ -58,22 +58,21 @@ const CourseFinder = () => {
     },
   });
 
-  const {data:Courses,isPending:CourseLoading}=useQuery({
-    queryKey:["FilterCourses",filterationObj],
-    queryFn:()=>courseFinderController.getAllFilteredCourses({
-      city:filterationObj.city,
-      country:filterationObj.country,
-      third_party:filterationObj.third_party,
-      is_partner:filterationObj.is_partner,
-      courseDuration:filterationObj.courseDuration,
-      is_active:true,
-      programType:filterationObj.programType,
-      state:filterationObj.state,
-      university:filterationObj.universityName
-
-    }),
-
-  })
+  const { data: Courses, isPending: CourseLoading } = useQuery({
+    queryKey: ["FilterCourses", filterationObj],
+    queryFn: () =>
+      courseFinderController.getAllFilteredCourses({
+        city: filterationObj.city,
+        country: filterationObj.country,
+        third_party: filterationObj.third_party,
+        is_partner: filterationObj.is_partner,
+        courseDuration: filterationObj.courseDuration,
+        is_active: true,
+        programType: filterationObj.programType,
+        state: filterationObj.state,
+        university: filterationObj.universityName,
+      }),
+  });
 
   function handleChange(key: keyof filterObj, id: string) {
     const copy = JSON.parse(JSON.stringify(filterationObj));
@@ -86,16 +85,17 @@ const CourseFinder = () => {
 
     setFilterationObj({ ...copy });
   }
-function handleBoolChange(key:"third_party"|"is_partner"){
-setFilterationObj((pre)=>({...pre,[key]:!pre[key]}))
-}
+  function handleBoolChange(key: "third_party" | "is_partner") {
+    setFilterationObj((pre) => ({ ...pre, [key]: !pre[key] }));
+  }
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("search", `${val}`);
     replace(`${pathname}?${params.toString()}`);
   }
+  console.log(Courses, "Courses");
 
-return (
+  return (
     <>
       <Grid container spacing={4}>
         <Grid item xs={12} lg={2.5}>
@@ -130,7 +130,8 @@ return (
                       intake={item.intake}
                       data={{
                         course_details: {
-                            ...item.course_id,
+                          name: item?.name,
+                          _id: item?._id,
                           price: item?.price,
                           program: item?.graduation_type,
                         },

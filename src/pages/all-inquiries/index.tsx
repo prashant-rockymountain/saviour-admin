@@ -18,6 +18,7 @@ const TABLE_HEAD = [
   { label: "SR.No", align: "left" },
   { label: "Name", align: "left" },
   { label: "Student Id", align: "left" },
+  { label: "Total Application", align: "center" },
   { label: "Application status", align: "center" },
   { label: "Application Stage", align: "center" },
   // { label: "In Take", align: "center" },

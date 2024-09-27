@@ -25,20 +25,19 @@ export const UniversityCard = ({
   university_name,
   name,
   data,
-  intake
+  intake,
 }: {
-  intake:string[]
+  intake: string[];
   image: string;
-  campus_name:string,
+  campus_name: string;
   university_name: string;
   name: string;
   data: Record<string, any>;
 }) => {
-  
   const disptach = useDispatch();
   const router = useRouter();
-  
-  
+  console.log(data, "nouifh");
+
   return (
     <Card>
       <CardContent>
@@ -47,7 +46,7 @@ export const UniversityCard = ({
             <Box
               component={"img"}
               width={"100%"}
-              sx={{ borderRadius: "6px"}}
+              sx={{ borderRadius: "6px" }}
               maxHeight={"80vh"}
               src={ApiUrl.IMAGE_BASE_URL + image}
             />
@@ -67,80 +66,77 @@ export const UniversityCard = ({
             </Grid>
           </Grid>
           <Grid item xs={7}>
+            <Typography variant="h6" fontSize={"1.1rem"}>
+              <b> {name.toCapitalize()}</b>
+            </Typography>
+            <Typography gutterBottom>{university_name}</Typography>
 
-          
-                <Typography variant="h6" fontSize={"1.1rem"}>
-                  <b> {name.toCapitalize()}</b>
+            <Grid container spacing={5}>
+              <Grid item display={"flex"} direction={"column"} gap={2}>
+                <Typography fontSize={"1.1rem"}>
+                  <b>Program Type</b>
                 </Typography>
-                <Typography gutterBottom>{university_name}</Typography>
-            
-<Grid container spacing={5}>
-                <Grid item display={"flex"} direction={"column"} gap={2}>
-                  <Typography fontSize={"1.1rem"}>
-                    <b>Program Type</b>
-                  </Typography>
-                  <CustomChip status={true} label={data?.course_details?.program?.program_type} />
-                </Grid>
-                <Grid item display={"flex"} direction={"column"} gap={2}>
-                  <Typography fontSize={"1.1rem"}>
-                    <b>Duration</b>
-                  </Typography>
-                  <CustomChip status={true} label={`${data?.course_details?.duration} years`} />
-                </Grid>
-                <Grid item display={"flex"} direction={"column"} gap={2}>
-                  <Typography fontSize={"1.1rem"}>
-                    <b>App. Fees</b>
-                  </Typography>
-                  <CustomChip status={true} label={`$${data?.course_details?.price}`}/>
-                </Grid>
-                <Grid item display={"flex"} direction={"column"} gap={2}>
-                  <Typography fontSize={"1.1rem"}>
-                    <b>Campus</b>
-                  </Typography>
-                  <CustomChip status={true} label={campus_name.toCapitalize()}/>
-                </Grid>
-
-
+                <CustomChip
+                  status={true}
+                  label={data?.course_details?.program?.program_type}
+                />
               </Grid>
-   
-         
-               <Typography pt={2} color={textcolor.primary_text}>
-                    Tentative Commision &nbsp;: &nbsp;
-                    <CustomChip label="CAD 459" status={true} />
-                  </Typography>
-   
+              <Grid item display={"flex"} direction={"column"} gap={2}>
+                <Typography fontSize={"1.1rem"}>
+                  <b>Duration</b>
+                </Typography>
+                <CustomChip
+                  status={true}
+                  label={`${data?.course_details?.duration} years`}
+                />
+              </Grid>
+              <Grid item display={"flex"} direction={"column"} gap={2}>
+                <Typography fontSize={"1.1rem"}>
+                  <b>App. Fees</b>
+                </Typography>
+                <CustomChip
+                  status={true}
+                  label={`$${data?.course_details?.price}`}
+                />
+              </Grid>
+              <Grid item display={"flex"} direction={"column"} gap={2}>
+                <Typography fontSize={"1.1rem"}>
+                  <b>Campus</b>
+                </Typography>
+                <CustomChip status={true} label={campus_name.toCapitalize()} />
+              </Grid>
+            </Grid>
+
+            <Typography pt={2} color={textcolor.primary_text}>
+              Tentative Commision &nbsp;: &nbsp;
+              <CustomChip label="CAD 459" status={true} />
+            </Typography>
           </Grid>
-          <Grid item xs={2} >
-<Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 3,
-                    float: "right",
-                  }}
-                >
-                  {(intake as string[]).toMonthSort().map((item)=>(
-<CustomChip status={true} label={`${item}(open)`} />
-                  ))}
-
-                </Box>
-   
-
-              </Grid>
+          <Grid item xs={2}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+                float: "right",
+              }}
+            >
+              {(intake as string[]).toMonthSort().map((item) => (
+                <CustomChip status={true} label={`${item}(open)`} />
+              ))}
+            </Box>
+          </Grid>
         </Grid>
         <Grid item xs={12} pb={6}>
-
-               
-                    <Button
-                      variant="contained"
-                      sx={{float:"right"}}
-                      onClick={() => {
-                        disptach(addeditdata(data)),
-                          router.push("/stepperForm");
-                      }}
-                    >
-                      Apply Now
-                    </Button>
+          <Button
+            variant="contained"
+            sx={{ float: "right" }}
+            onClick={() => {
+              disptach(addeditdata({...data,intake})), router.push("/stepperForm");
+            }}
+          >
+            Apply Now
+          </Button>
         </Grid>
       </CardContent>
     </Card>

@@ -45,6 +45,7 @@ const InquiriesRow: FC<rowType> = ({
             {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
           </TableCell>
           <TableCell align="left"></TableCell>
+          <TableCell align="center">{row?.applications?.length} </TableCell>
           <TableCell align="center"> </TableCell>
           <TableCell align="center"> </TableCell>
           <TableCell align="center">

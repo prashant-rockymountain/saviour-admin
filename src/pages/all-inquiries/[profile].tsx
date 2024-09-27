@@ -43,7 +43,7 @@ const ProfileBack = () => {
 
   const { profile: params } = router.query;
 
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isLoading } = useQuery({
     queryKey: ["inqueryProfile", params],
     enabled: !!params,
     queryFn: () => inqueryController.getInqueryProfile(params),
@@ -70,50 +70,58 @@ const ProfileBack = () => {
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <AccountCircleIcon sx={{ width: "100px", height: "100px" }} />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  {isLoading ? (
+                    <Skeleton variant="text" width={150} />
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
 
-                  {/* <Avatar
-                    variant="circular"
-                    src="https://img.freepik.com/premium-photo/beautiful-girl-avatar_984951-127.jpg"
-                    sx={{ width: "100px", height: "100px" }}
-                  /> */}
+                        fontSize: "18px",
+                      }}
+                    >
+                      {studentData?.first_name +
+                        " " +
+                        studentData?.middle_name +
+                        " " +
+                        studentData?.last_name}
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-
-                      fontSize: "18px",
-                    }}
-                  >
-                    {studentData?.first_name +
-                      " " +
-                      studentData?.middle_name +
-                      " " +
-                      studentData?.last_name}
-                  </Typography>
+                  {isLoading ? (
+                    <Skeleton variant="text" width={150} />
+                  ) : (
+                    <Typography sx={{ fontSize: "15px" }}>
+                      (GOHP_1993)
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <Typography sx={{ fontSize: "15px" }}>(GOHP_1993)</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <GChip
-                    size="medium"
-                    bgcolor="#808080"
-                    color="#808080"
-                    label="PND-VISA"
-                  />
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" height={20} width={100} />
+                  ) : (
+                    <GChip
+                      size="medium"
+                      bgcolor="#808080"
+                      color="#808080"
+                      label="PND-VISA"
+                    />
+                  )}
                 </Grid>
               </Grid>
               <Grid container spacing={2} sx={{ mt: "15px" }}>
@@ -197,15 +205,19 @@ const ProfileBack = () => {
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center", mt: "15px" }}
                 >
-                  <Button
-                    variant="contained"
-                    startIcon={<KeyboardBackspaceIcon />}
-                    onClick={() => {
-                      router.push("/all-inquiries");
-                    }}
-                  >
-                    Back
-                  </Button>
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" height={35} width={120} />
+                  ) : (
+                    <Button
+                      variant="contained"
+                      startIcon={<KeyboardBackspaceIcon />}
+                      onClick={() => {
+                        router.push("/all-inquiries");
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </CardContent>
@@ -220,17 +232,37 @@ const ProfileBack = () => {
                   variant="scrollable"
                   aria-label="lab API tabs example"
                 >
-                  <Tab label="Profile" value="1" />
-                  <Tab label="Documents" value="2" />
-                  <Tab label="Application" value="3" />
-                  <Tab label="Other Service" value="4" />
+                  {" "}
+                  {isLoading ? (
+                    <Skeleton variant="text" width={90} sx={{ mr: 3 }} />
+                  ) : (
+                    <Tab label="Profile" value="1" />
+                  )}
+                  {isLoading ? (
+                    <Skeleton variant="text" width={90} sx={{ mr: 3 }} />
+                  ) : (
+                    <Tab label="Application" value="3" />
+                  )}
+                  {isLoading ? (
+                    <Skeleton variant="text" width={90} sx={{ mr: 3 }} />
+                  ) : (
+                    <Tab label="Documents" value="2" />
+                  )}
+                  {isLoading ? (
+                    <Skeleton variant="text" width={90} sx={{ mr: 3 }} />
+                  ) : (
+                    <Tab label="Other Service" value="4" />
+                  )}
                 </TabList>
               </Box>
               <TabPanel value="1" sx={{ p: "24px 0px" }}>
                 <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      <StudentProfile data={studentData} />
+                      <StudentProfile
+                        data={studentData}
+                        isLoading={isLoading}
+                      />
                     </CardContent>
                   </Card>
                 </Grid>

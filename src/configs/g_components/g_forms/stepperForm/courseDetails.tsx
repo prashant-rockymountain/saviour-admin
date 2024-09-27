@@ -197,20 +197,7 @@ const CourseDetails = () => {
                       {...register("intake_month")}
                       // error={!!errors.commission_type}
                     >
-                      {[
-                        "January",
-                        "February",
-                        "March",
-                        "April",
-                        "May",
-                        "June",
-                        "July",
-                        "August",
-                        "September",
-                        "October",
-                        "November",
-                        "December",
-                      ].map((month) => (
+                      {editData?.intake?.map((month: string) => (
                         <MenuItem key={month} value={`${month}`}>
                           {month}
                         </MenuItem>

@@ -16,20 +16,20 @@ import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { useQuery } from "@tanstack/react-query";
-let defaultSearchVal:Record<string,string>={
-  country:"",
-  state:"",
-  city:""
-}
+let defaultSearchVal: Record<string, string> = {
+  country: "",
+  state: "",
+  city: "",
+};
 const FilterSidebar = ({ ...props }) => {
-const [searchData,setSearchData]=useState<Record<string,string>>(defaultSearchVal)
+  const [searchData, setSearchData] =
+    useState<Record<string, string>>(defaultSearchVal);
   const courseFinderController = new CourseFinderController();
-  const { handleChange,  filterationObj,handleBoolChange } = props;
+  const { handleChange, filterationObj, handleBoolChange } = props;
 
   const courseLength = ["1", "1.5", "2", "3", "4", "5"];
-  function handleSearch(value:string,key:string)
-  {
-setSearchData((pre)=>({...pre,[key]:value}))
+  function handleSearch(value: string, key: string) {
+    setSearchData((pre) => ({ ...pre, [key]: value }));
   }
   const { data: allPrograms } = useQuery({
     queryKey: ["program"],
@@ -46,7 +46,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
       courseFinderController.getAllFilteredState({
         country: filterationObj.country,
       }),
-      placeholderData: (previousData) => previousData,
+    placeholderData: (previousData) => previousData,
   });
   const { data: cityList } = useQuery({
     queryKey: ["cityList", filterationObj],
@@ -54,7 +54,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
       courseFinderController.getAllFilteredCity({
         state: filterationObj.state,
       }),
-      placeholderData: (previousData) => previousData,
+    placeholderData: (previousData) => previousData,
   });
 
   const { data: universities } = useQuery({
@@ -67,11 +67,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
       }),
 
     placeholderData: (previousData) => previousData,
-    
   });
-
-
-
 
   return (
     <>
@@ -82,7 +78,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
             <FormControlLabel
               control={
                 <Checkbox
-                checked={filterationObj.third_party}
+                  checked={filterationObj.third_party}
                   onChange={() => handleBoolChange("third_party")}
                 />
               }
@@ -91,7 +87,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
             <FormControlLabel
               control={
                 <Checkbox
-                checked={filterationObj.is_partner}
+                  checked={filterationObj.is_partner}
                   onChange={() => handleBoolChange("is_partner")}
                 />
               }
@@ -131,30 +127,29 @@ setSearchData((pre)=>({...pre,[key]:value}))
                     }}
                   >
                     <FormGroup>
-                      {
-                      
-                   
-                      countryList?.map((country: Record<string, any>) => (
-                        (country.name as string).toCongest().includes((searchData.country as string).toCongest()) &&
-                        <FormControlLabel
-                          key={country._id}
-                          control={
-                            <Checkbox
-                              checked={filterationObj.country.includes(
-                                country._id
-                              )}
-                              onChange={(e) =>
-                                handleChange(
-                                  "country",
-                                  country._id,
-                      
-                                )
+                      {countryList?.map(
+                        (country: Record<string, any>) =>
+                          (country.name as string)
+                            .toCongest()
+                            .includes(
+                              (searchData.country as string).toCongest()
+                            ) && (
+                            <FormControlLabel
+                              key={country._id}
+                              control={
+                                <Checkbox
+                                  checked={filterationObj.country.includes(
+                                    country._id
+                                  )}
+                                  onChange={(e) =>
+                                    handleChange("country", country._id)
+                                  }
+                                />
                               }
+                              label={(country.name as string).toCapitalize()}
                             />
-                          }
-                          label={(country.name as string).toCapitalize()}  
-                        />
-                      ))}
+                          )
+                      )}
                     </FormGroup>
                   </AccordionDetails>
                 </Grid>
@@ -188,26 +183,23 @@ setSearchData((pre)=>({...pre,[key]:value}))
                 sx={{ height: "35vh", overflowY: "scroll", pt: 1, pl: 5 }}
               >
                 <FormGroup sx={{ ml: 0 }}>
-                  {sateList?.map((stat: Record<string, any>) => (
-                              (stat.name as string).toCongest().includes((searchData.state as string).toCongest()) &&
-                    <FormControlLabel
-                      key={stat._id}
-                      control={
-                        <Checkbox
-                          checked={filterationObj.state.includes(
-                            stat._id
-                          )}
-                          onChange={(e) =>
-                            handleChange(
-                              "state",
-                              stat._id,
-                            )
+                  {sateList?.map(
+                    (stat: Record<string, any>) =>
+                      (stat.name as string)
+                        .toCongest()
+                        .includes((searchData.state as string).toCongest()) && (
+                        <FormControlLabel
+                          key={stat._id}
+                          control={
+                            <Checkbox
+                              checked={filterationObj.state.includes(stat._id)}
+                              onChange={(e) => handleChange("state", stat._id)}
+                            />
                           }
+                          label={(stat?.name as string).toCapitalize()}
                         />
-                      }
-                      label={(stat?.name as string).toCapitalize()}
-                    />
-                  ))}
+                      )
+                  )}
                 </FormGroup>
               </AccordionDetails>
             </Accordion>
@@ -243,26 +235,29 @@ setSearchData((pre)=>({...pre,[key]:value}))
                     }}
                   >
                     <FormGroup>
-                      {cityList?.map((city: Record<string, any>) => (
-                                 (city.name as string).toCongest().includes((searchData.city as string).toCongest())  &&
-                        <FormControlLabel
-                          key={city._id}
-                          control={
-                            <Checkbox
-                              checked={filterationObj.city.includes(
-                                city._id
-                              )}
-                              onChange={(e) =>
-                                handleChange(
-                                  "city",
-                                  city._id,
-                                )
+                      {cityList?.map(
+                        (city: Record<string, any>) =>
+                          (city.name as string)
+                            .toCongest()
+                            .includes(
+                              (searchData.city as string).toCongest()
+                            ) && (
+                            <FormControlLabel
+                              key={city._id}
+                              control={
+                                <Checkbox
+                                  checked={filterationObj.city.includes(
+                                    city._id
+                                  )}
+                                  onChange={(e) =>
+                                    handleChange("city", city._id)
+                                  }
+                                />
                               }
+                              label={(city.name as string).toCapitalize()}
                             />
-                          }
-                          label={(city.name as string).toCapitalize()}
-                        />
-                      ))}
+                          )
+                      )}
                     </FormGroup>
                   </AccordionDetails>
                 </Grid>
@@ -307,10 +302,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
                                 uni.name
                               )}
                               onChange={(e) =>
-                                handleChange(
-                                  "universityName",
-                                  uni._id,
-                                )
+                                handleChange("universityName", uni._id)
                               }
                             />
                           }
@@ -357,10 +349,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
                               pro.program_type
                             )}
                             onChange={(e) =>
-                              handleChange(
-                                "programType",
-                                pro._id,
-                              )
+                              handleChange("programType", pro._id)
                             }
                           />
                         }
@@ -392,15 +381,8 @@ setSearchData((pre)=>({...pre,[key]:value}))
                       key={item}
                       control={
                         <Checkbox
-                          checked={filterationObj.courseDuration.includes(
-                            item
-                          )}
-                          onChange={(e) =>
-                            handleChange(
-                              "courseDuration",
-                              item,
-                            )
-                          }
+                          checked={filterationObj.courseDuration.includes(item)}
+                          onChange={(e) => handleChange("courseDuration", item)}
                         />
                       }
                       label={item.toCapitalize()}
