@@ -24,8 +24,8 @@ interface filterObj {
   universityName: string[];
   programType: string[];
   courseDuration: string[];
-  onlyco_open: boolean;
-  co_open: boolean;
+  third_party: boolean;
+  is_partner: boolean;
 }
 
 const CourseFinder = () => {
@@ -42,8 +42,8 @@ const CourseFinder = () => {
     universityName: [],
     programType: [],
     courseDuration: [],
-    onlyco_open: true,
-    co_open: true,
+    third_party: true,
+    is_partner: true,
   });
 
   const {
@@ -63,8 +63,8 @@ const CourseFinder = () => {
     queryFn:()=>courseFinderController.getAllFilteredCourses({
       city:filterationObj.city,
       country:filterationObj.country,
-      co_open:filterationObj.co_open,
-      onlyco_open:filterationObj.onlyco_open,
+      third_party:filterationObj.third_party,
+      is_partner:filterationObj.is_partner,
       courseDuration:filterationObj.courseDuration,
       is_active:true,
       programType:filterationObj.programType,
@@ -72,7 +72,7 @@ const CourseFinder = () => {
       university:filterationObj.universityName
 
     }),
-    // placeholderData: (previousData) => previousData,
+
   })
 
   function handleChange(key: keyof filterObj, id: string) {
@@ -86,7 +86,7 @@ const CourseFinder = () => {
 
     setFilterationObj({ ...copy });
   }
-function handleBoolChange(key:"onlyco_open"|"co_open"){
+function handleBoolChange(key:"third_party"|"is_partner"){
 setFilterationObj((pre)=>({...pre,[key]:!pre[key]}))
 }
   function handlePagination(_: any, val: number) {

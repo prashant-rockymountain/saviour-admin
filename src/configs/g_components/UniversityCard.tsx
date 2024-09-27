@@ -37,7 +37,6 @@ export const UniversityCard = ({
   
   const disptach = useDispatch();
   const router = useRouter();
-  console.log(intake);
   
   
   return (

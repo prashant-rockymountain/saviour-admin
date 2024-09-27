@@ -70,7 +70,7 @@ setSearchData((pre)=>({...pre,[key]:value}))
     
   });
 
-console.log(universities,"log");
+
 
 
   return (
@@ -82,20 +82,20 @@ console.log(universities,"log");
             <FormControlLabel
               control={
                 <Checkbox
-                checked={filterationObj.onlyco_open}
-                  onChange={() => handleBoolChange("onlyco_open")}
+                checked={filterationObj.third_party}
+                  onChange={() => handleBoolChange("third_party")}
                 />
               }
-              label="Only Open Programs"
+              label="is Third Party"
             />
             <FormControlLabel
               control={
                 <Checkbox
-                checked={filterationObj.co_open}
-                  onChange={() => handleBoolChange("co_open")}
+                checked={filterationObj.is_partner}
+                  onChange={() => handleBoolChange("is_partner")}
                 />
               }
-              label="Co op Programs"
+              label="is Partner"
             />
           </FormGroup>
 
