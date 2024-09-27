@@ -14,7 +14,6 @@ import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import { FC } from "react";
 import { ApiUrl } from "../api/apiUrls";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
@@ -26,18 +25,20 @@ export const UniversityCard = ({
   university_name,
   name,
   data,
+  intake
 }: {
+  intake:string[]
   image: string;
   campus_name:string,
   university_name: string;
   name: string;
   data: Record<string, any>;
 }) => {
-  console.log(data,"Uni Data");
   
   const disptach = useDispatch();
   const router = useRouter();
-  console.log(data,"diajuW");
+  console.log(intake);
+  
   
   return (
     <Card>
@@ -46,8 +47,9 @@ export const UniversityCard = ({
           <Grid item xs={12} md={3}>
             <Box
               component={"img"}
-              width={{ xs: "20vw", lg: "14vw" }}
-              sx={{ borderRadius: "6px" }}
+              width={"100%"}
+              sx={{ borderRadius: "6px"}}
+              maxHeight={"80vh"}
               src={ApiUrl.IMAGE_BASE_URL + image}
             />
             <Grid
@@ -65,29 +67,15 @@ export const UniversityCard = ({
               <MapOutlinedIcon color={"info"} />
             </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <Grid container>
-              <Grid item xs={8}>
+          <Grid item xs={7}>
+
+          
                 <Typography variant="h6" fontSize={"1.1rem"}>
                   <b> {name.toCapitalize()}</b>
                 </Typography>
                 <Typography gutterBottom>{university_name}</Typography>
-              </Grid>
-              <Grid item xs={4} direction={"column"}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 3,
-                    float: "right",
-                  }}
-                >
-                  <Grid item>
-                    <CustomChip status={true} label={`${data?.course_details?.intake}(open)`} />
-                  </Grid>
-                </Box>
-              </Grid>
-              <Grid container spacing={5}>
+            
+<Grid container spacing={5}>
                 <Grid item display={"flex"} direction={"column"} gap={2}>
                   <Typography fontSize={"1.1rem"}>
                     <b>Program Type</b>
@@ -112,20 +100,41 @@ export const UniversityCard = ({
                   </Typography>
                   <CustomChip status={true} label={campus_name.toCapitalize()}/>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  display={"flex"}
-                  flexDirection={"row"}
-                  justifyContent={"space-between"}
-                >
-                  <Typography color={textcolor.primary_text}>
+
+
+              </Grid>
+   
+         
+               <Typography pt={2} color={textcolor.primary_text}>
                     Tentative Commision &nbsp;: &nbsp;
                     <CustomChip label="CAD 459" status={true} />
                   </Typography>
-                  <Grid item>
+   
+          </Grid>
+          <Grid item xs={2} >
+<Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 3,
+                    float: "right",
+                  }}
+                >
+                  {(intake as string[]).toMonthSort().map((item)=>(
+<CustomChip status={true} label={`${item}(open)`} />
+                  ))}
+
+                </Box>
+   
+
+              </Grid>
+        </Grid>
+        <Grid item xs={12} pb={6}>
+
+               
                     <Button
                       variant="contained"
+                      sx={{float:"right"}}
                       onClick={() => {
                         disptach(addeditdata(data)),
                           router.push("/stepperForm");
@@ -133,11 +142,6 @@ export const UniversityCard = ({
                     >
                       Apply Now
                     </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
         </Grid>
       </CardContent>
     </Card>

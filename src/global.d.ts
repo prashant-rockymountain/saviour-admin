@@ -3,4 +3,6 @@
     toCongest():string
   }
 
- 
+ interface Array<T>{
+  toMonthSort():Array<T>
+ }

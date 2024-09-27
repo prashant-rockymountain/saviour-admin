@@ -127,6 +127,7 @@ return (
                       university_name={item.university.name.name}
                       name={item.name}
                       campus_name={item?.university?.location?.city?.name}
+                      intake={item.intake}
                       data={{
                         course_details: {
                             ...item.course_id,
