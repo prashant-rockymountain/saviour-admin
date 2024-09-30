@@ -121,7 +121,7 @@ export const UniversityCard = ({
                 float: "right",
               }}
             >
-              {(intake as string[]).toMonthSort().map((item) => (
+              {(intake as string[])?.toMonthSort()?.map((item) => (
                 <CustomChip status={true} label={`${item}(open)`} />
               ))}
             </Box>
@@ -132,7 +132,8 @@ export const UniversityCard = ({
             variant="contained"
             sx={{ float: "right" }}
             onClick={() => {
-              disptach(addeditdata({...data,intake})), router.push("/stepperForm");
+              disptach(addeditdata({ ...data, intake })),
+                router.push("/stepperForm");
             }}
           >
             Apply Now

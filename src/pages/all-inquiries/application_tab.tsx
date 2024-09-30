@@ -15,7 +15,9 @@ const Application = ({ data }: { data: [Record<string, any>] }) => {
           </Typography>
         </Grid>
         {data?.map((application: Record<string, any>, index: number) => (
-          <ApplicationCard data={application} />
+          <Grid item xs={12}>
+            <ApplicationCard data={application} />
+          </Grid>
         ))}
       </Grid>
     </>

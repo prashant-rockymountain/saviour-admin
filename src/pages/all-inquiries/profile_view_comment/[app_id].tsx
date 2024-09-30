@@ -52,6 +52,8 @@ const ProfileViewComment = () => {
   const programType = data?.credentials?.program_type;
   const student = data?.student;
   const programName = data?.program_name?.name;
+  const instituteName = data?.institute_name;
+  const countryName = data?.country?.name;
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -101,7 +103,7 @@ const ProfileViewComment = () => {
                     </Typography>
                   )}
                 </Grid>
-                <Grid
+                {/* <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", justifyContent: "center" }}
@@ -113,7 +115,7 @@ const ProfileViewComment = () => {
                       (GOHP_1993)
                     </Typography>
                   )}
-                </Grid>
+                </Grid> */}
                 <Grid
                   item
                   xs={12}
@@ -153,7 +155,7 @@ const ProfileViewComment = () => {
                       <Typography
                         sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
                       >
-                        FANSHAWE COLLEGE
+                        {instituteName}
                       </Typography>
                     </>
                   )}
@@ -205,12 +207,12 @@ const ProfileViewComment = () => {
                       <Typography
                         sx={{ color: "gray", fontSize: "14px", ml: "5px" }}
                       >
-                        London
+                        {countryName}
                       </Typography>
                     </>
                   )}
                 </Grid>
-                <Grid
+                {/* <Grid
                   item
                   xs={12}
                   sx={{ display: "flex", alignItems: "center" }}
@@ -235,7 +237,7 @@ const ProfileViewComment = () => {
                       </Typography>
                     </>
                   )}
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sx={{ mt: "5px", display: "flex" }}>
                   {isLoading ? (
@@ -362,20 +364,32 @@ const ProfileViewComment = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography
-                  sx={{ fontSize: "20px", fontWeight: "bold", color: "black" }}
-                >
-                  Comment
-                </Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    // dispatch(addeditdata(null));
-                    setOpen(true);
-                  }}
-                >
-                  Add Comment
-                </Button>
+                {isLoading ? (
+                  <Skeleton variant="text" width={250} />
+                ) : (
+                  <Typography
+                    sx={{
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    Comment
+                  </Typography>
+                )}
+                {isLoading ? (
+                  <Skeleton variant="rectangular" height={35} width={150} />
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      // dispatch(addeditdata(null));
+                      setOpen(true);
+                    }}
+                  >
+                    Add Comment
+                  </Button>
+                )}
                 {/* </Link> */}
               </Grid>
             </CardContent>
@@ -416,8 +430,7 @@ const ProfileViewComment = () => {
                   //   {...register(`education_info.${index}.type`)}
                   //   error={!!errors?.education_info?.[index]?.type}
                 >
-                  <MenuItem value={"on campus"}>ON CAMPUS</MenuItem>
-                  <MenuItem value={"off campus"}>OFF CAMPUS</MenuItem>
+                  <MenuItem value={"on campus"}></MenuItem>
                 </Select>
                 {/* <FormHelperText error={true}>
                   {!!errors?.education_info?.[index]?.type &&

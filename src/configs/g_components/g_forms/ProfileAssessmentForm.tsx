@@ -762,7 +762,6 @@ const ProfileAssessmentForm = ({
                             getCurrentState(values.country, values.state)
                           }
                           sx={{ mt: 2 }}
-                          disablePortal
                           options={
                             getStateArray("country")?.length > 0
                               ? getStateArray("country")

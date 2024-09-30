@@ -44,11 +44,11 @@ const CourseDetails = () => {
     (state: any) => state?.data?.alleditdata?.editdata
   );
   const dispatch = useDispatch();
-  console.log(editData, "register");
+  // console.log(editData, "register");
   const stepperFormController = new StepperFormController();
   const locationController = new CourseFinderController();
   const [courseData, setcourseData] = useState<courseDetailsTypes>({
-    institute_name: editData?.university_details?.name?._id,
+    institute_name: editData?.university_details?.name?.name,
     country: editData?.university_details?.location?.country?._id,
     campus_name: editData?.university_details?.location?.city?._id,
     credentials: editData?.course_details?.program?._id,
