@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 export const ApplicationCard = ({ data }: { data: Record<string, any> }) => {
   const disptach = useDispatch();
   const router = useRouter();
-  console.log(data, ",oxaij");
+  // console.log(data, ",oxaij");
   const { name } = data?.program_name;
   const university_name = data?.program_name?.university?.location?.address;
   const university_logo = data?.program_name?.university?.university_logo;
@@ -34,17 +34,29 @@ export const ApplicationCard = ({ data }: { data: Record<string, any> }) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={3}>
             <Box
-              component={"img"}
-              width={{
-                xs: "30vw",
-                sm: "19vw",
-                md: "13vw",
-                lg: "10vw",
-                xl: "11vw",
+              sx={{
+                display: "flex",
+                height: "10vh",
+                width: "100%",
               }}
-              sx={{ borderRadius: "6px" }}
-              src={ApiUrl.IMAGE_BASE_URL + university_logo}
-            />
+            >
+              <Box
+                component={"img"}
+                // width={{
+                //   xs: "30vw",
+                //   sm: "19vw",
+                //   md: "13vw",
+                //   lg: "10vw",
+                //   xl: "11vw",
+                // }}
+                sx={{
+                  borderRadius: "6px",
+                  width: "100%",
+                  objectFit: "contain",
+                }}
+                src={ApiUrl.IMAGE_BASE_URL + university_logo}
+              />
+            </Box>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Grid container>

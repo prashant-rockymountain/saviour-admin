@@ -4,7 +4,7 @@ import { ApplicationCard } from "src/configs/g_components/ApplicationCard";
 import GChip from "src/configs/g_components/g_chip";
 
 const Application = ({ data }: { data: [Record<string, any>] }) => {
-  console.log(data, "applosdij");
+  // console.log(data, "applosdij");
 
   return (
     <>
