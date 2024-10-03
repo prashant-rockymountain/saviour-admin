@@ -95,11 +95,13 @@ const ProfileViewComment = () => {
                         fontSize: "18px",
                       }}
                     >
-                      {student?.first_name +
+                      {(
+                        student?.first_name +
                         " " +
                         student?.middle_name +
                         " " +
-                        student?.last_name}
+                        student?.last_name
+                      ).toCapitalize()}
                     </Typography>
                   )}
                 </Grid>

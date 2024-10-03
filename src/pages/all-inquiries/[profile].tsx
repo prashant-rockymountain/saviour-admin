@@ -86,11 +86,13 @@ const ProfileBack = () => {
                         fontSize: "18px",
                       }}
                     >
-                      {studentData?.first_name +
+                      {(
+                        studentData?.first_name +
                         " " +
                         studentData?.middle_name +
                         " " +
-                        studentData?.last_name}
+                        studentData?.last_name
+                      ).toCapitalize()}
                     </Typography>
                   )}
                 </Grid>

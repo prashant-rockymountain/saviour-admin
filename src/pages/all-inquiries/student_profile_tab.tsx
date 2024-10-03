@@ -40,11 +40,13 @@ const StudentProfile = ({
           ) : (
             <Typography sx={{ fontSize: "18px" }}>
               <span style={{ fontWeight: "bold" }}>Full Name :</span>{" "}
-              {data?.first_name +
+              {(
+                data?.first_name +
                 " " +
                 data?.middle_name +
                 " " +
-                data?.last_name}
+                data?.last_name
+              ).toCapitalize()}
             </Typography>
           )}
         </Grid>

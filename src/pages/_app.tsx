@@ -9,8 +9,8 @@ import ThemeComponent from "../configs/theme/ThemeComponent";
 import { ToastContainer } from "react-toastify";
 import WindowWrapper from "../configs/layouts/window_wrapper";
 import { Chart, ArcElement } from "chart.js";
-import "../extensions/string-extension"
-import "../extensions/array-extensions"
+import "../extensions/string-extension";
+import "../extensions/array-extensions";
 Chart.register(ArcElement);
 import {
   SettingsConsumer,

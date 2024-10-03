@@ -46,8 +46,8 @@ const InquiriesRow: FC<rowType> = ({
           </TableCell>
           <TableCell align="left"></TableCell>
           <TableCell align="center">{row?.applications?.length} </TableCell>
-          <TableCell align="center"> </TableCell>
-          <TableCell align="center"> </TableCell>
+          {/* <TableCell align="center"> </TableCell>
+          <TableCell align="center"> </TableCell> */}
           <TableCell align="center">
             {
               <Fab

@@ -269,11 +269,11 @@ const CourseDetails = () => {
                     loading={isLoading}
                     fullWidth
                     getOptionLabel={(option) =>
-                      option?.first_name +
+                      (option?.first_name +
                         " " +
                         option?.middle_name +
                         " " +
-                        option?.last_name || ""
+                        option?.last_name).toCapitalize() || ""
                     }
                     renderInput={(params) => (
                       <TextField

@@ -19,8 +19,8 @@ const TABLE_HEAD = [
   { label: "Name", align: "left" },
   { label: "Student Id", align: "left" },
   { label: "Total Application", align: "center" },
-  { label: "Application status", align: "center" },
-  { label: "Application Stage", align: "center" },
+  // { label: "Application status", align: "center" },
+  // { label: "Application Stage", align: "center" },
   // { label: "In Take", align: "center" },
   { label: "Action", align: "center" },
 ];
