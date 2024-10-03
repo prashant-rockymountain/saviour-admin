@@ -155,7 +155,7 @@ export const UniversityCard = ({
             variant="contained"
             sx={{ float: "right" }}
             onClick={() => {
-              disptach(addeditdata(data)), router.push("/stepperForm");
+              disptach(addeditdata({...data,intake:intake})), router.push("/stepperForm");
             }}
           >
             Apply Now

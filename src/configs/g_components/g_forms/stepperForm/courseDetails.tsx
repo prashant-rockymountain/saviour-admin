@@ -179,37 +179,6 @@ const CourseDetails = () => {
                   InputProps={{ readOnly: true }}
                 />
               </Grid>
-
-              <Grid item xs={12} sm={3}>
-                {isLoading ? (
-                  <Skeleton variant="text" width={140} />
-                ) : (
-                  <FormLabel>Intake Month</FormLabel>
-                )}
-                {isLoading ? (
-                  <Skeleton variant="text" width="100%" height={45} />
-                ) : (
-                  <FormControl fullWidth>
-                    <Select
-                      size={"small"}
-                      sx={{ mt: 2 }}
-                      // defaultValue={values.commission_type}
-                      {...register("intake_month")}
-                      // error={!!errors.commission_type}
-                    >
-                      {editData?.intake?.map((month: string) => (
-                        <MenuItem key={month} value={`${month}`}>
-                          {month}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText error={true}>
-                      {/* {errors.commission_type &&
-                            errors.commission_type.message} */}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              </Grid>
               <Grid item xs={12} sm={3}>
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
@@ -248,6 +217,37 @@ const CourseDetails = () => {
                   </FormControl>
                 )}
               </Grid>
+              <Grid item xs={12} sm={3}>
+                {isLoading ? (
+                  <Skeleton variant="text" width={140} />
+                ) : (
+                  <FormLabel>Intake Month</FormLabel>
+                )}
+                {isLoading ? (
+                  <Skeleton variant="text" width="100%" height={45} />
+                ) : (
+                  <FormControl fullWidth>
+                    <Select
+                      size={"small"}
+                      sx={{ mt: 2 }}
+                      // defaultValue={values.commission_type}
+                      {...register("intake_month")}
+                      // error={!!errors.commission_type}
+                    >
+                      {editData?.intake?.map((month: string) => (
+                        <MenuItem key={month} value={`${month}`}>
+                          {month}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <FormHelperText error={true}>
+                      {/* {errors.commission_type &&
+                            errors.commission_type.message} */}
+                    </FormHelperText>
+                  </FormControl>
+                )}
+              </Grid>
+
               <Grid item xs={12} sm={12}>
                 {isLoading ? (
                   <Skeleton variant="text" width={140} />
@@ -269,11 +269,13 @@ const CourseDetails = () => {
                     loading={isLoading}
                     fullWidth
                     getOptionLabel={(option) =>
-                      (option?.first_name +
+                      (
+                        option?.first_name +
                         " " +
                         option?.middle_name +
                         " " +
-                        option?.last_name).toCapitalize() || ""
+                        option?.last_name
+                      ).toCapitalize() || ""
                     }
                     renderInput={(params) => (
                       <TextField
