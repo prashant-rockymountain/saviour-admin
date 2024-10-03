@@ -29,15 +29,15 @@ return data?.data?.data
     }
    async  getAllFilteredUniversities({city,state,country}:{city:string[],country:string[],state:string[]}){
 const data=await axi.get(
-    `${ApiUrl.CAMPUS_FILTER_LIS}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}`
+    `${ApiUrl.CAMPUS_FILTER_LIST}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}`
 )
 
 return data?.data?.data
 
     }
-   async  getAllFilteredCourses({city,state,country,university,is_partner,third_party,programType,courseDuration,is_active}:{city:string[],country:string[],state:string[],university:string[],is_partner:boolean,third_party:boolean,programType:string[],courseDuration:string[],is_active:boolean}){
+   async  getAllFilteredCourses({city,state,country,university,is_partner,third_party,programType,courseDuration,is_active,searchData}:{city:string[],country:string[],state:string[],university:string[],is_partner:boolean,third_party:boolean,programType:string[],courseDuration:string[],is_active:boolean,searchData:string[]}){
 const data=await axi.get(
-    `${ApiUrl.GET_FILTERED_COURSES}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}${`&university_name=${university.length?university.toString():""}`}${`&is_partner=${is_partner??""}`}${`&third_party=${third_party??""}`}${`&programType=${programType.length?programType.toString():""}`}${`&courseDuration=${courseDuration.length?courseDuration.toString():""}`}${`&is_active=${is_active??""}`}`
+    `${ApiUrl.GET_FILTERED_COURSES}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}${`&university_name=${university.length?university.toString():""}`}${`&is_partner=${is_partner??""}`}${`&third_party=${third_party??""}`}${`&program_name=${programType.length?programType.toString():""}`}${`&duration=${courseDuration.length?courseDuration.toString():""}`}${`&is_active=${is_active??""}`}${`&q=${searchData.toString()}`}`
 )
 
 return data?.data?.data

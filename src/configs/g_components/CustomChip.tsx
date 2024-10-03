@@ -6,16 +6,18 @@ interface chipTypes {
 }
 const CustomChip: FC<chipTypes> = ({ status, label }) => {
   return (
-    <Chip
-      label={label ? label : status ? "Active" : "In Active"}
-      sx={{
-        bgcolor: status ? "#E9FCD4" : alpha("#D74242", 0.16),
-        color: status ? "#2ea105" : "#b80202",
-        fontWeight: 800,
-        fontSize: "0.7rem",
 
-        borderRadius: 1,
-      }}
+    <Chip     
+    label={label ? label : status ? "Active" : "In Active"}
+    
+    sx={{
+      bgcolor: status ? "#E9FCD4" : alpha("#D74242", 0.16),
+      color: status ? "#2ea105" : "#b80202",
+      fontWeight: 800,
+      fontSize: "0.7rem",
+      
+      borderRadius: 1,
+    }}
     />
   );
 };

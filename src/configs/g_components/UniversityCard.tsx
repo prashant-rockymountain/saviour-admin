@@ -25,8 +25,10 @@ export const UniversityCard = ({
   university_name,
   name,
   data,
+  duration,
   intake,
 }: {
+  duration: number;
   intake: string[];
   image: string;
   campus_name: string;
@@ -36,7 +38,7 @@ export const UniversityCard = ({
 }) => {
   const disptach = useDispatch();
   const router = useRouter();
-  console.log(data, "nouifh");
+
 
   return (
     <Card>
@@ -72,45 +74,66 @@ export const UniversityCard = ({
             <Typography gutterBottom>{university_name}</Typography>
 
             <Grid container spacing={5}>
-              <Grid item display={"flex"} direction={"column"} gap={2}>
-                <Typography fontSize={"1.1rem"}>
-                  <b>Program Type</b>
-                </Typography>
-                <CustomChip
-                  status={true}
-                  label={data?.course_details?.program?.program_type}
-                />
+              <Grid item>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
+                  <Typography fontSize={"1.1rem"}>
+                    <b>Program Type</b>
+                  </Typography>
+                  <CustomChip
+                    status={true}
+                    label={data?.course_details?.program?.program_type}
+                  />
+                </div>
               </Grid>
-              <Grid item display={"flex"} direction={"column"} gap={2}>
-                <Typography fontSize={"1.1rem"}>
-                  <b>Duration</b>
-                </Typography>
-                <CustomChip
-                  status={true}
-                  label={`${data?.course_details?.duration} years`}
-                />
+              <Grid item>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
+                  <Typography fontSize={"1.1rem"}>
+                    <b>Duration</b>
+                  </Typography>
+                  <CustomChip status={true} label={`${duration} years`} />
+                </div>
               </Grid>
-              <Grid item display={"flex"} direction={"column"} gap={2}>
-                <Typography fontSize={"1.1rem"}>
-                  <b>App. Fees</b>
-                </Typography>
-                <CustomChip
-                  status={true}
-                  label={`$${data?.course_details?.price}`}
-                />
+              <Grid item>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
+                  <Typography fontSize={"1.1rem"}>
+                    <b>App. Fees</b>
+                  </Typography>
+                  <CustomChip
+                    status={true}
+                    label={`$${data?.course_details?.price}`}
+                  />
+                </div>
               </Grid>
-              <Grid item display={"flex"} direction={"column"} gap={2}>
-                <Typography fontSize={"1.1rem"}>
-                  <b>Campus</b>
-                </Typography>
-                <CustomChip status={true} label={campus_name.toCapitalize()} />
+              <Grid item>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
+                  <Typography fontSize={"1.1rem"}>
+                    <b>Campus</b>
+                  </Typography>
+                  <CustomChip
+                    status={true}
+                    label={campus_name.toCapitalize()}
+                  />
+                </div>
               </Grid>
             </Grid>
-
-            <Typography pt={2} color={textcolor.primary_text}>
-              Tentative Commision &nbsp;: &nbsp;
-              <CustomChip label="CAD 459" status={true} />
-            </Typography>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Typography
+                pt={2}
+                color={textcolor.primary_text}
+                component={"span"}
+              >
+                Tentative Commision &nbsp;: &nbsp;
+                <CustomChip label="CAD 459" status={true} />
+              </Typography>
+            </div>
           </Grid>
           <Grid item xs={2}>
             <Box
@@ -121,8 +144,8 @@ export const UniversityCard = ({
                 float: "right",
               }}
             >
-              {(intake as string[])?.toMonthSort()?.map((item) => (
-                <CustomChip status={true} label={`${item}(open)`} />
+              {(intake as string[]).toMonthSort().map((item, ind) => (
+                <CustomChip status={true} key={ind} label={`${item}(open)`} />
               ))}
             </Box>
           </Grid>
@@ -132,8 +155,7 @@ export const UniversityCard = ({
             variant="contained"
             sx={{ float: "right" }}
             onClick={() => {
-              disptach(addeditdata({ ...data, intake })),
-                router.push("/stepperForm");
+              disptach(addeditdata(data)), router.push("/stepperForm");
             }}
           >
             Apply Now

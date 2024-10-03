@@ -5,19 +5,19 @@ import {
   Grid,
   Pagination,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { FilterSearch } from "src/configs/g_components/filterSearch";
+import React, {  useState } from "react";
+import FilterSearch  from "src/configs/g_components/filterSearch";
 import { UniversityCard } from "src/configs/g_components/UniversityCard";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
-import { elRequest } from "src/configs/api/handleElasticSearch";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { addeditdata } from "src/reduxStore/editDataSlice";
-import FilterSidebar from "src/configs/g_components/filterSidebar";
-import CourseFinderController from "./controller";
 
-interface filterObj {
+import { useRouter } from "next/router";
+
+const FilterSidebar=dynamic(()=>import("src/configs/g_components/filterSidebar"),{loading:()=><p>Loading.......</p>})
+import CourseFinderController from "./controller";
+import dynamic from "next/dynamic";
+
+export interface filterObj {
   country: string[];
   city: string[];
   state: string[];
@@ -26,11 +26,11 @@ interface filterObj {
   courseDuration: string[];
   third_party: boolean;
   is_partner: boolean;
+  searchData:string[]
 }
 
 const CourseFinder = () => {
   const courseFinderController = new CourseFinderController();
-
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
@@ -44,35 +44,29 @@ const CourseFinder = () => {
     courseDuration: [],
     third_party: true,
     is_partner: true,
+    searchData:[]
+    
   });
 
-  const {
-    mutate,
-    data: AllCourses,
-    isPending,
-  } = useMutation({
-    mutationKey: ["elastic"],
-    mutationFn: elRequest,
-    onError(err) {
-      console.log(err);
-    },
-  });
 
-  const { data: Courses, isPending: CourseLoading } = useQuery({
-    queryKey: ["FilterCourses", filterationObj],
-    queryFn: () =>
-      courseFinderController.getAllFilteredCourses({
-        city: filterationObj.city,
-        country: filterationObj.country,
-        third_party: filterationObj.third_party,
-        is_partner: filterationObj.is_partner,
-        courseDuration: filterationObj.courseDuration,
-        is_active: true,
-        programType: filterationObj.programType,
-        state: filterationObj.state,
-        university: filterationObj.universityName,
-      }),
-  });
+
+  const {data:Courses,isPending:CourseLoading}=useQuery({
+    queryKey:["FilterCourses",filterationObj],
+    queryFn:()=>courseFinderController.getAllFilteredCourses({
+      city:filterationObj.city,
+      country:filterationObj.country, 
+      third_party:filterationObj.third_party,
+      is_partner:filterationObj.is_partner,
+      courseDuration:filterationObj.courseDuration,
+      is_active:true,
+      programType:filterationObj.programType,
+      state:filterationObj.state,
+      university:filterationObj.universityName,
+      searchData:filterationObj.searchData
+
+    }),
+
+  })
 
   function handleChange(key: keyof filterObj, id: string) {
     const copy = JSON.parse(JSON.stringify(filterationObj));
@@ -82,8 +76,8 @@ const CourseFinder = () => {
     } else {
       copy[key].push(id);
     }
+setFilterationObj({ ...copy });
 
-    setFilterationObj({ ...copy });
   }
   function handleBoolChange(key: "third_party" | "is_partner") {
     setFilterationObj((pre) => ({ ...pre, [key]: !pre[key] }));
@@ -93,7 +87,7 @@ const CourseFinder = () => {
     params.set("search", `${val}`);
     replace(`${pathname}?${params.toString()}`);
   }
-  console.log(Courses, "Courses");
+  
 
   return (
     <>
@@ -110,7 +104,7 @@ const CourseFinder = () => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <FilterSearch />
+                  <FilterSearch  setFilterationObj={setFilterationObj}/>
                 </CardContent>
               </Card>
             </Grid>
@@ -126,6 +120,7 @@ const CourseFinder = () => {
                       image={item.university.university_logo}
                       university_name={item.university.name.name}
                       name={item.name}
+                      duration={item.duration}
                       campus_name={item?.university?.location?.city?.name}
                       intake={item.intake}
                       data={{
@@ -140,7 +135,7 @@ const CourseFinder = () => {
                     />
                   </Grid>
                 ))}
-                {AllCourses?.length > 0 && (
+                {Courses?.length > 0 && (
                   <Grid
                     item
                     xs={12}

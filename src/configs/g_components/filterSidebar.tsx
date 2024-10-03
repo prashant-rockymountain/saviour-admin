@@ -29,7 +29,9 @@ const FilterSidebar = ({ ...props }) => {
 
   const courseLength = ["1", "1.5", "2", "3", "4", "5"];
   function handleSearch(value: string, key: string) {
-    setSearchData((pre) => ({ ...pre, [key]: value }));
+    setTimeout(() => {
+      setSearchData((pre) => ({ ...pre, [key]: value })); 
+    }, 350);
   }
   const { data: allPrograms } = useQuery({
     queryKey: ["program"],
@@ -57,7 +59,7 @@ const FilterSidebar = ({ ...props }) => {
     placeholderData: (previousData) => previousData,
   });
 
-  const { data: universities } = useQuery({
+  const { data: universities } = useQuery({ 
     queryKey: ["filterUniversities", filterationObj],
     queryFn: () =>
       courseFinderController.getAllFilteredUniversities({
@@ -346,7 +348,7 @@ const FilterSidebar = ({ ...props }) => {
                         control={
                           <Checkbox
                             checked={filterationObj.programType.includes(
-                              pro.program_type
+                              pro._id
                             )}
                             onChange={(e) =>
                               handleChange("programType", pro._id)
