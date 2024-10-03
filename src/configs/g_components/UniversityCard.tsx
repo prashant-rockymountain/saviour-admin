@@ -39,19 +39,22 @@ export const UniversityCard = ({
   const disptach = useDispatch();
   const router = useRouter();
 
-
   return (
     <Card>
       <CardContent>
         <Grid container spacing={3}>
           <Grid item xs={12} md={3}>
-            <Box
-              component={"img"}
-              width={"100%"}
-              sx={{ borderRadius: "6px" }}
-              maxHeight={"80vh"}
-              src={ApiUrl.IMAGE_BASE_URL + image}
-            />
+            <Box sx={{ width: "15vw", height: "15vh", display: "flex" }}>
+              <Box
+                component={"img"}
+                sx={{
+                  borderRadius: "6px",
+                  width: "100%",
+                  objectFit: "contain",
+                }}
+                src={ApiUrl.IMAGE_BASE_URL + image}
+              />
+            </Box>
             <Grid
               item
               xs={11}
@@ -155,7 +158,8 @@ export const UniversityCard = ({
             variant="contained"
             sx={{ float: "right" }}
             onClick={() => {
-              disptach(addeditdata({...data,intake:intake})), router.push("/stepperForm");
+              disptach(addeditdata({ ...data, intake: intake })),
+                router.push("/stepperForm");
             }}
           >
             Apply Now

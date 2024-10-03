@@ -34,6 +34,7 @@ const CourseFinder = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
+console.log(searchParams.get("search"));
 
   const [filterationObj, setFilterationObj] = useState<filterObj>({
     country: [],
@@ -51,18 +52,18 @@ const CourseFinder = () => {
 
 
   const {data:Courses,isPending:CourseLoading}=useQuery({
-    queryKey:["FilterCourses",filterationObj],
+    queryKey:[`FilterCourses${searchParams.get("search")??1}`,filterationObj],
     queryFn:()=>courseFinderController.getAllFilteredCourses({
       city:filterationObj.city,
       country:filterationObj.country, 
       third_party:filterationObj.third_party,
       is_partner:filterationObj.is_partner,
       courseDuration:filterationObj.courseDuration,
-      is_active:true,
       programType:filterationObj.programType,
       state:filterationObj.state,
       university:filterationObj.universityName,
-      searchData:filterationObj.searchData
+      searchData:filterationObj.searchData,
+      page:`${searchParams.get("search")??1}`
 
     }),
 
@@ -142,7 +143,7 @@ setFilterationObj({ ...copy });
                     sx={{ display: "flex", placeContent: "center" }}
                   >
                     <Pagination
-                      defaultPage={+searchParams.get("search")!}
+                      defaultPage={+(searchParams.get("search")??1)}
                       count={10}
                       variant="outlined"
                       shape="rounded"

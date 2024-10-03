@@ -35,9 +35,9 @@ const data=await axi.get(
 return data?.data?.data
 
     }
-   async  getAllFilteredCourses({city,state,country,university,is_partner,third_party,programType,courseDuration,is_active,searchData}:{city:string[],country:string[],state:string[],university:string[],is_partner:boolean,third_party:boolean,programType:string[],courseDuration:string[],is_active:boolean,searchData:string[]}){
+   async  getAllFilteredCourses({city,state,country,university,is_partner,third_party,programType,courseDuration,searchData,page}:{city:string[],country:string[],state:string[],university:string[],is_partner:boolean,third_party:boolean,programType:string[],courseDuration:string[],searchData:string[],page:string}){
 const data=await axi.get(
-    `${ApiUrl.GET_FILTERED_COURSES}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}${`&university_name=${university.length?university.toString():""}`}${`&is_partner=${is_partner??""}`}${`&third_party=${third_party??""}`}${`&program_name=${programType.length?programType.toString():""}`}${`&duration=${courseDuration.length?courseDuration.toString():""}`}${`&is_active=${is_active??""}`}${`&q=${searchData.toString()}`}`
+    `${ApiUrl.GET_FILTERED_COURSES}${`?country=${country.length?country.toString():""}`}${`&city=${city.length?city.toString():""}`}${`&state=${state.length?state.toString():""}`}${`&university_name=${university.length?university.toString():""}`}${`&is_partner=${is_partner??""}`}${`&third_party=${third_party??""}`}${`&program_name=${programType.length?programType.toString():""}`}${`&duration=${courseDuration.length?courseDuration.toString():""}`}${`&q=${searchData.toString()}`}${`&is_active=true`}${`&page=${page}`}`
 )
 
 return data?.data?.data
