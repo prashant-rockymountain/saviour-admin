@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   FormGroup,
@@ -12,27 +13,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CourseFinderController from "src/pages/course-finder/controller";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { delay } from "@reduxjs/toolkit/dist/utils";
 let defaultSearchVal: Record<string, string> = {
   country: "",
   state: "",
   city: "",
 };
 const FilterSidebar = ({ ...props }) => {
-  const [searchData, setSearchData] =
-    useState<Record<string, string>>(defaultSearchVal);
   const courseFinderController = new CourseFinderController();
+
   const { handleChange, filterationObj, handleBoolChange } = props;
 
-  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
-  function handleSearch(value: string, key: string) {
-    setTimeout(() => {
-      setSearchData((pre) => ({ ...pre, [key]: value })); 
-    }, 350);
-  }
   const { data: allPrograms } = useQuery({
     queryKey: ["program"],
     queryFn: () => courseFinderController.getProgramTypeList("?is_active=true"),
@@ -43,24 +38,33 @@ const FilterSidebar = ({ ...props }) => {
     queryFn: courseFinderController.getAllFilteredCountry,
   });
   const { data: sateList } = useQuery({
-    queryKey: ["stateList", filterationObj],
+    queryKey: ["stateList"],
     queryFn: () =>
       courseFinderController.getAllFilteredState({
         country: filterationObj.country,
       }),
     placeholderData: (previousData) => previousData,
   });
-  const { data: cityList } = useQuery({
-    queryKey: ["cityList", filterationObj],
-    queryFn: () =>
+
+  const {
+    data: paginationData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["cityList", filterationObj.state],
+    queryFn: ({ pageParam = 1 }) =>
       courseFinderController.getAllFilteredCity({
         state: filterationObj.state,
+        page: pageParam,
       }),
-    placeholderData: (previousData) => previousData,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return +lastPage.currentPage + 1;
+    },
   });
-
-  const { data: universities } = useQuery({ 
-    queryKey: ["filterUniversities", filterationObj],
+  const { data: universities } = useQuery({
+    queryKey: ["filterUniversities"],
     queryFn: () =>
       courseFinderController.getAllFilteredUniversities({
         city: filterationObj.city,
@@ -71,6 +75,42 @@ const FilterSidebar = ({ ...props }) => {
     placeholderData: (previousData) => previousData,
   });
 
+  const [searchData, setSearchData] =
+    useState<Record<string, string>>(defaultSearchVal);
+  function handleSearch(value: string, key: string) {
+    setTimeout(() => {
+      setSearchData((pre) => ({ ...pre, [key]: value }));
+    }, 350);
+  }
+  function debounce(func: (e: any) => void, delay: number) {
+    let timeout: number | any;
+    return function (...args: any) {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
+        // @ts-ignore
+        func.apply(this, args);
+      }, delay);
+    };
+  }
+  function handleScroll(e: any) {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (
+      scrollHeight - 500 < scrollTop + clientHeight &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  }
+  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
+
+  const cityList =
+    paginationData?.pages[paginationData.pageParams.length - 1].cities;
+
+  console.log(cityList, "PAGINATION");
+
   return (
     <>
       <Card>
@@ -79,19 +119,13 @@ const FilterSidebar = ({ ...props }) => {
           <FormGroup sx={{ ml: 5 }}>
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={filterationObj.third_party}
-                  onChange={() => handleBoolChange("third_party")}
-                />
+                <Checkbox onChange={() => handleBoolChange("third_party")} />
               }
               label="is Third Party"
             />
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={filterationObj.is_partner}
-                  onChange={() => handleBoolChange("is_partner")}
-                />
+                <Checkbox onChange={() => handleBoolChange("is_partner")} />
               }
               label="is Partner"
             />
@@ -132,8 +166,8 @@ const FilterSidebar = ({ ...props }) => {
                       {countryList?.map(
                         (country: Record<string, any>) =>
                           (country.name as string)
-                            .toCongest()
-                            .includes(
+                            ?.toCongest()
+                            ?.includes(
                               (searchData.country as string).toCongest()
                             ) && (
                             <FormControlLabel
@@ -188,8 +222,10 @@ const FilterSidebar = ({ ...props }) => {
                   {sateList?.map(
                     (stat: Record<string, any>) =>
                       (stat.name as string)
-                        .toCongest()
-                        .includes((searchData.state as string).toCongest()) && (
+                        ?.toCongest()
+                        ?.includes(
+                          (searchData.state as string).toCongest()
+                        ) && (
                         <FormControlLabel
                           key={stat._id}
                           control={
@@ -229,6 +265,7 @@ const FilterSidebar = ({ ...props }) => {
                 </Grid>
                 <Grid item xs={12}>
                   <AccordionDetails
+                    onScroll={debounce(handleScroll, 100)}
                     sx={{
                       height: "35vh",
                       overflowY: "scroll",
@@ -240,8 +277,8 @@ const FilterSidebar = ({ ...props }) => {
                       {cityList?.map(
                         (city: Record<string, any>) =>
                           (city.name as string)
-                            .toCongest()
-                            .includes(
+                            ?.toCongest()
+                            ?.includes(
                               (searchData.city as string).toCongest()
                             ) && (
                             <FormControlLabel
@@ -259,6 +296,21 @@ const FilterSidebar = ({ ...props }) => {
                               label={(city.name as string).toCapitalize()}
                             />
                           )
+                      )}
+                      {isFetchingNextPage && (
+                        <p
+                          style={{
+                            display:"flex",
+                            justifyContent:"center",
+                            alignItems:"center",
+                            gap:5,
+                            fontWeight: "bold",
+                            marginBottom: "0.5rem",
+                          }}
+                        >
+                          <CircularProgress size={16}  />
+                          <span>Loading .....</span>
+                        </p>
                       )}
                     </FormGroup>
                   </AccordionDetails>

@@ -18,17 +18,22 @@ import { ApiUrl } from "../api/apiUrls";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-
+interface commisioninterface {
+amount:number,
+type:"percentage"|"fixed"
+}
 export const UniversityCard = ({
   image,
   campus_name,
   university_name,
   name,
   data,
+  commision,
   duration,
   intake,
 }: {
   duration: number;
+  commision:commisioninterface;
   intake: string[];
   image: string;
   campus_name: string;
@@ -38,6 +43,7 @@ export const UniversityCard = ({
 }) => {
   const disptach = useDispatch();
   const router = useRouter();
+console.log(commision);
 
   return (
     <Card>
@@ -134,7 +140,7 @@ export const UniversityCard = ({
                 component={"span"}
               >
                 Tentative Commision &nbsp;: &nbsp;
-                <CustomChip label="CAD 459" status={true} />
+                <CustomChip  label={`${commision.amount} ${commision.type=="percentage"?"%":"$"}`}status={true} />
               </Typography>
             </div>
           </Grid>
