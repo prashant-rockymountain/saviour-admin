@@ -20,8 +20,8 @@ export default class UniversityController {
     return data?.data?.data
   }
 
-  getUniversityCourse = async(boydata:Record<string,any>)=>{
-    const data = await axi.post(`${ApiUrl.ADMIN_UNIVERSITY_COURSE_URL}`,boydata);
+  getUniversityCourse = async(boydata:Record<string,any>,page:number,limit:number)=>{
+    const data = await axi.post(`${ApiUrl.ADMIN_UNIVERSITY_COURSE_URL}?page=${page}&limit=${limit}`,boydata);
     return data?.data?.data;
   }
 

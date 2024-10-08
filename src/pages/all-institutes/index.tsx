@@ -1,6 +1,6 @@
 import { Card, CardContent, Grid } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GTable from "src/configs/g_components/g_table/Table/g_table";
 import Searchbar from "src/configs/g_components/Searchbar";
 import UniversityController from "./controller";
@@ -15,17 +15,23 @@ const AllInstitutes = () => {
         { label: "Logo", align: "center" },
         { label: "University Name", align: "center" },
         { label: "Location", align: "center" },
+        { label: "No of Courses", align: "center" },
         { label: "Action", align: "right" },
     ];
 
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading,isSuccess } = useQuery({
         queryKey: ["AllTrueUniversity"],
         queryFn: () => universityController.getUniversityList({ is_active: true }),
     })
 
 
-    const [filteredData, setFilteredData] = useState<Record<string, any>[]>(data)
+    const [filteredData, setFilteredData] = useState<Record<string, any>[]>([])
+
+
+    useEffect(()=>{
+        setFilteredData(data)
+    },[isSuccess])
 
 
     return (

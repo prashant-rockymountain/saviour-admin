@@ -21,18 +21,20 @@ const InstitudeRow: FC<rowType> = ({
     ...prop
 }) => {
 
-    const dispatch = useDispatch();
     const router = useRouter();
-
     const showInstitude = (data: Record<string, any>) => {
-        dispatch(addeditdata(data))
-        router.push("/all-institutes/"+data?.university?._id)
+        if (data?.course_details?.map((ele: any) => ele?.courses)?.flat(Infinity)?.length > 10) {
+            router.push("/all-institutes/" + data?.university?._id + "?page=1")
+        } else {
+            router.push("/all-institutes/" + data?.university?._id)
+        }
+
     }
 
     return (
         <TableRow hover key={Math.random()}>
             {isLoading ? (
-                <TableCell colSpan={5}>
+                <TableCell colSpan={6}>
                     <Skeleton variant="text" height={40} />
                 </TableCell>
             ) : (
@@ -49,6 +51,9 @@ const InstitudeRow: FC<rowType> = ({
                     </TableCell>
                     <TableCell align="center">
                         {row?.university?.location?.address}
+                    </TableCell>
+                    <TableCell align="center">
+                        {row?.course_details?.map((ele: any) => ele?.courses)?.flat(Infinity)?.length}
                     </TableCell>
                     <TableCell align="right">
                         <Fab
