@@ -51,3 +51,13 @@ export const downloadxsls = (
   XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
   XLSX.writeFile(workbook, `${name}.xlsx`);
 };
+
+export function debounce(func: (...args: any[]) => void, delay: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+    return function (...args: any[]) {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => func(...args), delay);
+  };
+}

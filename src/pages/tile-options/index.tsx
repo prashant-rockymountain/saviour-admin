@@ -6,16 +6,16 @@ import {
   Skeleton,
 } from "@mui/material";
 import React, { useState } from "react";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 import Searchbar from "src/configs/g_components/Searchbar";
 import GModal from "src/configs/g_components/modal";
 import { useQuery } from "@tanstack/react-query";
-import RoleOptionsRow from "src/configs/g_components/g_table/Rows/roleOptionsRow";
+import RoleOptionsRow from "src/configs/g_table/Rows/roleOptionsRow";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import RoleoptionController from "./controller";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
-import RoleOptionsForm from "src/configs/g_components/g_forms/roleOptionsForm";
+import RoleOptionsForm from "src/configs/g_forms/roleOptionsForm";
 
 const TABLE_HEAD = [
   { label: "SR.No", align: "left" },

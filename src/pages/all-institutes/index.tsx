@@ -1,10 +1,10 @@
 import { Card, CardContent, Grid } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 import Searchbar from "src/configs/g_components/Searchbar";
 import UniversityController from "./controller";
-import InstitudeRow from "src/configs/g_components/g_table/Rows/institudeRow";
+import InstitudeRow from "src/configs/g_table/Rows/institudeRow";
 
 const universityController = new UniversityController()
 

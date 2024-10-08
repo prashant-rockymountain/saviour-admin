@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Checkbox,
-  CircularProgress,
   Divider,
   FormControlLabel,
   FormGroup,
@@ -13,17 +12,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CourseFinderController from "src/pages/course-finder/controller";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { delay } from "@reduxjs/toolkit/dist/utils";
+import { useQuery } from "@tanstack/react-query";
+
+import CitiesComponent from "./CitiesComponent";
 let defaultSearchVal: Record<string, string> = {
   country: "",
   state: "",
-  city: "",
 };
 const FilterSidebar = ({ ...props }) => {
+  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
+
   const courseFinderController = new CourseFinderController();
 
   const { handleChange, filterationObj, handleBoolChange } = props;
@@ -46,23 +47,6 @@ const FilterSidebar = ({ ...props }) => {
     placeholderData: (previousData) => previousData,
   });
 
-  const {
-    data: paginationData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["cityList", filterationObj.state],
-    queryFn: ({ pageParam = 1 }) =>
-      courseFinderController.getAllFilteredCity({
-        state: filterationObj.state,
-        page: pageParam,
-      }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      return +lastPage.currentPage + 1;
-    },
-  });
   const { data: universities } = useQuery({
     queryKey: ["filterUniversities"],
     queryFn: () =>
@@ -82,34 +66,6 @@ const FilterSidebar = ({ ...props }) => {
       setSearchData((pre) => ({ ...pre, [key]: value }));
     }, 350);
   }
-  function debounce(func: (e: any) => void, delay: number) {
-    let timeout: number | any;
-    return function (...args: any) {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      timeout = setTimeout(() => {
-        // @ts-ignore
-        func.apply(this, args);
-      }, delay);
-    };
-  }
-  function handleScroll(e: any) {
-    const { scrollTop, scrollHeight, clientHeight } = e.target;
-    if (
-      scrollHeight - 500 < scrollTop + clientHeight &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
-    }
-  }
-  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
-
-  const cityList =
-    paginationData?.pages[paginationData.pageParams.length - 1].cities;
-
-  console.log(cityList, "PAGINATION");
 
   return (
     <>
@@ -255,66 +211,15 @@ const FilterSidebar = ({ ...props }) => {
                 City / Campus
               </AccordionSummary>
               <Grid container spacing={2}>
-                <Grid item xs={12} sx={{ p: 3 }}>
-                  <TextField
-                    size="small"
-                    onChange={(e) => handleSearch(e.target.value, "city")}
-                    placeholder="Search city"
-                    fullWidth
+
+               
+                  <CitiesComponent
+                    handleChange={handleChange}
+                    filterationObj={filterationObj}
+                    searchData={searchData}
+                    hhandleSearch={handleSearch}
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <AccordionDetails
-                    onScroll={debounce(handleScroll, 100)}
-                    sx={{
-                      height: "35vh",
-                      overflowY: "scroll",
-                      pt: 1,
-                      pl: 5,
-                    }}
-                  >
-                    <FormGroup>
-                      {cityList?.map(
-                        (city: Record<string, any>) =>
-                          (city.name as string)
-                            ?.toCongest()
-                            ?.includes(
-                              (searchData.city as string).toCongest()
-                            ) && (
-                            <FormControlLabel
-                              key={city._id}
-                              control={
-                                <Checkbox
-                                  checked={filterationObj.city.includes(
-                                    city._id
-                                  )}
-                                  onChange={(e) =>
-                                    handleChange("city", city._id)
-                                  }
-                                />
-                              }
-                              label={(city.name as string).toCapitalize()}
-                            />
-                          )
-                      )}
-                      {isFetchingNextPage && (
-                        <p
-                          style={{
-                            display:"flex",
-                            justifyContent:"center",
-                            alignItems:"center",
-                            gap:5,
-                            fontWeight: "bold",
-                            marginBottom: "0.5rem",
-                          }}
-                        >
-                          <CircularProgress size={16}  />
-                          <span>Loading .....</span>
-                        </p>
-                      )}
-                    </FormGroup>
-                  </AccordionDetails>
-                </Grid>
+          
               </Grid>
             </Accordion>
             <Divider sx={{ my: 5 }} />

@@ -6,20 +6,17 @@ import {
   Fab,
   CircularProgress,
   Chip,
-  Avatar,
 } from "@mui/material";
 import { FC } from "react";
 import { rowType } from "src/configs/g_types/types";
-
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-import CustomChip from "../../CustomChip";
-import { ApiUrl } from "src/configs/api/apiUrls";
-import CustomThumb from "../../CustomThumb";
+import CustomChip from "../../g_components/CustomChip";
 
-const StaffMemberRow: FC<rowType> = ({
+const InquiriesRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
@@ -27,9 +24,13 @@ const StaffMemberRow: FC<rowType> = ({
   index,
   ...prop
 }) => {
-
   const dispatch = useDispatch();
   const router = useRouter();
+  const hanclick = (data: string) => {
+    if (clickbutton) {
+      clickbutton(data);
+    }
+  };
 
   return (
     <TableRow hover key={Math.random()}>
@@ -39,32 +40,29 @@ const StaffMemberRow: FC<rowType> = ({
         </TableCell>
       ) : (
         <>
-          <TableCell align="left">{serialNumber}</TableCell>
-          <TableCell>
-            {" "}
-            <CustomThumb alt={"profile pic"} src={row?.profile_pic} />
-          </TableCell>
-          <TableCell align="left">{row?.name}</TableCell>
-          <TableCell align="left">{row?.phone}</TableCell>
-          <TableCell align="left" sx={{ textTransform: "none" }}>
-            {row?.email}
-          </TableCell>
+          <TableCell>{serialNumber}</TableCell>
           <TableCell align="left">
-            {" "}
-            <CustomChip status={row?.is_active} />
+            {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
           </TableCell>
-          <TableCell align="left">
+          <TableCell align="left"></TableCell>
+          <TableCell align="center">{row?.applications?.length} </TableCell>
+          {/* <TableCell align="center"> </TableCell>
+          <TableCell align="center"> </TableCell> */}
+          <TableCell align="center">
             {
               <Fab
                 size="small"
                 color="secondary"
-                onClick={() => {
-                  dispatch(addeditdata(row));
-                  router.push("/staff-member/addEditStaffMember");
-                }
+                onClick={
+                  clickbutton != undefined
+                    ? () => hanclick
+                    : () => {
+                        // dispatch(addeditdata(row));
+                        router.push("/all-inquiries/" + row?._id);
+                      }
                 }
               >
-                <EditIcon />
+                <VisibilityIcon />
               </Fab>
             }
           </TableCell>
@@ -74,4 +72,4 @@ const StaffMemberRow: FC<rowType> = ({
   );
 };
 
-export default StaffMemberRow;
+export default InquiriesRow;

@@ -14,45 +14,42 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-import CustomChip from "../../CustomChip";
-
-const StudentsRow: FC<rowType> = ({
+import CustomChip from "../../g_components/CustomChip";
+const RoleOptionsRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
+  open,
   row,
   index,
   ...prop
 }) => {
+
   const dispatch = useDispatch();
   const router = useRouter();
+
+
 
   return (
     <TableRow hover key={Math.random()}>
       {isLoading ? (
-        <TableCell colSpan={6}>
+        <TableCell colSpan={5}>
           <Skeleton variant="text" height={40} />
         </TableCell>
       ) : (
         <>
           <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left">
-            {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
-          </TableCell>
-          <TableCell align="left">{row?.email}</TableCell>
-          <TableCell align="left">{row?.phone}</TableCell>
+          <TableCell align="left">{row?.name}</TableCell>
+          <TableCell align="center"> <CustomChip status={row?.is_active} /></TableCell>
           <TableCell align="center">
-            {" "}
-            <CustomChip status={row?.is_active} />
-          </TableCell>
-          <TableCell align="right">
             {
               <Fab
                 size="small"
                 color="secondary"
                 onClick={() => {
                   dispatch(addeditdata(row));
-                  router.push("/all-students/addEdit");
+                  open(true)
+                  // router.push("/country/addEditCountry");
                 }}
               >
                 <EditIcon />
@@ -65,4 +62,4 @@ const StudentsRow: FC<rowType> = ({
   );
 };
 
-export default StudentsRow;
+export default RoleOptionsRow;

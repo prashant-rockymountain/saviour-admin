@@ -26,16 +26,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Customfield from "../Customfield";
-import CustomButton from "../CustomButton";
+import Customfield from "../g_components/Customfield";
+import CustomButton from "../g_components/CustomButton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
-import { successToast } from "../g_toaster";
+import { successToast } from "../g_components/g_toaster";
 import ApplicationController from "src/pages/all-students/controller";
 import { LoadingButton } from "@mui/lab";
-import GUpload from "../g_upload";
+import GUpload from "../g_components/g_upload";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { Record } from "immutable";
 import { error } from "console";

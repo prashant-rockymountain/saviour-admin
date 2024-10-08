@@ -1,10 +1,10 @@
 import { Button, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 import RoleController from "../role/controller";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import AcademicDocumentsRow from "src/configs/g_components/g_table/Rows/academicDocumentsRow";
+import AcademicDocumentsRow from "src/configs/g_table/Rows/academicDocumentsRow";
 import Link from "next/link";
 
 const Document = ({ data }: { data: Record<string, any> }) => {

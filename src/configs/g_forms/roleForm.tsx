@@ -30,15 +30,15 @@ import {
   Skeleton,
   Switch,
 } from "@mui/material";
-import Customfield from "../Customfield";
-import CustomButton from "../CustomButton";
+import Customfield from "../g_components/Customfield";
+import CustomButton from "../g_components/CustomButton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import RoleoptionController from "src/pages/tile-options/controller";
 import RoleController from "src/pages/role/controller";
-import { errorToast, successToast } from "../g_toaster";
+import { errorToast, successToast } from "../g_components/g_toaster";
 
 interface IFormInput {
   name: string;
