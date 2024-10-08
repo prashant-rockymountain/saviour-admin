@@ -22,12 +22,12 @@ import React, { useState } from "react";
 import Crumbs from "src/configs/g_components/Crumbs";
 import IconifyIcon from "src/configs/theme/components/icon";
 import Customfield from "src/configs/g_components/Customfield";
-import CourseDetails from "src/configs/g_components/g_forms/stepperForm/courseDetails";
-import StudentInfo from "src/configs/g_components/g_forms/stepperForm/studentInfo";
-import TestForm from "src/configs/g_components/g_forms/stepperForm/TestForm";
-import EducationInfo from "src/configs/g_components/g_forms/stepperForm/educationInfo";
-import EmploymentInfo from "src/configs/g_components/g_forms/stepperForm/employmentInfo";
-import DocumentsForm from "src/configs/g_components/g_forms/stepperForm/documentsForm";
+import CourseDetails from "src/configs/g_forms/stepperForm/courseDetails";
+import StudentInfo from "src/configs/g_forms/stepperForm/studentInfo";
+import TestForm from "src/configs/g_forms/stepperForm/TestForm";
+import EducationInfo from "src/configs/g_forms/stepperForm/educationInfo";
+import EmploymentInfo from "src/configs/g_forms/stepperForm/employmentInfo";
+import DocumentsForm from "src/configs/g_forms/stepperForm/documentsForm";
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,

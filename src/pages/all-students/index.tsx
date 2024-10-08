@@ -2,7 +2,7 @@ import { Button, Card, CardContent, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 import AddIcon from "@mui/icons-material/Add";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 
 import Link from "next/link";
 import Searchbar from "src/configs/g_components/Searchbar";
@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import ApplicationController from "./controller";
-import StudentsRow from "src/configs/g_components/g_table/Rows/studentsRow";
+import StudentsRow from "src/configs/g_table/Rows/studentsRow";
 // import GraduationController from "./controller";
 
 const TABLE_HEAD = [

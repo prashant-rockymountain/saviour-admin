@@ -16,23 +16,19 @@ import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CourseFinderController from "src/pages/course-finder/controller";
 import { useQuery } from "@tanstack/react-query";
+
+import CitiesComponent from "./CitiesComponent";
 let defaultSearchVal: Record<string, string> = {
   country: "",
   state: "",
-  city: "",
 };
 const FilterSidebar = ({ ...props }) => {
-  const [searchData, setSearchData] =
-    useState<Record<string, string>>(defaultSearchVal);
+  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
+
   const courseFinderController = new CourseFinderController();
+
   const { handleChange, filterationObj, handleBoolChange } = props;
 
-  const courseLength = ["1", "1.5", "2", "3", "4", "5"];
-  function handleSearch(value: string, key: string) {
-    setTimeout(() => {
-      setSearchData((pre) => ({ ...pre, [key]: value })); 
-    }, 350);
-  }
   const { data: allPrograms } = useQuery({
     queryKey: ["program"],
     queryFn: () => courseFinderController.getProgramTypeList("?is_active=true"),
@@ -43,24 +39,16 @@ const FilterSidebar = ({ ...props }) => {
     queryFn: courseFinderController.getAllFilteredCountry,
   });
   const { data: sateList } = useQuery({
-    queryKey: ["stateList", filterationObj],
+    queryKey: ["stateList"],
     queryFn: () =>
       courseFinderController.getAllFilteredState({
         country: filterationObj.country,
       }),
     placeholderData: (previousData) => previousData,
   });
-  const { data: cityList } = useQuery({
-    queryKey: ["cityList", filterationObj],
-    queryFn: () =>
-      courseFinderController.getAllFilteredCity({
-        state: filterationObj.state,
-      }),
-    placeholderData: (previousData) => previousData,
-  });
 
-  const { data: universities } = useQuery({ 
-    queryKey: ["filterUniversities", filterationObj],
+  const { data: universities } = useQuery({
+    queryKey: ["filterUniversities"],
     queryFn: () =>
       courseFinderController.getAllFilteredUniversities({
         city: filterationObj.city,
@@ -71,6 +59,14 @@ const FilterSidebar = ({ ...props }) => {
     placeholderData: (previousData) => previousData,
   });
 
+  const [searchData, setSearchData] =
+    useState<Record<string, string>>(defaultSearchVal);
+  function handleSearch(value: string, key: string) {
+    setTimeout(() => {
+      setSearchData((pre) => ({ ...pre, [key]: value }));
+    }, 350);
+  }
+
   return (
     <>
       <Card>
@@ -79,19 +75,13 @@ const FilterSidebar = ({ ...props }) => {
           <FormGroup sx={{ ml: 5 }}>
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={filterationObj.third_party}
-                  onChange={() => handleBoolChange("third_party")}
-                />
+                <Checkbox onChange={() => handleBoolChange("third_party")} />
               }
               label="is Third Party"
             />
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={filterationObj.is_partner}
-                  onChange={() => handleBoolChange("is_partner")}
-                />
+                <Checkbox onChange={() => handleBoolChange("is_partner")} />
               }
               label="is Partner"
             />
@@ -132,8 +122,8 @@ const FilterSidebar = ({ ...props }) => {
                       {countryList?.map(
                         (country: Record<string, any>) =>
                           (country.name as string)
-                            .toCongest()
-                            .includes(
+                            ?.toCongest()
+                            ?.includes(
                               (searchData.country as string).toCongest()
                             ) && (
                             <FormControlLabel
@@ -188,8 +178,10 @@ const FilterSidebar = ({ ...props }) => {
                   {sateList?.map(
                     (stat: Record<string, any>) =>
                       (stat.name as string)
-                        .toCongest()
-                        .includes((searchData.state as string).toCongest()) && (
+                        ?.toCongest()
+                        ?.includes(
+                          (searchData.state as string).toCongest()
+                        ) && (
                         <FormControlLabel
                           key={stat._id}
                           control={
@@ -219,50 +211,15 @@ const FilterSidebar = ({ ...props }) => {
                 City / Campus
               </AccordionSummary>
               <Grid container spacing={2}>
-                <Grid item xs={12} sx={{ p: 3 }}>
-                  <TextField
-                    size="small"
-                    onChange={(e) => handleSearch(e.target.value, "city")}
-                    placeholder="Search city"
-                    fullWidth
+
+               
+                  <CitiesComponent
+                    handleChange={handleChange}
+                    filterationObj={filterationObj}
+                    searchData={searchData}
+                    hhandleSearch={handleSearch}
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <AccordionDetails
-                    sx={{
-                      height: "35vh",
-                      overflowY: "scroll",
-                      pt: 1,
-                      pl: 5,
-                    }}
-                  >
-                    <FormGroup>
-                      {cityList?.map(
-                        (city: Record<string, any>) =>
-                          (city.name as string)
-                            .toCongest()
-                            .includes(
-                              (searchData.city as string).toCongest()
-                            ) && (
-                            <FormControlLabel
-                              key={city._id}
-                              control={
-                                <Checkbox
-                                  checked={filterationObj.city.includes(
-                                    city._id
-                                  )}
-                                  onChange={(e) =>
-                                    handleChange("city", city._id)
-                                  }
-                                />
-                              }
-                              label={(city.name as string).toCapitalize()}
-                            />
-                          )
-                      )}
-                    </FormGroup>
-                  </AccordionDetails>
-                </Grid>
+          
               </Grid>
             </Accordion>
             <Divider sx={{ my: 5 }} />

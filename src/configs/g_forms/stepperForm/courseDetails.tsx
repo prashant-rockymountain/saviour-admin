@@ -22,10 +22,10 @@ import Customfield from "src/configs/g_components/Customfield";
 import ApplicationController from "src/pages/all-students/controller";
 import CourseFinderController from "src/pages/course-finder/controller";
 import * as yup from "yup";
-import CustomButton from "../../CustomButton";
+import CustomButton from "../../g_components/CustomButton";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { successToast } from "../../g_toaster";
+import { successToast } from "../../g_components/g_toaster";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import StepperFormController from "src/pages/stepperForm/controller";
 interface courseDetailsTypes {

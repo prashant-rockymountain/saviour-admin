@@ -5,6 +5,8 @@ import {
   CardContent,
   Chip,
   Grid,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CustomChip from "./CustomChip";
@@ -18,17 +20,23 @@ import { ApiUrl } from "../api/apiUrls";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-
+import Link from "next/link";
+interface commisioninterface {
+  amount: number;
+  type: "percentage" | "fixed";
+}
 export const UniversityCard = ({
   image,
   campus_name,
   university_name,
   name,
   data,
+  commision,
   duration,
   intake,
 }: {
   duration: number;
+  commision: commisioninterface;
   intake: string[];
   image: string;
   campus_name: string;
@@ -59,15 +67,48 @@ export const UniversityCard = ({
               item
               xs={11}
               display={"flex"}
-              gap={2}
+         gap={1}
               flexDirection={"row"}
               justifyContent={"center"}
             >
-              <VideocamOutlinedIcon color={"info"} />
-              <PlaceIcon color={"info"} />
-              <InfoOutlinedIcon color={"info"} />
-              <ArticleOutlinedIcon color={"info"} />
-              <MapOutlinedIcon color={"info"} />
+              <Link href={data.links.video} target="_blank">
+                <Tooltip title="Video" sx={{p:0}}>
+                  <IconButton>
+                    <VideocamOutlinedIcon color={"info"} />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+              <Link
+                href={`https://maps.google.com?q=${data.links.lat},${data.links.long}`}
+                target="_blank"
+              >
+                <Tooltip title="Pin on map"  sx={{p:0}} >
+                  <IconButton>
+                    <PlaceIcon color={"info"} />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+              {/* <Link href={data.links.video} target="_blank">
+                <Tooltip title="video">
+                  <IconButton>
+                    <InfoOutlinedIcon color={"info"} />
+                  </IconButton>
+                </Tooltip>
+              </Link> */}
+              <Link href={data.links.brochure_link} target="_blank">
+                <Tooltip title="Brochure Link"  sx={{p:0}} >
+                  <IconButton>
+                    <ArticleOutlinedIcon color={"info"} />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+              <Link href={data.links.city_link} target="_blank">
+              <Tooltip title="City Link"  sx={{p:0}} >
+                <IconButton>
+                  <MapOutlinedIcon color={"info"} />
+                </IconButton>
+              </Tooltip>
+              </Link>
             </Grid>
           </Grid>
           <Grid item xs={7}>
@@ -134,7 +175,12 @@ export const UniversityCard = ({
                 component={"span"}
               >
                 Tentative Commision &nbsp;: &nbsp;
-                <CustomChip label="CAD 459" status={true} />
+                <CustomChip
+                  label={`${commision.amount} ${
+                    commision.type == "percentage" ? "%" : "$"
+                  }`}
+                  status={true}
+                />
               </Typography>
             </div>
           </Grid>
@@ -153,10 +199,10 @@ export const UniversityCard = ({
             </Box>
           </Grid>
         </Grid>
-        <Grid item xs={12} pb={6}>
+        <Grid item xs={12} p={4}>
           <Button
             variant="contained"
-            sx={{ float: "right" }}
+            sx={{ float: "right" ,mb:2}}
             onClick={() => {
               disptach(addeditdata({ ...data, intake: intake })),
                 router.push("/stepperForm");

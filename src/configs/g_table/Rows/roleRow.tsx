@@ -14,12 +14,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-import CustomChip from "../../CustomChip";
-const RoleOptionsRow: FC<rowType> = ({
+import CustomChip from "../../g_components/CustomChip";
+
+const RoleRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
-  open,
   row,
   index,
   ...prop
@@ -27,8 +27,6 @@ const RoleOptionsRow: FC<rowType> = ({
 
   const dispatch = useDispatch();
   const router = useRouter();
-
-
 
   return (
     <TableRow hover key={Math.random()}>
@@ -39,18 +37,23 @@ const RoleOptionsRow: FC<rowType> = ({
       ) : (
         <>
           <TableCell>{serialNumber}</TableCell>
-          <TableCell align="left">{row?.name}</TableCell>
-          <TableCell align="center"> <CustomChip status={row?.is_active} /></TableCell>
+          <TableCell align="left" >
+            {row?.name}
+          </TableCell>
+          <TableCell align="center">
+            {" "}
+            <CustomChip status={row?.is_active} />
+          </TableCell>
           <TableCell align="center">
             {
               <Fab
                 size="small"
                 color="secondary"
                 onClick={() => {
-                  dispatch(addeditdata(row));
-                  open(true)
-                  // router.push("/country/addEditCountry");
-                }}
+                        dispatch(addeditdata(row));
+                        router.push("/role/addEditRole");
+                      }
+                }
               >
                 <EditIcon />
               </Fab>
@@ -62,4 +65,4 @@ const RoleOptionsRow: FC<rowType> = ({
   );
 };
 
-export default RoleOptionsRow;
+export default RoleRow;

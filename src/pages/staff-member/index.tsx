@@ -13,19 +13,19 @@ import {
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import React, { useState } from "react";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 import { textcolor } from "src/configs/theme/palette";
 import Searchbar from "src/configs/g_components/Searchbar";
 import GModal from "src/configs/g_components/modal";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import RoleOptionsRow from "src/configs/g_components/g_table/Rows/roleOptionsRow";
+import RoleOptionsRow from "src/configs/g_table/Rows/roleOptionsRow";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import RoleoptionController from "../tile-options/controller";
-import RoleRow from "src/configs/g_components/g_table/Rows/roleRow";
+import RoleRow from "src/configs/g_table/Rows/roleRow";
 import RoleController from "../role/controller";
-import StaffMemberRow from "src/configs/g_components/g_table/Rows/staffMemberRow";
+import StaffMemberRow from "src/configs/g_table/Rows/staffMemberRow";
 import StaffController from "./controller";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 

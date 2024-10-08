@@ -20,7 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
 import RoleoptionController from "src/pages/tile-options/controller";
-import { errorToast, successToast } from "../g_toaster";
+import { errorToast, successToast } from "../g_components/g_toaster";
 interface IFormInput {
   name: string;
   is_active: boolean;

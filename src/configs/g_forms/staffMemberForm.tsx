@@ -32,8 +32,8 @@ import {
   Skeleton,
   Switch,
 } from "@mui/material";
-import Customfield from "../Customfield";
-import CustomButton from "../CustomButton";
+import Customfield from "../g_components/Customfield";
+import CustomButton from "../g_components/CustomButton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,12 +41,12 @@ import { addeditdata } from "src/reduxStore/editDataSlice";
 import { AllCountry } from "src/configs/g_constants/all_country_code";
 import RoleController from "src/pages/role/controller";
 import StaffController from "src/pages/staff-member/controller";
-import { errorToast, successToast } from "../g_toaster";
+import { errorToast, successToast } from "../g_components/g_toaster";
 import { ApiUrl } from "src/configs/api/apiUrls";
 import dynamic from "next/dynamic";
-import CustomZoneLoader from "../CustomZoneLoader";
+import CustomZoneLoader from "../g_components/CustomZoneLoader";
 
-const Gdropzone = dynamic(() => import("../g_dropzone"), {
+const Gdropzone = dynamic(() => import("../g_components/g_dropzone"), {
   ssr: false,
   loading: () => <CustomZoneLoader />,
 });

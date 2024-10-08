@@ -9,14 +9,14 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import { rowType } from "src/configs/g_types/types";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 import { useRouter } from "next/router";
-import CustomChip from "../../CustomChip";
+import CustomChip from "../../g_components/CustomChip";
 
-const InquiriesRow: FC<rowType> = ({
+const StudentsRow: FC<rowType> = ({
   isLoading,
   serialNumber,
   clickbutton,
@@ -26,16 +26,11 @@ const InquiriesRow: FC<rowType> = ({
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const hanclick = (data: string) => {
-    if (clickbutton) {
-      clickbutton(data);
-    }
-  };
 
   return (
     <TableRow hover key={Math.random()}>
       {isLoading ? (
-        <TableCell colSpan={7}>
+        <TableCell colSpan={6}>
           <Skeleton variant="text" height={40} />
         </TableCell>
       ) : (
@@ -44,25 +39,23 @@ const InquiriesRow: FC<rowType> = ({
           <TableCell align="left">
             {row?.first_name + " " + row?.middle_name + " " + row?.last_name}
           </TableCell>
-          <TableCell align="left"></TableCell>
-          <TableCell align="center">{row?.applications?.length} </TableCell>
-          {/* <TableCell align="center"> </TableCell>
-          <TableCell align="center"> </TableCell> */}
+          <TableCell align="left">{row?.email}</TableCell>
+          <TableCell align="left">{row?.phone}</TableCell>
           <TableCell align="center">
+            {" "}
+            <CustomChip status={row?.is_active} />
+          </TableCell>
+          <TableCell align="right">
             {
               <Fab
                 size="small"
                 color="secondary"
-                onClick={
-                  clickbutton != undefined
-                    ? () => hanclick
-                    : () => {
-                        // dispatch(addeditdata(row));
-                        router.push("/all-inquiries/" + row?._id);
-                      }
-                }
+                onClick={() => {
+                  dispatch(addeditdata(row));
+                  router.push("/all-students/addEdit");
+                }}
               >
-                <VisibilityIcon />
+                <EditIcon />
               </Fab>
             }
           </TableCell>
@@ -72,4 +65,4 @@ const InquiriesRow: FC<rowType> = ({
   );
 };
 
-export default InquiriesRow;
+export default StudentsRow;

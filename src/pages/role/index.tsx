@@ -1,14 +1,14 @@
 import { Button, Card, CardContent, Grid, Skeleton } from "@mui/material";
 import Link from "next/link";
 import React, { useState } from "react";
-import GTable from "src/configs/g_components/g_table/Table/g_table";
+import GTable from "src/configs/g_table/Table/g_table";
 import Searchbar from "src/configs/g_components/Searchbar";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { addeditdata } from "src/reduxStore/editDataSlice";
 
 import RoleController from "./controller";
-import RoleRow from "src/configs/g_components/g_table/Rows/roleRow";
+import RoleRow from "src/configs/g_table/Rows/roleRow";
 import { AbilityNames } from "src/configs/g_constants/allConstants";
 
 const TABLE_HEAD = [

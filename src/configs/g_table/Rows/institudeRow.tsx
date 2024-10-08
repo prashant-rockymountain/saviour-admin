@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { Edit, Visibility } from "@mui/icons-material";
 import { addeditdata } from "src/reduxStore/editDataSlice";
-import CustomThumb from "../../CustomThumb";
+import CustomThumb from "../../g_components/CustomThumb";
 
 const InstitudeRow: FC<rowType> = ({
     isLoading,

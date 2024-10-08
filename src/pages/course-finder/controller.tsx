@@ -21,9 +21,11 @@ const data=await axi.get(
 return data?.data?.data
 
     }
-   async  getAllFilteredCity({state}:{state:string[]}){
+   async  getAllFilteredCity({state,page,name}:{state:string[],page:number,name:string}){
+   
+    
 const data=await axi.get(
-    `${ApiUrl.GET_CITIES_URL}?state=${state.toString()}`)
+    `${ApiUrl.GET_CITIES_URL}?state=${state.toString()}&page=${page}&limit=${page*50}&city_name=${name}`)
 return data?.data?.data
 
     }
