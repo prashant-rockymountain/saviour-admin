@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CircularProgress, Collapse, Divider, Grid, Pagination, Skeleton, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, CircularProgress, Collapse, Divider, Grid, Modal, Pagination, Skeleton, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import InstitudeSiderbar from './InstitudeSiderbar'
 import { useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import UniversityController from './controller'
 import { useRouter } from 'next/router'
 import CustomChip from 'src/configs/g_components/CustomChip'
 import { count } from 'console'
+import { Cancel } from '@mui/icons-material'
 
 interface high {
   graduation_type: string[]
@@ -26,7 +27,8 @@ const ShowInstitute = () => {
   const [read, setread] = useState(false)
   const [limit, setlimit] = useState(4)
   const [loader, setloader] = useState(false)
-
+  const [openmodal, setopenmodal] = useState(false)
+  const [details, setdetails] = useState("")
   const [showcourse, setshowcourse] = useState<Record<string, any>>()
 
   const { data: universityProfile } = useQuery({
@@ -51,13 +53,16 @@ const ShowInstitute = () => {
     }
   })
 
-
-
   const handlechange = (data: high) => {
     let newdata = { ...data, "university": showInstitude }
     mutate({ ...newdata })
     setbodydata({ ...newdata })
     setloader(true)
+  }
+
+  const showrequirement = (data: string) => {
+    setdetails(data)
+    setopenmodal(true)
   }
 
   useEffect(() => {
@@ -77,13 +82,14 @@ const ShowInstitute = () => {
   }, [pageno, showInstitude])
 
 
+  console.log(showcourse?.details)
 
   return (
     <Grid container spacing={6}>
       <Grid item lg={8} xs={12}>
         <Grid container spacing={5}>
           <Grid item xs={12}>
-            {!universityProfile ? <Skeleton variant='rectangular' width={"100%"} height={"55vh"} /> :
+            {!universityProfile ? <Skeleton variant='rectangular' width={"100%"} height={"25vh"} /> :
               <Card>
                 <CardContent>
                   <Grid container spacing={5}>
@@ -92,7 +98,7 @@ const ShowInstitute = () => {
                         <Typography fontWeight={"bold"} pb={1} textTransform={"uppercase"} fontSize={20}>{universityProfile?.university?.name?.name}</Typography>
                         <Typography variant='body1' textTransform={"uppercase"} fontWeight={500} fontSize={17}>{universityProfile?.university?.location?.city?.name}, {universityProfile?.university?.location?.state?.name}, {universityProfile?.university?.location?.country?.name}</Typography>
                       </span>
-                      <img style={{ borderRadius: 7 }} width={"25%"} src={ApiUrl.IMAGE_BASE_URL + universityProfile?.university?.university_logo} alt='College Image' />
+                      <img style={{ borderRadius: 7, maxHeight: "140px" }} width={"25%"} src={ApiUrl.IMAGE_BASE_URL + universityProfile?.university?.university_logo} alt='College Image' />
                     </Grid>
                     <Grid item xs={12}>
                       <Divider />
@@ -124,7 +130,7 @@ const ShowInstitute = () => {
                           <Typography sx={{ cursor: "pointer" }} fontSize={15} fontWeight={"bold"}>{ele?.course_id?.name?.slice(0, 50)}..</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography fontSize={13} color={"primary"} sx={{ cursor: "pointer" }} pt={3}>Requirements {">>"}</Typography>
+                          <Typography fontSize={13} color={"primary"} sx={{ cursor: "pointer" }} pt={3}><span onClick={() => showrequirement(ele?.entry_requirement)}>Requirements {">>"}</span></Typography>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -153,26 +159,37 @@ const ShowInstitute = () => {
                 </Card>
               </Grid>
             ))}
+
+            {(pageno && showcourse?.count) &&
+              <Grid item mt={5} xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                <Pagination page={Number(pageno)} onChange={(e, value) => router.replace(`${url}?page=${value}`)} shape="rounded" color='primary' count={Math.ceil(showcourse?.count / limit)} size="large" />
+                <Typography >of {showcourse?.count}</Typography>
+              </Grid>
+            }
           </>}
 
 
-          {(pageno && showcourse?.count) &&
-            <Grid item mt={5} xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-              <Pagination page={Number(pageno)} onChange={(e, value) => router.replace(`${url}?page=${value}`)} shape="rounded" color='primary' count={Math.ceil(showcourse?.count / limit)} size="large" />
-              <Typography >of {showcourse?.count}</Typography>
-            </Grid>
-          }
+
         </Grid>
       </Grid>
       <Grid item lg={4} xs={12}>
-        {!universityProfile ? <Skeleton variant='rectangular' width={"100%"} height={"85vh"} /> :
-          <Card>
+        {!universityProfile ? <Skeleton variant='rectangular' width={"100%"} height={"75vh"} /> :
+          <Card >
             <CardContent>
               <InstitudeSiderbar universityProfile={universityProfile} handlechange={handlechange} />
             </CardContent>
           </Card>
         }
       </Grid>
+      <Modal open={openmodal} onClose={() => setopenmodal(false)}>
+        <Grid item xs={12} sm={6} md={4} mx={"auto"} mt={70}>
+          <Card sx={{ p: 5 }}>
+            <Typography display={"flex"} justifyContent={"space-between"} fontSize={20} fontWeight={"bold"} pb={2} textAlign={'justify'}><span>Course Requirements</span> <span style={{ cursor: "pointer" }} onClick={() => setopenmodal(false)}><Cancel /></span></Typography>
+            <Typography textAlign={'justify'}>{details}</Typography>
+          </Card>
+        </Grid>
+      </Modal>
+
     </Grid>
   )
 }
