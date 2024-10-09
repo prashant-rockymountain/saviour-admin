@@ -20,6 +20,7 @@ import CourseFinderController from "./controller";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import FilterSkeleton from "src/configs/g_skeleton/filterSideBar";
+import CustomSelect from "src/configs/g_components/CustomSelect";
 
 export interface filterObj {
   country: string[];
@@ -51,10 +52,7 @@ const CourseFinder = () => {
   });
 
   const { data: Courses, isPending: CourseLoading } = useQuery({
-    queryKey: [
-      `FilterCourses${searchParams.get("search") ?? 1}`,
-      filterationObj,
-    ],
+    queryKey: [`FilterCourses${searchParams.get("page") ?? 1}`, filterationObj],
     queryFn: () =>
       courseFinderController.getAllFilteredCourses({
         city: filterationObj.city,
@@ -66,7 +64,7 @@ const CourseFinder = () => {
         state: filterationObj.state,
         university: filterationObj.universityName,
         searchData: filterationObj.searchData,
-        page: `${searchParams.get("search") ?? 1}`,
+        page: `${searchParams.get("page") ?? 1}`,
       }),
   });
 
@@ -86,9 +84,10 @@ const CourseFinder = () => {
   }
   function handlePagination(_: any, val: number) {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("search", `${val}`);
+    params.set("page", `${val}`);
     replace(`${pathname}?${params.toString()}`);
   }
+  console.log(Courses, "cou");
 
   return (
     <>
@@ -109,6 +108,9 @@ const CourseFinder = () => {
                 </CardContent>
               </Card>
             </Grid>
+            <Grid item xs={12} ml={3}>
+              <CustomSelect />
+            </Grid>
 
             {CourseLoading ? (
               <Grid item xs={12} textAlign={"center"}>
@@ -116,48 +118,50 @@ const CourseFinder = () => {
               </Grid>
             ) : (
               <>
-                {Courses?.map((item: Record<string, any>) => (
-                  <Grid item xs={12} key={item._id}>
-                    <UniversityCard
-                      image={item.university.university_logo}
-                      university_name={item.university.name.name}
-                      name={item.name}
-                      commision={{
-                        type: item.university.commission_type,
-                        amount: item.university.commission,
-                      }}
-                      duration={item.duration}
-                      campus_name={item?.university?.location?.city?.name}
-                      intake={item.intake}
-                      data={{
-                        course_details: {
-                          name: item?.name,
-                          _id: item?._id,
-                          price: item?.price,
-                          program: item?.graduation_type,
-                        },
-                        links: {
-                          video: item.university.video_link,
-                          city_link: item.university.city_link,
-                          brochure_link: item.university.brochure_link,
-                          lat: item.university.location.latitude,
-                          long: item.university.location.longitude,
-                        },
+                {Courses?.universityRecords?.map(
+                  (item: Record<string, any>) => (
+                    <Grid item xs={12} key={item._id}>
+                      <UniversityCard
+                        image={item.university.university_logo}
+                        university_name={item.university.name.name}
+                        name={item.name}
+                        commision={{
+                          type: item.university.commission_type,
+                          amount: item.university.commission,
+                        }}
+                        duration={item.duration}
+                        campus_name={item?.university?.location?.city?.name}
+                        intake={item.intake}
+                        data={{
+                          course_details: {
+                            name: item?.name,
+                            _id: item?._id,
+                            price: item?.price,
+                            program: item?.graduation_type,
+                          },
+                          links: {
+                            video: item.university.video_link,
+                            city_link: item.university.city_link,
+                            brochure_link: item.university.brochure_link,
+                            lat: item.university.location.latitude,
+                            long: item.university.location.longitude,
+                          },
 
-                        university_details: item?.university,
-                      }}
-                    />
-                  </Grid>
-                ))}
-                {Courses?.length > 0 && (
+                          university_details: item?.university,
+                        }}
+                      />
+                    </Grid>
+                  )
+                )}
+                {Courses.universityRecords?.length > 0 && (
                   <Grid
                     item
                     xs={12}
                     sx={{ display: "flex", placeContent: "center" }}
                   >
                     <Pagination
-                      defaultPage={+(searchParams.get("search") ?? 1)}
-                      count={10}
+                      defaultPage={+(searchParams.get("page") ?? 1)}
+                      count={Math.ceil(Courses.count / 10)}
                       variant="outlined"
                       shape="rounded"
                       onChange={handlePagination}
