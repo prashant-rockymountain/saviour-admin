@@ -6,10 +6,8 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import { rowType } from "src/configs/g_types/types";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { Edit, Visibility } from "@mui/icons-material";
-import { addeditdata } from "src/reduxStore/editDataSlice";
 import CustomThumb from "../../g_components/CustomThumb";
 
 const InstitudeRow: FC<rowType> = ({
@@ -23,12 +21,7 @@ const InstitudeRow: FC<rowType> = ({
 
     const router = useRouter();
     const showInstitude = (data: Record<string, any>) => {
-        if (data?.course_details?.map((ele: any) => ele?.courses)?.flat(Infinity)?.length > 10) {
-            router.push("/all-institutes/" + data?.university?._id + "?page=1")
-        } else {
-            router.push("/all-institutes/" + data?.university?._id)
-        }
-
+        router.push("/all-institutes/" + data?.university?._id + "?page=1")
     }
 
     return (

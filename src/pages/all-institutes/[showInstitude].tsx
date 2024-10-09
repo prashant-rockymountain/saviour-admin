@@ -1,5 +1,5 @@
 import { Button, Card, CardContent, CircularProgress, Collapse, Divider, Grid, Pagination, Skeleton, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import InstitudeSiderbar from './InstitudeSiderbar'
 import { useSelector } from 'react-redux'
 import { ApiUrl } from 'src/configs/api/apiUrls'
@@ -8,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import UniversityController from './controller'
 import { useRouter } from 'next/router'
 import CustomChip from 'src/configs/g_components/CustomChip'
+import { count } from 'console'
 
 interface high {
   graduation_type: string[]
@@ -26,7 +27,7 @@ const ShowInstitute = () => {
   const [limit, setlimit] = useState(4)
   const [loader, setloader] = useState(false)
 
-  const [showcourse, setshowcourse] = useState<Record<string,any>>()
+  const [showcourse, setshowcourse] = useState<Record<string, any>>()
 
   const { data: universityProfile } = useQuery({
     queryKey: ["UniversityProfile", showInstitude],
@@ -41,14 +42,15 @@ const ShowInstitute = () => {
     university: showInstitude
   }
 
-  
-const [bodydata,setbodydata] = useState<Record<string,any>>()
+
+  const [bodydata, setbodydata] = useState<Record<string, any>>({})
   const { mutate, data: coursedata, isSuccess } = useMutation({
     mutationFn: (bodydata: Record<string, any>) => universityController.getUniversityCourse(bodydata, +(pageno ?? "1"), limit),
     onSuccess: () => {
       setloader(false)
     }
   })
+
 
 
   const handlechange = (data: high) => {
@@ -67,7 +69,11 @@ const [bodydata,setbodydata] = useState<Record<string,any>>()
 
   useEffect(() => {
     setloader(true)
-    mutate({ ...emptyobj })
+    if (Object.keys(bodydata).length) {
+      mutate({ ...bodydata })
+    } else {
+      mutate({ ...emptyobj })
+    }
   }, [pageno, showInstitude])
 
 
@@ -107,8 +113,8 @@ const [bodydata,setbodydata] = useState<Record<string,any>>()
           <Grid item xs={12}>
             <Typography variant='h5'>Courses : </Typography>
           </Grid>
-          {loader ? <Grid item xs={12} textAlign={"center"}><CircularProgress size={25}/></Grid>  : <>
-            {showcourse?.details?.map((ele: Record<string, any>, index:number) => (
+          {loader ? <Grid item xs={12} textAlign={"center"}><CircularProgress size={25} /></Grid> : <>
+            {showcourse?.details?.map((ele: Record<string, any>, index: number) => (
               <Grid item xs={12} key={ele?._id}>
                 <Card sx={{ p: 4 }}>
                   <Grid container>
@@ -125,7 +131,7 @@ const [bodydata,setbodydata] = useState<Record<string,any>>()
                     <Grid item xs={6} sm={6} md={5.3} display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
                       <Grid >
                         <Typography pb={1} sx={{ fontSize: { sm: 10, md: 14 } }}>Program Type</Typography>
-                        <CustomChip fontsize={{ md: "0.7rem", xs: "9px" }} label={ele?.graduation_type?.program_type} status={false} />
+                        <CustomChip fontsize={{ md: "11px", xs: "9px" }} label={ele?.graduation_type?.program_type} status={false} />
                       </Grid>
                       <Grid textAlign={"center"} >
                         <Typography sx={{ fontSize: { sm: 10, md: 14 } }} pb={1}>Duration</Typography>
@@ -150,10 +156,10 @@ const [bodydata,setbodydata] = useState<Record<string,any>>()
           </>}
 
 
-          {pageno &&
+          {(pageno && showcourse?.count) &&
             <Grid item mt={5} xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-              <Pagination page={+pageno} onChange={(e, value) => router.replace(`${url}?page=${value}`)} shape="rounded" color='primary' count={Math.ceil(showcourse?.count/limit)} size="large" />
-                <Typography >of {showcourse?.count}</Typography>
+              <Pagination page={Number(pageno)} onChange={(e, value) => router.replace(`${url}?page=${value}`)} shape="rounded" color='primary' count={Math.ceil(showcourse?.count / limit)} size="large" />
+              <Typography >of {showcourse?.count}</Typography>
             </Grid>
           }
         </Grid>

@@ -1,5 +1,6 @@
 import { LocationOnOutlined, MapOutlined, TextSnippetOutlined, VideocamOutlined } from '@mui/icons-material'
 import { Chip, Divider, Grid, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,6 +17,8 @@ interface sidebar {
 
 const InstitudeSiderbar: FC<sidebar> = ({ universityProfile, handlechange }) => {
     const editdata = universityProfile
+    const url = window.location.pathname
+    const router = useRouter()
     const map = `https://maps.google.com?q=${editdata?.university?.location?.latitude},${editdata?.university?.location?.longitude}`
     const keyDetailsData = [
         { "label": "Video Link", icondata: <VideocamOutlined sx={{ ml: 1 }} color='primary' />, linkdata: editdata?.university?.video_link },
@@ -82,6 +85,7 @@ const InstitudeSiderbar: FC<sidebar> = ({ universityProfile, handlechange }) => 
             setareacateogory(commonFunction(checkarrlist(myarray), "study_area_category"))
         }
         handlechange(myarray)
+        router.replace(`${url}?page=1`)
         sethighlight(myarray)
     }
 

@@ -14,8 +14,7 @@ const CustomChip: FC<chipTypes> = ({ status, label, fontsize }) => {
         bgcolor: status ? "#E9FCD4" : alpha("#D74242", 0.16),
         color: status ? "#2ea105" : "#b80202",
         fontWeight: 800,
-        fontSize: "0.8rem",
-
+        fontSize: fontsize ?? "0.8rem",
         borderRadius: 1,
       }}
     />
