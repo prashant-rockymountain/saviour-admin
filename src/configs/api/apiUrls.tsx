@@ -56,7 +56,7 @@ export const ApiUrl = {
   ELASTIC_TEST: "university/get-test",
   ADD_APPLICATION_URL: "admin/student/applications/add",
   GET_COUNTRY_URL: "admin/location/countries",
-  GET_STUDY_AREA:"graduation/study-area/get?is_active=true",
+  GET_STUDY_AREA:"admin/graduation/study-area/list?is_active=true",
   GET_STATE_URL: "admin/location/states",
   GET_CITIES_URL: "admin/location/cities",
   GET_INQUERY_PROFILE_URL: "admin/student/applications/profile/",
